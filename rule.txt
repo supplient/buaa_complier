@@ -117,50 +117,197 @@ example:
         int a;char b[6],c;
         int d,a[6];
 restriction:
-    
+    `const_decl` should have at least one identifier.
+    `var_decl` should have at least one identifier.
+    `const_decl` must have init value.
+    array is not valid for `const_decl`, but valid for `var_decl`.
 
+effect:
+    常量、变量是最基本的数据单元。扩充c0要求任何数据单元在被使用前都被声明。
 
-
-＜声明头部＞   ::=  int＜标识符＞ |char＜标识符＞
-＜有返回值函数定义＞  ::=  ＜声明头部＞'('＜参数表＞')' '{'＜复合语句＞'}'
-＜无返回值函数定义＞  ::= void＜标识符＞'('＜参数表＞')''{'＜复合语句＞'}'
-＜参数表＞    ::= ＜参数＞{,＜参数＞}| ＜空>
-＜参数＞    ::=  ＜类型标识符＞＜标识符＞
-
-
-＜复合语句＞   ::=  ［＜常量说明＞］［＜变量说明＞］＜语句列＞
-＜语句列＞   ::= ｛＜语句＞｝
-＜语句＞    ::= ＜条件语句＞｜＜循环语句＞| ＜有返回值函数调用语句＞; 
-                           |＜无返回值函数调用语句＞;｜＜赋值语句＞;｜＜读语句＞;｜＜写语句＞;｜＜空＞;|＜情况语句＞｜＜返回语句＞;
-
-＜赋值语句＞   ::=  ＜标识符＞＝＜表达式＞|＜标识符＞'['＜表达式＞']'=＜表达式＞
-
-＜条件＞    ::=  ＜表达式＞＜关系运算符＞＜表达式＞｜＜表达式＞ //表达式为0条件为假，否则为真
-
-＜条件语句＞  ::=  if '('＜条件＞')'＜语句＞
-
-＜循环语句＞   ::=  while '('＜条件＞')'＜语句＞
-
-＜情况语句＞  ::=  switch '('＜表达式＞')' '{'＜情况表＞＜缺省＞ '}'
-＜情况表＞   ::=  ＜情况子语句＞{＜情况子语句＞}
-＜情况子语句＞  ::=  case＜常量＞：＜语句＞
-＜缺省＞   ::=  default : ＜语句＞|＜空＞
-
-＜有返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
-＜无返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
-＜值参数表＞   ::= ＜表达式＞{,＜表达式＞}｜＜空＞
-
-＜读语句＞    ::=  scanf '('＜标识符＞{,＜标识符＞}')'
-
-＜写语句＞    ::= printf '(' ＜字符串＞,＜表达式＞ ')'| printf '('＜字符串＞ ')'| printf '('＜表达式＞')'
-
-＜返回语句＞   ::=  return['('＜表达式＞')']     
-
-3. TODO
+5.
 rule:
-    ＜程序＞    ::= ［＜常量说明＞］［＜变量说明＞］{＜有返回值函数定义＞|＜无返回值函数定义＞}＜主函数＞
-    ＜主函数＞    ::= void main'('')''{'＜复合语句＞'}'
+    ＜声明头部＞   ::=  int＜标识符＞ |char＜标识符＞
+    ＜参数＞    ::=  ＜类型标识符＞＜标识符＞
+    ＜参数表＞    ::= ＜参数＞{,＜参数＞}| ＜空>
+    ＜有返回值函数定义＞  ::=  ＜声明头部＞'('＜参数表＞')' '{'＜复合语句＞'}'
+    ＜无返回值函数定义＞  ::= void＜标识符＞'('＜参数表＞')''{'＜复合语句＞'}'
 example:
+    <decl_head>
+        int a_2
+        char b3
+    <param>
+        int a_2
+        char b3
+    <param_list>
+        int a_2,char b3
+        
+    <func_with_return_define>
+        int a_2(){a=2;}
+        char b3(int a, char b){}
+    <func_without_return_define>
+        void a_2(){a=2;}
+        void b3(int a, char b){}
+restriction:
+    Empty is valid for `param_list`.
+    "(", ")" and "{", "}" are necessary for each function defination.
+effect:
+    函数是程序的执行块的单位。扩充c0不支持分程序，所以每一个函数都是同级的。
+    与数据单元一样，扩充c0也要求每一个执行块在被使用前被声明。
+
+6.
+rule:
+    ＜赋值语句＞   ::=  ＜标识符＞＝＜表达式＞|＜标识符＞'['＜表达式＞']'=＜表达式＞
+example:
+    <assign_statement>
+        a = b+3
+        a[3] = 7
+restriction:
+    array's member can be the left value.
+    The right value can be any valid expression.
+effect:
+    表示赋值操作的语句。
+
+7.
+rule:
+    ＜条件＞    ::=  ＜表达式＞＜关系运算符＞＜表达式＞｜＜表达式＞ //表达式为0条件为假，否则为真
+
+    ＜条件语句＞  ::=  if '('＜条件＞')'＜语句＞
+    
+    ＜循环语句＞   ::=  while '('＜条件＞')'＜语句＞
+
+    ＜缺省＞   ::=  default : ＜语句＞|＜空＞
+    ＜情况子语句＞  ::=  case＜常量＞：＜语句＞
+    ＜情况表＞   ::=  ＜情况子语句＞{＜情况子语句＞}
+    ＜情况语句＞  ::=  switch '('＜表达式＞')' '{'＜情况表＞＜缺省＞ '}'
+example:
+    <condition>
+        a+b
+        233
+        233>6
+    <if_statement>
+        if(233>6)return;
+        if(1)a=3;
+    <while_statement>
+        while(b);
+        while(i>6)i=i-1;
+    <switch_default>
+        default: return;
+
+    <switch_case>
+        case 2:a=2;
+    <switch_case_list>
+        case 2:a=2;
+        case 2:a=2;case 3:a=3;
+    <switch_statement>
+        switch(a+233){case 2:a=2;case 3:a=3;}
+        switch(a+233){case 2:a=2;default:a=0;}
+restriction:
+    A single expression is allowed for `conditon`.
+    ONLY ONE `statement` can be `if_statement`, `while_statement` and `switch_case` 's body part.
+    Empty is valid for `switch_default`.
+    `switch_case_list` shoudl have at least one `switch_case`.
+    "{" and "}" are necessary for `switch_statement`.
+effect:
+    控制程序执行逻辑的语句。
+
+8.
+rule:
+    ＜值参数表＞   ::= ＜表达式＞{,＜表达式＞}｜＜空＞
+    ＜有返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
+    ＜无返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
+    ＜返回语句＞   ::=  return['('＜表达式＞')']     
+example:
+    <value_param_list>
+        233
+        a+b,3
+
+    <func_with_return_call>
+        func()
+        func(a)
+    <func_without_return_call>
+        func()
+        func(a)
+    <return_statement>
+        return
+        return a
+restriction:
+    Empty is allowed for `value_param_list`.
+    "(" and ")" are necessary for function's call.
+effect:
+    函数相关的跳转语句。与7的控制语句共同构成非线性程序的基础。
+
+9.
+rule:
+    ＜读语句＞    ::=  scanf '('＜标识符＞{,＜标识符＞}')'
+    ＜写语句＞    ::= printf '(' ＜字符串＞,＜表达式＞ ')'| printf '('＜字符串＞ ')'| printf '('＜表达式＞')'
+example:
+    <input_statement>
+        scanf(a, b, c)
+        scanf(a)
+    <output_statement>
+        printf("233", 233)
+        printf("233")
+        printf(233)
+restriction:
+    Only `identifier` is allowed for scanf's param.
+    Only `string` and `expression` are allowed for printf's param.
+    If `string` and `expression` are set as printf's param at the same time, `string` must be the first param.
+    printf can have at most one `string` param and at most one `expression` param, and should have at least one param of `string` or `expression`.
+effect:
+    IO语句。
+
+10.
+rule:
+    ＜语句＞    ::= ＜条件语句＞｜＜循环语句＞| ＜有返回值函数调用语句＞; 
+                            |＜无返回值函数调用语句＞;｜＜赋值语句＞;｜＜读语句＞;｜＜写语句＞;｜＜空＞;|＜情况语句＞｜＜返回语句＞;
+    ＜语句列＞   ::= ｛＜语句＞｝
+    ＜复合语句＞   ::=  ［＜常量说明＞］［＜变量说明＞］＜语句列＞
+example:
+    <statement>
+        if(1)return;
+        func();
+        a=2;
+        scanf(a);
+        ;
+        return a;
+    <statement_list>
+        a=6;return a;
+
+    <compound_statement>
+        const char c='_';int a;
+        int a;return;
+        a=3;if(a)return;
+
+restriction:
+    `statement` must be ended by ';'.
+    A single ';' is valid for `statement`.
+    Empty is valid for `statement_list`.
+    Each element of `compound_statement`(declaraions for constant and variables, statments) can be omitted.
+    The order of `compound_statement` 's elements are fixed.
+effect:
+    语句是最基本的执行单元。
+
+11.
+rule:
+    ＜主函数＞    ::= void main'('')''{'＜复合语句＞'}'
+    ＜程序＞    ::= ［＜常量说明＞］［＜变量说明＞］{＜有返回值函数定义＞|＜无返回值函数定义＞}＜主函数＞
+example:
+    <main_func>
+        void main(){}
+    <program>
+        const int a=3;char b[3];void main(){}
+        void func1(){}int func2(){}void func3(){}void main(){}
+restriction:
+    `main_func` cannot have any param and return value.
+    `program` can be started by `const_decl` and `var_decl`. And these two's order is fixed.
+    `func_with_return_define` and `func_without_return_define` can only be written in `program`. And these two's order is not fixed. They can be mixed together.
+    If we treat `program` as four parts: constant declaraions, variable declarations, function declarations and main function.
+        Their order is fixed.
+        The first three parts can be omitted.
+        main function cannot be omitted.
+effect:
+    程序最顶层的组成。
 
 
 
