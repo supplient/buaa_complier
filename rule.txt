@@ -89,6 +89,7 @@ restriction:
     `+` and `-` can be the head of the expression.
     Empty is not valid for `expression`, `item` and `factor`.
     Only function with return value can be a `factor`.
+    Only `func_with_return_call` is allowed for `factor`. Other `statement`s are not allowed.
 effect:
     表达式是最基本的计算单元，因子、项、表达式这三项递归地定义了它。
     
@@ -121,6 +122,8 @@ restriction:
     `var_decl` should have at least one identifier.
     `const_decl` must have init value.
     array is not valid for `const_decl`, but valid for `var_decl`.
+    It's invalid in grammal level that assign `character` to an `int constant` and vice versa.
+    It's not valid to assign init value to varaibles.
 
 effect:
     常量、变量是最基本的数据单元。扩充c0要求任何数据单元在被使用前都被声明。
@@ -234,6 +237,7 @@ example:
 restriction:
     Empty is allowed for `value_param_list`.
     "(" and ")" are necessary for function's call.
+    "(" and ")" are necessary for return value.
 effect:
     函数相关的跳转语句。与7的控制语句共同构成非线性程序的基础。
 
