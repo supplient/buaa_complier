@@ -28,17 +28,22 @@ void loop_body()
     i = i / 2;
 }
 
-int print_loop_condition(){
-    return(ci>0);
-}
+int fab_func(int j)
+{
+    swtich(j)
+    {
+        case 0: return(1);
+        case 1: return(1);
+        case 2: return(2);
+    }
 
-void print_loop_body(){
-    ci = ci - 1;
-    printf("\n", c[ci]);
+    return(fab_func(j-1) + fab_func(j-2));
 }
 
 void main()
 {
+    int j;
+
     scanf(i);
     if(i<0)
         i=-i;
@@ -52,8 +57,11 @@ void main()
     while(loop_condition())
         loop_body();
 
-    while(print_loop_condition())
-        print_loop_body();
+    while(ci>0)
+    {
+        ci = ci - 1;
+        printf("\n", c[ci]);
+    }
 
     printchar('D');
     printchar('o');
@@ -61,6 +69,9 @@ void main()
     printchar('e');
     printchar('.');
     printf("\n", '~');
+
+    scanf(j);
+    printf(fab_func(j));
 
     while(1)
         ;
