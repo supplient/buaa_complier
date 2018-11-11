@@ -190,7 +190,7 @@ example:
         233>6
     <if_statement>
         if(233>6)return;
-        if(1)a=3;
+        if(1){a=3;a=a+1;}
     <while_statement>
         while(b);
         while(i>6)i=i-1;
@@ -203,7 +203,7 @@ example:
         case 2:a=2;
         case 2:a=2;case 3:a=3;
     <switch_statement>
-        switch(a+233){case 2:a=2;case 3:a=3;}
+        switch(a+233){case 2:{a=2;}case 3:a=3;}
         switch(a+233){case 2:a=2;default:a=0;}
 restriction:
     A single expression is allowed for `conditon`.
@@ -263,7 +263,7 @@ effect:
 
 10.
 rule:
-    ＜语句＞    ::= ＜条件语句＞｜＜循环语句＞| ＜有返回值函数调用语句＞; 
+    ＜语句＞    ::= ＜条件语句＞｜＜循环语句＞| '{'＜语句列＞'}'| ＜有返回值函数调用语句＞; 
                             |＜无返回值函数调用语句＞;｜＜赋值语句＞;｜＜读语句＞;｜＜写语句＞;｜＜空＞;|＜情况语句＞｜＜返回语句＞;
     ＜语句列＞   ::= ｛＜语句＞｝
     ＜复合语句＞   ::=  ［＜常量说明＞］［＜变量说明＞］＜语句列＞
@@ -281,7 +281,7 @@ example:
     <compound_statement>
         const char c='_';int a;
         int a;return;
-        a=3;if(a)return;
+        a=3;if(a){return;}
 
 restriction:
     `statement` must be ended by ';'.
