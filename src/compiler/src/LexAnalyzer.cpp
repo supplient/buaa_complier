@@ -36,6 +36,8 @@ bool LexAnalyzer::getChar(char &c){
     if(!file || file.eof())
         return false;
     file.get(c);
+    if(!file || file.eof())
+        return false;
     column++;
     if(c == '\r')
         file.get(c);
@@ -245,6 +247,70 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         return true;
     }
 
+    // operator
+    bool op_is = true;
+    bool op_get_for_next = true;
+    string op_error_head = "opeator: ";
+    switch(ch){
+        case '+': sy = sym::PLUS; break;
+        case '-': sy = sym::MINUS;break;
+        case '*': sy = sym::MULTI;break;
+        case '/': sy = sym::DIV;  break;
+        case '<':
+            sy = sym::LESS;
+            if(getChar(ch)){
+                if(ch == '=')
+                    sy = sym::LESSOREQUAL;
+                else
+                    op_get_for_next = false;
+            }
+            break;
+        case '>':
+            sy = sym::MORE;
+            if(getChar(ch)){
+                if(ch == '=')
+                    sy = sym::MOREOREQUAL;
+                else
+                    op_get_for_next = false;
+            }
+            break;
+        case '!':
+            if(getChar(ch)){
+                if(ch != '='){
+                    string tmp;
+                    tmp.push_back(ch);
+                    errorRepo(op_error_head + "Should be !=, but we get !" + tmp);
+                    return false;
+                }
+                sy = sym::NOTEQUAL;
+            }
+            else{
+                errorRepo(op_error_head + "Should be !=, but we only get !");
+                return false;
+            }
+            break;
+        case '=':
+            sy = sym::ASSIGN;
+            if(getChar(ch)){
+                if(ch == '=')
+                    sy = sym::EQUAL;
+                else
+                    op_get_for_next = false;
+            }
+            break;
+        default: op_is = false;// Not operator
+    }
+    if(op_is){// Is operator
+        if(op_get_for_next)// Get next char for next call
+            getChar(ch);
+        // No value need to be assigned
+        return true;
+    }
+
+    string tmp = "";
+    tmp.push_back(ch);
+    errorRepo("Invalid character '" + tmp + "'.");
+    getChar(ch);
     return false;
 }
 
