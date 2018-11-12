@@ -28,15 +28,6 @@ namespace sym{
         "COLON",
         "COMMA",
 
-        //UNSIGNED_INTEGER
-        "UNSIGNED_INTEGER",
-
-        //CHARACTER
-        "CHARACTER",
-
-        //IDENTIFIER
-        "IDENTIFIER",
-
         //RESERVED
         "CONST",
         "INT",
@@ -54,6 +45,15 @@ namespace sym{
 
         //STRING
         "STRING",
+
+        //UNSIGNED_INTEGER
+        "UNSIGNED_INTEGER",
+
+        //CHARACTER
+        "CHARACTER",
+
+        //IDENTIFIER
+        "IDENTIFIER",
     };
 };
 
