@@ -5,6 +5,11 @@
 LexAnalyzer::LexAnalyzer(string filename)
     : file(filename, ios::binary)
 {
+    // Init static data if has not init.
+    if(!LexAnalyzer::hasInit)
+        LexAnalyzer::initStaticData();
+
+    // Open source file
     if(!file.is_open() || !file){
         cerr << "File " << filename << " open failed." << endl;
         throw 2;
@@ -124,6 +129,14 @@ bool LexAnalyzer::isDigit(char c){
     return false; // else
 }
 
+bool LexAnalyzer::lookUpReserved(const string &name, sym::SYMBOL &sy){
+    map<string, sym::SYMBOL>::iterator iter = LexAnalyzer::reservedTable.find(name);
+    if(iter == LexAnalyzer::reservedTable.end())
+        return false;
+    sy = iter->second;
+    return true;
+}
+
 bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
     // Branch
     if(isAlpha(ch)){
@@ -134,7 +147,13 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
                 break;
             name.push_back(ch);
         }
-        // TODO Assume No reserved
+        if(lookUpReserved(name, sy)){
+            // Is reserved
+            // sy has been assigned in lookUpReserved
+            // no value need to be assigned
+            return true;
+        }
+        // Is identifier
         this->string_value = name;
         sy = sym::IDENTIFIER;
         return true;
