@@ -9,8 +9,13 @@ using namespace std;
 void lexOutputSym(const LexAnalyzer &lex, sym::SYMBOL sy){
     cout << lex.getLineNo() << "[" << lex.getColumnNo() << "]: "
          << sym::SYMBOL_NAME[sy];
-    if(sy == sym::IDENTIFIER){
-        cout << "\t" << lex.getStringValue();
+    switch(sy){
+        case sym::IDENTIFIER:
+            cout << "\t" << lex.getStringValue();
+            break;
+        case sym::UNSIGNED_INTEGER:
+            cout << "\t" << lex.getIntValue();
+            break;
     }
     cout << endl;
 }

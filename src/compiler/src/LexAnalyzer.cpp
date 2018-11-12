@@ -138,7 +138,7 @@ bool LexAnalyzer::lookUpReserved(const string &name, sym::SYMBOL &sy){
 }
 
 bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
-    // Branch
+    // identifier  |  reserved
     if(isAlpha(ch)){
         string name = "";
         name.push_back(ch);
@@ -151,11 +151,34 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
             // Is reserved
             // sy has been assigned in lookUpReserved
             // no value need to be assigned
+            ;
+        }
+        else{
+            // Is identifier
+            sy = sym::IDENTIFIER;
+            this->string_value = name;
+        }
+        return true;
+    }
+    // unsigned_integer
+    else if(isNotZeroDigit(ch) || ch == '0'){
+        sy = sym::UNSIGNED_INTEGER;
+        if(ch == '0'){
+            // Just a zero
+            this->int_value = 0;
             return true;
         }
-        // Is identifier
-        this->string_value = name;
-        sy = sym::IDENTIFIER;
+        else{
+            // Start with not_zero_digit
+            string name = "";
+            name.push_back(ch);
+            while(getChar(ch)){
+                if(!isDigit(ch))
+                    break;
+                name.push_back(ch);
+            }
+            this->int_value = stoi(name);
+        }
         return true;
     }
 
