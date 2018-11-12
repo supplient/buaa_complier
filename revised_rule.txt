@@ -1,20 +1,24 @@
 ﻿lexcial:
-    <reserved operator> one operator one symbol
+    <operator> one operator one symbol
         +  -  *  /  <  <=  >  >=  !=  ==  =
     <separator> one separator one symbol
         (  )  [  ]  {  }  ;  :  ,
-    <unsigned integer> one symbol for all number
+    <unsigned_integer> one symbol for all number
+    <character> one symbol for all character
     <identifier> one symbol for all unreserved identifier
-    <reserved identifier> one reserved identifier one symbol
+    <reserved> one reserved identifier one symbol
         const  int  char  void  main  if  while  switch  case  default  scanf  printf  return
+    <string> one symbol for all string
 
 1.
 rule:
-    ＜字母＞   ::= ＿｜a｜．．．｜z｜A｜．．．｜Z
-    ＜非零数字＞  ::= １｜．．．｜９
-    ＜数字＞   ::= ０｜＜非零数字＞
-    ＜无符号整数＞  ::= ＜非零数字＞｛＜数字＞｝| 0
-    ＜标识符＞    ::=  ＜字母＞｛＜字母＞｜＜数字＞｝
+    <alpha> ::= _|a|...|z|A|...|Z
+    <not_zero_digit> ::= 1|...|9
+    <digit> ::= 0 | <not_zero_digit>
+    <character> ::= '(+|-|*|/|<alpha>|<digit>)'
+    <unsigned_integer> ::= <not_zero_digit>{<digit>} | 0
+    <identifier> ::= <alpha>{<alpha>|<digit>}
+    <string> ::= "{十进制编码为32,33,35-126的ASCII字符}"
 example:
     <alpha>
         _ a G
@@ -31,6 +35,9 @@ restriction:
     `0` is not allowed for the head of `unsigned integer`. For example, `012` is not invalid, while `0` is valid.
     `digit` is not allowed for the head of `identifier`. Only `character` is valid for the head.
         However `digit` is valid when it is in the middle or tail of `identifier`.
+    `"` is not allowed for `string`.
+    Empty string is valid.
+    ` `(Space) is valid for `string`.
 effect:
     都是词法分析给出的内容。将字符串转换成了最基本的语法元素。
 
@@ -40,9 +47,7 @@ rule:
     ＜加法运算符＞ ::= +｜-
     ＜乘法运算符＞  ::= *｜/
     ＜关系运算符＞  ::=  <｜<=｜>｜>=｜!=｜==
-    ＜字符＞    ::=  '＜加法运算符＞'｜'＜乘法运算符＞'｜'＜字母＞'｜'＜数字＞'
     ＜整数＞        ::= ［＋｜－］＜无符号整数＞
-    ＜字符串＞   ::=  "｛十进制编码为32,33,35-126的ASCII字符｝"
     ＜类型标识符＞      ::=  int | char
 example:
     <plus_op>
@@ -61,9 +66,6 @@ example:
         int char
 restriction:
     `0`, `+0` and `-0` are all valid for `integer`.
-    `"` is not allowed for `string`.
-    Empty string is valid.
-    ` `(Space) is valid for `string`.
     Only `int` and `char` are valid `type identifier`.
 effect:
     都是对最基本的语法元素稍微包装过后的具有一定语义的语法元素。
