@@ -16,6 +16,9 @@ void lexOutputSym(const LexAnalyzer &lex, sym::SYMBOL sy){
         case sym::UNSIGNED_INTEGER:
             cout << "\t" << lex.getIntValue();
             break;
+        case sym::CHARACTER:
+            cout << "\t" << lex.getCharValue();
+            break;
     }
     cout << endl;
 }

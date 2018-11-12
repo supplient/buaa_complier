@@ -181,6 +181,48 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         }
         return true;
     }
+    // character
+    else if(ch == '\''){
+        string error_head = "character: ";
+        // Check internal
+        if(!getChar(ch)){
+            errorRepo(error_head + "get internal character failed.");
+            return false;
+        }
+        if(!(
+            isAlpha(ch)|| isDigit(ch)
+            || ch == '+'
+            || ch == '-'
+            || ch == '*'
+            || ch == '/'
+            )){
+            string tmp = "";
+            tmp.push_back(ch);
+            errorRepo(error_head + "internal character '" + tmp + "' is invalid.");
+            return false;
+        }
+        char temp = ch; // Temporarily save
+        // Check right
+        if(!getChar(ch)){
+            errorRepo(error_head + "get right ' failed.");
+            return false;
+        }
+        if(ch != '\''){
+            errorRepo(error_head + "lack ' at right.");
+            return false;
+        }
+        // Get next char for next call.
+        getChar(ch);
+        // All right, save & return
+        sy = sym::CHARACTER;
+        this->char_value = temp;
+        return true;
+    }
 
     return false;
+}
+
+void LexAnalyzer::errorRepo(string reason){
+    cerr << "Lex Error at line[" << line << "] column[" << column << "]--" << endl;
+    cerr << reason << endl;
 }

@@ -63,6 +63,9 @@ class LexAnalyzer
         State getCurrentState();
         void loadState(const State &);
 
+        // Error report
+        void errorRepo(string reason);
+
         // Internal symbol solve
         bool _nextSymbol(sym::SYMBOL &sy);
 
