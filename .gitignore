@@ -33,3 +33,8 @@
 
 # Backup
 ~*
+
+# CodeBlocks project runtime file
+*.depend
+*.layout
+**/obj
