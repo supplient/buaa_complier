@@ -218,11 +218,37 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         this->char_value = temp;
         return true;
     }
+    // string
+    else if(ch == '\"'){
+        string error_head = "string: ";
+        string name = "";
+        while(getChar(ch)){
+            if(ch == '\"')
+                break;
+            if(
+                ch != 32
+                && ch != 33
+                && !(ch >= 35 && ch <= 126)
+            ){
+                string tmp = "";
+                tmp.push_back(ch);
+                errorRepo(error_head + "'" + tmp + "' is invalid internal character.");
+                return false;
+            }
+            name.push_back(ch);
+        }
+        // Get next char for next call.
+        getChar(ch);
+        // save & return
+        sy = sym::STRING;
+        this->string_value = name;
+        return true;
+    }
 
     return false;
 }
 
 void LexAnalyzer::errorRepo(string reason){
     cerr << "Lex Error at line[" << line << "] column[" << column << "]--" << endl;
-    cerr << reason << endl;
+    cerr << "\t" << reason << endl;
 }
