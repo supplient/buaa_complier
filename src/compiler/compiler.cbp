@@ -38,6 +38,8 @@
 		<Unit filename="include/symbol.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/LexAnalyzer.cpp" />
+		<Unit filename="src/LexAnalyzer_static.cpp" />
+		<Unit filename="src/symbol.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

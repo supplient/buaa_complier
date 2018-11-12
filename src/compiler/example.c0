@@ -30,7 +30,7 @@ void loop_body()
 
 int fab_func(int j)
 {
-    swtich(j)
+    switch(j)
     {
         case 0: return(1);
         case 1: return(1);
@@ -67,8 +67,7 @@ void main()
     printchar('o');
     printchar('n');
     printchar('e');
-    printchar('.');
-    printf("\n", '~');
+    printf("\n", '+');
 
     scanf(j);
     printf(fab_func(j));
