@@ -16,9 +16,9 @@ int loop_condition()
     int temp;
 
     temp = i/two;
-    if(temp*two != i)// Not Even
+    if(temp*two != i)
         return(0);
-    return(1);// Even
+    return(1);
 }
 
 void loop_body()
@@ -49,8 +49,8 @@ void main()
         i=-i;
     switch(i==0)
     {
-        case 0:i=i;// Keep
-        default:i=i+1;// At least one, plz
+        case 0:i=i;
+        default:i=i+1;
     }
 
     ci = 0;
