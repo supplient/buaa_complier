@@ -307,6 +307,26 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         return true;
     }
 
+    // separator
+    bool sep_is = true;
+    switch(ch){
+        case '(': sy = sym::LEFT_ROUND;     break;
+        case ')': sy = sym::RIGHT_ROUND;    break;
+        case '[': sy = sym::LEFT_SQUARE;    break;
+        case ']': sy = sym::RIGHT_SQUARE;   break;
+        case '{': sy = sym::LEFT_BRACE;     break;
+        case '}': sy = sym::RIGHT_BRACE;    break;
+        case ';': sy = sym::SEMICOLON;      break;
+        case ':': sy = sym::COLON;          break;
+        case ',': sy = sym::COMMA;          break;
+        default: sep_is = false;// Not separator
+    }
+    if(sep_is){// Is separator
+        getChar(ch);// Get next char for next call
+        // No value need to be assigned
+        return true;
+    }
+
     string tmp = "";
     tmp.push_back(ch);
     errorRepo("Invalid character '" + tmp + "'.");
