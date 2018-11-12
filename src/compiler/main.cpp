@@ -28,27 +28,10 @@ void lexOutputSym(const LexAnalyzer &lex, sym::SYMBOL sy){
 
 int main()
 {
-    string filename = "test.txt";
+    string filename = "example.c0";
 
     LexAnalyzer lex(filename);
     sym::SYMBOL sy;
-
-    sy = lex.nextSymbol();
-    lexOutputSym(lex, sy);
-    sy = lex.nextSymbol();
-    lexOutputSym(lex, sy);
-    if(lex.goBack())
-        cout << "Go backed." << endl;
-    else
-        cout << "Go back failed." << endl;
-    if(lex.goBack())
-        cout << "Go backed." << endl;
-    else
-        cout << "Go back failed." << endl;
-    if(lex.goBack())
-        cout << "Go backed." << endl;
-    else
-        cout << "Go back failed." << endl;
 
     while( (sy=lex.nextSymbol()) != sym::ENDOFFILE ){
         lexOutputSym(lex, sy);

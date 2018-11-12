@@ -168,6 +168,8 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         if(ch == '0'){
             // Just a zero
             this->int_value = 0;
+            // Get next char for next call.
+            getChar(ch);
             return true;
         }
         else{

@@ -1,24 +1,25 @@
-﻿lexcial:
+﻿lexcial symbol:
     <operator> one operator one symbol
         +  -  *  /  <  <=  >  >=  !=  ==  =
     <separator> one separator one symbol
         (  )  [  ]  {  }  ;  :  ,
-    <unsigned_integer> one symbol for all number
-    <character> one symbol for all character
-    <identifier> one symbol for all unreserved identifier
-    <reserved> one reserved identifier one symbol
+    <unsigned_integer>[<not_zero_digit> | 0] one symbol for all number
+    <character>['] one symbol for all character
+    <identifier>[<alpha>] one symbol for all unreserved identifier
+    <reserved>[<alpha>] one reserved identifier one symbol
         const  int  char  void  main  if  while  switch  case  default  scanf  printf  return
-    <string> one symbol for all string
+    <string>["] one symbol for all string 
+    
 
 1.
 rule:
-    <alpha> ::= _|a|...|z|A|...|Z
-    <not_zero_digit> ::= 1|...|9
-    <digit> ::= 0 | <not_zero_digit>
-    <character> ::= '(+|-|*|/|<alpha>|<digit>)'
-    <unsigned_integer> ::= <not_zero_digit>{<digit>} | 0
-    <identifier> ::= <alpha>{<alpha>|<digit>}
-    <string> ::= "{十进制编码为32,33,35-126的ASCII字符}"
+    <alpha>             ::=     _|a|...|z|A|...|Z
+    <not_zero_digit>    ::=     1|...|9
+    <digit>             ::=     0 | <not_zero_digit>
+    <character>         ::=     '(+|-|*|/|<alpha>|<digit>)'
+    <unsigned_integer>  ::=     <not_zero_digit>{<digit>} | 0
+    <identifier>        ::=     <alpha> {<alpha> | <digit>}
+    <string>            ::=     "{十进制编码为32,33,35-126的ASCII字符}"
 example:
     <alpha>
         _ a G
