@@ -72,7 +72,7 @@ class LexAnalyzer
         // Char control
         bool isEOF();
         bool getChar(char &c);
-        
+
         // Lex judge support
         bool isAlpha(char c);
         bool isNotZeroDigit(char c);

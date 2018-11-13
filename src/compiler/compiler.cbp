@@ -13,7 +13,10 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add directory="include" />
+					<Add directory="src" />
+					<Add directory="src/lex" />
+					<Add directory="src/grammar" />
+					<Add directory="src/elements" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -34,12 +37,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/LexAnalyzer.h" />
-		<Unit filename="include/symbol.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/LexAnalyzer.cpp" />
-		<Unit filename="src/LexAnalyzer_static.cpp" />
+		<Unit filename="src/lex/LexAnalyzer.cpp" />
+		<Unit filename="src/lex/LexAnalyzer.h" />
+		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
 		<Unit filename="src/symbol.cpp" />
+		<Unit filename="src/symbol.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
