@@ -99,6 +99,7 @@ sym::SYMBOL LexAnalyzer::nextSymbol(){
             history.pop();
     }while(!done);
 
+    symbol = res;
     return res;
 }
 
