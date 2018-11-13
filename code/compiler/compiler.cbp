@@ -17,6 +17,7 @@
 					<Add directory="src/lex" />
 					<Add directory="src/grammar" />
 					<Add directory="src/elements" />
+					<Add directory="log" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -38,6 +39,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="log/log.cpp" />
+		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/elements/ConstDecl.cpp" />
 		<Unit filename="src/elements/ConstDecl.h" />
@@ -57,6 +60,7 @@
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
 		<Unit filename="src/symbol.cpp" />
 		<Unit filename="src/symbol.h" />
+		<Unit filename="test/gra_test.cpp" />
 		<Unit filename="test/lex_test.cpp" />
 		<Extensions>
 			<code_completion />
