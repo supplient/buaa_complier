@@ -12,7 +12,7 @@ using namespace std;
 class LexAnalyzer
 {
     public:
-        LexAnalyzer(string filename);
+        LexAnalyzer(ifstream& file);
         virtual ~LexAnalyzer();
 
         sym::SYMBOL nextSymbol();
@@ -21,12 +21,17 @@ class LexAnalyzer
         int getLineNo()const{return history.top().line;}
         int getColumnNo()const{return history.top().column;}
 
+        sym::SYMBOL getSymbol(){return symbol;}
         int getIntValue()const{return int_value;}
         char getCharValue()const{return char_value;}
         string getStringValue()const{return string_value;}
 
+        // Wrapper function
+        sym::SYMBOL operator*(){return getSymbol();}
+
         // Static function
         static bool initStaticData();
+
 
     private:
         // Static Data
@@ -47,16 +52,16 @@ class LexAnalyzer
         };
 
         // Symbol state
+        sym::SYMBOL symbol;
         unsigned int int_value;
         char char_value;
         string string_value;
-        sym::SYMBOL symbol;
 
         // Char state
         char ch;
         unsigned int line;
         unsigned int column;
-        ifstream file;
+        ifstream& file;
 
         // State history
         stack<State> history;

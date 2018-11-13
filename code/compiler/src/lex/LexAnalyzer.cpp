@@ -2,18 +2,14 @@
 
 #include <iostream>
 
-LexAnalyzer::LexAnalyzer(string filename)
-    : file(filename, ios::binary)
+LexAnalyzer::LexAnalyzer(ifstream &file)
+    : file(file)
 {
     // Init static data if has not init.
     if(!LexAnalyzer::hasInit)
         LexAnalyzer::initStaticData();
 
-    // Open source file
-    if(!file.is_open() || !file){
-        cerr << "File " << filename << " open failed." << endl;
-        throw 2;
-    }
+    // TODO check whether is a binary file
 
     // Location init
     // We start with `1` instead of `0`.
@@ -27,9 +23,6 @@ LexAnalyzer::LexAnalyzer(string filename)
 
 LexAnalyzer::~LexAnalyzer()
 {
-    if(file.is_open()){
-        file.close();
-    }
 }
 
 bool LexAnalyzer::getChar(char &c){

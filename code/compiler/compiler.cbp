@@ -27,6 +27,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
+					<Add directory="src/elements" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -38,11 +39,25 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="src/elements/ConstDecl.cpp" />
+		<Unit filename="src/elements/ConstDecl.h" />
+		<Unit filename="src/elements/Element.h" />
+		<Unit filename="src/elements/FuncDefine.cpp" />
+		<Unit filename="src/elements/FuncDefine.h" />
+		<Unit filename="src/elements/MainFunc.cpp" />
+		<Unit filename="src/elements/MainFunc.h" />
+		<Unit filename="src/elements/Program.cpp" />
+		<Unit filename="src/elements/Program.h" />
+		<Unit filename="src/elements/VarDecl.cpp" />
+		<Unit filename="src/elements/VarDecl.h" />
+		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
+		<Unit filename="src/grammar/GrammarAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
 		<Unit filename="src/symbol.cpp" />
 		<Unit filename="src/symbol.h" />
+		<Unit filename="test/lex_test.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

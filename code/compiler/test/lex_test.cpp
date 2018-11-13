@@ -22,21 +22,22 @@ void lexOutputSym(const LexAnalyzer &lex, sym::SYMBOL sy){
         case sym::STRING:
             cout << "\t" << lex.getStringValue();
             break;
+        default:
+            ;// Do nothing
     }
     cout << endl;
 }
 
-int main()
-{
-    string filename = "example.c0";
-
-    LexAnalyzer lex(filename);
+void lexTest(string filename){
+    ifstream file(filename, ios_base::binary);
+    if(!file.is_open() || !file){
+        cerr << "File " << filename << " open failed." << endl;
+        throw "File open failed.";
+    }
+    LexAnalyzer lex(file);
     sym::SYMBOL sy;
 
     while( (sy=lex.nextSymbol()) != sym::ENDOFFILE ){
         lexOutputSym(lex, sy);
     }
-
-    cout << "Hello world!" << endl;
-    return 0;
 }
