@@ -15,9 +15,9 @@ public:
     Program(/* args */);
     ~Program();
 
-    vector<ConstDecl> const_decl_list;
-    vector<VarDecl> var_decl_list;
-    vector<FuncDefine> func_define_list;
+    vector<ConstDecl*> const_decl_list;
+    vector<VarDecl*> var_decl_list;
+    vector<FuncDefine*> func_define_list;
     MainFunc* main_func;
 };
 
