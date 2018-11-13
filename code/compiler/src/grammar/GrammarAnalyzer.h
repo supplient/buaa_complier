@@ -5,8 +5,10 @@
 #include <set>
 
 #include "LexAnalyzer.h"
+
 #include "Program.h"
 #include "MainFunc.h"
+#include "CompoundStatement.h"
 
 using namespace std;
 
@@ -27,6 +29,7 @@ class GrammarAnalyzer{
         void skip(const SymSet &valid_set, const SymSet &delimiter);
 
         MainFunc* constructMainFunc(const SymSet &);
+        CompoundStatement* constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter);
 };
 
 #endif//GRAMMAR_ANALYZER_H

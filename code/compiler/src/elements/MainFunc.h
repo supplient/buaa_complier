@@ -2,7 +2,7 @@
 #define MAIN_FUNC_H
 
 #include "Element.h"
-
+#include "CompoundStatement.h"
 
 class MainFunc : public Element
 {
@@ -10,9 +10,7 @@ class MainFunc : public Element
         MainFunc();
         virtual ~MainFunc();
 
-    protected:
-
-    private:
+        CompoundStatement *compound_statement;
 };
 
 #endif // MAIN_FUNC_H
