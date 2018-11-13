@@ -109,8 +109,9 @@ effect:
 
 4.
 rule:
-    <const_define> ::= int<identifier>=<integer>{,<identifier>=<integer>}
-                    | char<identifier>=<character>{,<identifier>=<character>}
+    <int_const_define> ::= int<identifier>=<integer>{,<identifier>=<integer>}
+    <char_const_define> ::= char<identifier>=<character>{,<identifier>=<character>}
+    <const_define> ::= <int_const_define> | <char_const_define>
     <const_decl>   ::= const<const_define>;{const<const_define>;}
     <var_define>   ::= <type_ident>(<identifier>|<identifier>'['<unsigned_integer>']') {,(<identifier>|<identifier>'['<unsigned_integer>']')} //＜无符号整数＞表示数组元素的个数，其值需大于0
     <var_decl>     ::= <var_define>;{<var_define>;}
@@ -318,7 +319,7 @@ effect:
 
 11.
 rule:
-    <main_func> ::= void main '('')''{'<compound_statement>'}'
+    O<main_func> ::= void main '('')''{'<compound_statement>'}'
     <program> ::= [<const_decl>] [<var_decl>] {<func_with_return_define>|<func_without_return_define>}<main_func>
 example:
     <main_func>

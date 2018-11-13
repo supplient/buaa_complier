@@ -6,9 +6,14 @@
 
 #include "LexAnalyzer.h"
 
+//4
+#include "ConstDecl.h"
+#include "ConstDefine.h"
+//10
+#include "CompoundStatement.h"
+//11
 #include "Program.h"
 #include "MainFunc.h"
-#include "CompoundStatement.h"
 
 using namespace std;
 
@@ -28,8 +33,13 @@ class GrammarAnalyzer{
         void skip(sym::SYMBOL valid_sym, const SymSet &delimiter);
         void skip(const SymSet &valid_set, const SymSet &delimiter);
 
-        MainFunc* constructMainFunc(const SymSet &);
+        // 4
+        ConstDefine* constructConstDefine(const SymSet &);
+        ConstDecl* constructConstDecl(const SymSet &);
+        // 10
         CompoundStatement* constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter);
+        // 11
+        MainFunc* constructMainFunc(const SymSet &);
 };
 
 #endif//GRAMMAR_ANALYZER_H

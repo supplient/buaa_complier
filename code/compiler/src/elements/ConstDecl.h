@@ -1,8 +1,12 @@
 #ifndef CONST_DECL_H
 #define CONST_DECL_H
 
-#include "Element.h"
+#include <vector>
 
+#include "Element.h"
+#include "ConstDefine.h"
+
+using namespace std;
 
 class ConstDecl : public Element
 {
@@ -10,9 +14,7 @@ class ConstDecl : public Element
         ConstDecl();
         virtual ~ConstDecl();
 
-    protected:
-
-    private:
+        vector<ConstDefine*> const_define_list;
 };
 
 #endif // CONST_DECL_H

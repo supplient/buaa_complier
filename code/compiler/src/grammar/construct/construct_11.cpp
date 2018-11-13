@@ -1,7 +1,5 @@
 #include "GrammarAnalyzer.h"
 
-#include <iostream>
-
 #include "symbol.h"
 
 using namespace std;
@@ -123,10 +121,4 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     idel.erase(check_sym);
 
     return main_func;
-}
-
-CompoundStatement* GrammarAnalyzer::constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter){
-    CompoundStatement *com_stat = new CompoundStatement();
-    // TODO
-    return com_stat;
 }
