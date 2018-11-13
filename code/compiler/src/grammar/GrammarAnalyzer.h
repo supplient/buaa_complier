@@ -17,7 +17,6 @@ class GrammarAnalyzer{
         GrammarAnalyzer(LexAnalyzer &lex):lex(lex){}
 
         Program* constructProgram();
-        MainFunc* constructMainFunc(const SymSet &);
     private:
         LexAnalyzer &lex;
 
@@ -26,6 +25,8 @@ class GrammarAnalyzer{
         void fatalRepo(string reason);
         void skip(sym::SYMBOL valid_sym, const SymSet &delimiter);
         void skip(const SymSet &valid_set, const SymSet &delimiter);
+
+        MainFunc* constructMainFunc(const SymSet &);
 };
 
 #endif//GRAMMAR_ANALYZER_H

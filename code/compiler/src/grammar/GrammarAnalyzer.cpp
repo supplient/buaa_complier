@@ -46,6 +46,7 @@ Program* GrammarAnalyzer::constructProgram(){
     idel.insert(sym::ENDOFFILE);
 
     Program *program = new Program();
+    lex.nextSymbol();
 
     // TODO add const_decl
     // TODO add var_decl
