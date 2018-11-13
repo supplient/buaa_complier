@@ -45,11 +45,12 @@ effect:
 
 2.
 rule:
-    ＜加法运算符＞ ::= +｜-
-    ＜乘法运算符＞  ::= *｜/
-    ＜关系运算符＞  ::=  <｜<=｜>｜>=｜!=｜==
-    ＜整数＞        ::= ［＋｜－］＜无符号整数＞
-    ＜类型标识符＞      ::=  int | char
+    <plus_op> ::= + | -
+    <mult_op> ::= * | /
+    <compare_op> ::= < | <= | > | >= | != | ==
+    <integer> ::= [+|-]<unsigned_integer>
+    <type_ident> ::= int | char
+    <constant> ::= <integer> | <character>
 example:
     <plus_op>
         +
@@ -74,9 +75,9 @@ effect:
 
 3.
 rule:
-    ＜因子＞    ::= ＜标识符＞｜＜标识符＞'['＜表达式＞']'|'('＜表达式＞')'｜＜整数＞|＜字符＞｜＜有返回值函数调用语句＞         
-    ＜项＞     ::= ＜因子＞{＜乘法运算符＞＜因子＞}
-    ＜表达式＞    ::= ［＋｜－］＜项＞{＜加法运算符＞＜项＞}   //[+|-]只作用于第一个<项>
+    <factor> ::= <identifier> | <identifier>'['<expression>']' | '('<expression>')' | <integer> | <character> | <func_with_return_call>
+    <item> ::= <factor>{<mult_op><factor>}
+    <expression> ::= [+|-] <item>{<plus_op><item>}  //[+|-]只作用于第一个<项>
 example:
     <factor>
         a23  abc[(3+6)]  (a+b)  +233  '2'  func()
@@ -98,8 +99,8 @@ rule:
     <const_define> ::= int<identifier>=<integer>{,<identifier>=<integer>}
                     | char<identifier>=<character>{,<identifier>=<character>}
     <const_decl> ::= const<const_define>;{const<const_define>;}
-    ＜变量定义＞  ::= ＜类型标识符＞(＜标识符＞|＜标识符＞'['＜无符号整数＞']'){,(＜标识符＞|＜标识符＞'['＜无符号整数＞']' )} //＜无符号整数＞表示数组元素的个数，其值需大于0
-    ＜变量说明＞  ::= ＜变量定义＞;{＜变量定义＞;}
+    <var_define> ::= <type_ident>(<identifier>|<identifier>'['<unsigned_integer>']') {,(<identifier>|<identifier>'['<unsigned_integer>']')} //＜无符号整数＞表示数组元素的个数，其值需大于0
+    <var_decl> ::= <var_define>;{<var_define>;}
 example:
     <const_define>
         int a=2,b=6
@@ -122,17 +123,16 @@ restriction:
     `const_decl` must have init value.
     array is not valid for `const_decl`, but valid for `var_decl`.
     It's not valid to assign init value to varaibles.
-
 effect:
     常量、变量是最基本的数据单元。扩充c0要求任何数据单元在被使用前都被声明。
 
 5.
 rule:
-    ＜声明头部＞   ::=  int＜标识符＞ |char＜标识符＞
-    ＜参数＞    ::=  ＜类型标识符＞＜标识符＞
-    ＜参数表＞    ::= ＜参数＞{,＜参数＞}| ＜空>
-    ＜有返回值函数定义＞  ::=  ＜声明头部＞'('＜参数表＞')' '{'＜复合语句＞'}'
-    ＜无返回值函数定义＞  ::= void＜标识符＞'('＜参数表＞')''{'＜复合语句＞'}'
+    <decl_head> ::= int <identifier> | char <identifier>
+    <param> ::= <type_ident><identifier>
+    <param_list> ::= <param>{, <param>} | <empty>
+    <func_with_return_define> ::= <decl_head>'('<param_list>')''{'<compound_statement>'}'
+    <func_without_return_define> ::= void <identifier>'('<param_list>')''{'<compound_statement>'}'
 example:
     <decl_head>
         int a_2
@@ -158,7 +158,7 @@ effect:
 
 6.
 rule:
-    ＜赋值语句＞   ::=  ＜标识符＞＝＜表达式＞|＜标识符＞'['＜表达式＞']'=＜表达式＞
+    <assign_statement> ::= <identifier> = <expression>  |  <identifier>'['<expression>']' = <expression>
 example:
     <assign_statement>
         a = b+3
@@ -171,16 +171,16 @@ effect:
 
 7.
 rule:
-    ＜条件＞    ::=  ＜表达式＞＜关系运算符＞＜表达式＞｜＜表达式＞ //表达式为0条件为假，否则为真
+    <condition> ::= <expression> <compare_op> <expression>  |  <expression> //表达式为0条件为假，否则为真
 
-    ＜条件语句＞  ::=  if '('＜条件＞')'＜语句＞
+    <if_statement> ::= if '('<condition>')' <statement>
     
-    ＜循环语句＞   ::=  while '('＜条件＞')'＜语句＞
+    <while_statement> ::= while '('<condition>')' <statement>
 
-    ＜缺省＞   ::=  default : ＜语句＞|＜空＞
-    ＜情况子语句＞  ::=  case＜常量＞：＜语句＞
-    ＜情况表＞   ::=  ＜情况子语句＞{＜情况子语句＞}
-    ＜情况语句＞  ::=  switch '('＜表达式＞')' '{'＜情况表＞＜缺省＞ '}'
+    <switch_default> ::= default: <statement>  |  <empty>
+    <switch_case> ::= case <constant>: <statement>
+    <switch_case_list> ::= <switch_case> {<switch_case>}
+    <switch_statement> ::= switch'('<expression>')' '{'<switch_case_list> <switch_default>'}'
 example:
     <condition>
         a+b
@@ -214,10 +214,10 @@ effect:
 
 8.
 rule:
-    ＜值参数表＞   ::= ＜表达式＞{,＜表达式＞}｜＜空＞
-    ＜有返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
-    ＜无返回值函数调用语句＞ ::= ＜标识符＞'('＜值参数表＞')'
-    ＜返回语句＞   ::=  return['('＜表达式＞')']     
+    <value_param_list> ::= <expression>{, <expression>}  |  <empty>
+    <func_with_return_call> ::= <identifier>'('<value_param_list>')'
+    <func_without_return_call> ::= <identifier>'('<value_param_list>')'
+    <return_statement> ::= return['('<expression>')']
 example:
     <value_param_list>
         233
@@ -235,13 +235,18 @@ example:
 restriction:
     Empty is allowed for `value_param_list`.
     "(" and ")" are necessary for function's call.
+    "(" and ")" are necessary for return statement.
 effect:
     函数相关的跳转语句。与7的控制语句共同构成非线性程序的基础。
 
 9.
 rule:
-    ＜读语句＞    ::=  scanf '('＜标识符＞{,＜标识符＞}')'
-    ＜写语句＞    ::= printf '(' ＜字符串＞,＜表达式＞ ')'| printf '('＜字符串＞ ')'| printf '('＜表达式＞')'
+    <input_statement> ::= scanf'('<identifier>{, <identifier>}')'
+    <output_statement> ::= printf'('
+                                <string>, <expression>
+                                | <string>
+                                | <expression>
+                                ')'
 example:
     <input_statement>
         scanf(a, b, c)
@@ -260,10 +265,12 @@ effect:
 
 10.
 rule:
-    ＜语句＞    ::= ＜条件语句＞｜＜循环语句＞| '{'＜语句列＞'}'| ＜有返回值函数调用语句＞; 
-                            |＜无返回值函数调用语句＞;｜＜赋值语句＞;｜＜读语句＞;｜＜写语句＞;｜＜空＞;|＜情况语句＞｜＜返回语句＞;
-    ＜语句列＞   ::= ｛＜语句＞｝
-    ＜复合语句＞   ::=  ［＜常量说明＞］［＜变量说明＞］＜语句列＞
+    <statement> ::= <if_statement>  |  <while_statement>  |  <switch_statement>  
+                  |  <func_with_return_call>;  |  <func_without_return_call>;  |  <return_statement>;
+                  |  <assign_statement>;  |  <input_statement>;  |  <output_statement>;
+                  |  <empty>;  |  '{'<statement_list>'}'
+    <statement_list> ::= {<statement>}
+    <compound_statement> ::= [<const_decl>] [<var_decl>] <statement_list>
 example:
     <statement>
         if(1)return;
