@@ -38,3 +38,6 @@
 *.depend
 *.layout
 **/obj
+
+# Log file
+*.log
