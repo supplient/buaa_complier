@@ -1,5 +1,9 @@
 #include "log.h"
 
+#include <iostream>
+
+using namespace std;
+
 namespace log{
     Debug debug("log/debug.log");
     Debug info("log/info.log", &debug);
@@ -19,6 +23,7 @@ namespace log{
 
     Log& Debug::operator<<(const string &s){
         file << "[DEBUG]" << s << endl;
+        //cerr << "[DEBUG]" << s << endl;
         return Log::operator<<(s);
     }
 }

@@ -42,8 +42,12 @@
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/elements/CompoundStatement.cpp" />
+		<Unit filename="src/elements/CompoundStatement.h" />
 		<Unit filename="src/elements/ConstDecl.cpp" />
 		<Unit filename="src/elements/ConstDecl.h" />
+		<Unit filename="src/elements/ConstDefine.cpp" />
+		<Unit filename="src/elements/ConstDefine.h" />
 		<Unit filename="src/elements/Element.h" />
 		<Unit filename="src/elements/FuncDefine.cpp" />
 		<Unit filename="src/elements/FuncDefine.h" />
@@ -55,6 +59,10 @@
 		<Unit filename="src/elements/VarDecl.h" />
 		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
 		<Unit filename="src/grammar/GrammarAnalyzer.h" />
+		<Unit filename="src/grammar/GrammarAnalyzer_construct.cpp" />
+		<Unit filename="src/grammar/construct/construct_10.cpp" />
+		<Unit filename="src/grammar/construct/construct_11.cpp" />
+		<Unit filename="src/grammar/construct/construct_4.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />

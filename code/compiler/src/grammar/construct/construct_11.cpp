@@ -12,7 +12,16 @@ Program* GrammarAnalyzer::constructProgram(){
     Program *program = new Program();
     lex.nextSymbol();
 
-    // TODO add const_decl
+    if(*lex == sym::CONST){
+        SymSet const_decl_del = idel;
+        // TODO insert var_decl 's head
+        // TODO insert func_define 's head
+        const_decl_del.insert(sym::VOID); // main_func 's head
+        program->const_decl = constructConstDecl(const_decl_del);
+    }
+    else
+        program->const_decl = NULL;
+
     // TODO add var_decl
     // TODO add func_define
 
@@ -20,7 +29,7 @@ Program* GrammarAnalyzer::constructProgram(){
     if(program->main_func == NULL){
         errorRepo(ehd + "cannot find main function.");
         delete program;
-        return NULL;
+        program = NULL;
     }
 
     return program;
@@ -100,11 +109,6 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     suffix.insert(sym::RIGHT_BRACE);
     main_func->compound_statement =
         constructCompoundStatement(suffix, delimiter);
-    if(main_func->compound_statement == NULL){
-        // Should have errorRepoed
-        delete main_func;
-        return NULL;
-    }
     // Should have nextSymboled
     // TODO erase compound_statement's head from idel
     // Note: Must reserve RIGHT_BRACE, use set's diff to do this.
