@@ -6,6 +6,7 @@
 using namespace std;
 
 ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
+    const string ehd = "const_define: ";
     // TODO
     return NULL;
 }

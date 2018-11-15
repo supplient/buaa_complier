@@ -6,6 +6,9 @@
 
 #include "LexAnalyzer.h"
 
+//2
+#include "Integer.h"
+
 //4
 #include "ConstDecl.h"
 #include "ConstDefine.h"
@@ -32,6 +35,9 @@ class GrammarAnalyzer{
         void fatalRepo(string reason);
         void skip(sym::SYMBOL valid_sym, const SymSet &delimiter);
         void skip(const SymSet &valid_set, const SymSet &delimiter);
+
+        // 2
+        Integer* constructInteger(const SymSet &);
 
         // 4
         ConstDefine* constructConstDefine(const SymSet &);
