@@ -2,6 +2,7 @@
 #define CONST_DEFINE_H
 
 #include <string>
+#include <vector>
 
 #include "Element.h"
 #include "Integer.h"
@@ -21,8 +22,8 @@ class IntConstDefine : public ConstDefine
         IntConstDefine(){}
         virtual ~IntConstDefine(){}
 
-        string ident;
-        Integer *integer;
+        vector<string> ident_list;
+        vector<Integer*> integer_list;
 };
 
 class CharConstDefine : public ConstDefine

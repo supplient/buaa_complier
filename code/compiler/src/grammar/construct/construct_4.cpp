@@ -8,25 +8,30 @@ using namespace std;
 ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
     const string ehd = "const_define: ";
     bool loop_for_error_skip = false;
-    bool fail_flag = false;
     
     ConstDefine *const_define = NULL;
     do{
         if(*lex == sym::INT){
-
             loop_for_error_skip = false;
             IntConstDefine *int_const_define = new IntConstDefine();
             SymSet int_idel = delimiter;
+            int_idel.insert(sym::IDENTIFIER);
+            int_idel.insert(sym::ASSIGN);
+            // TODO insert integer's head
             int_idel.insert(sym::COMMA);
 
             do{
+                bool fail_flag = false;
+                string ident;
+                Integer *integer;
+
                 lex.nextSymbol();
                 if(*lex != sym::IDENTIFIER){
                     errorRepo(ehd + "shoudl assign identifier.");
                     skip(sym::IDENTIFIER, int_idel);
                 }
                 if(*lex == sym::IDENTIFIER){
-                    int_const_define->ident = lex.getStringValue();
+                    ident = lex.getStringValue();
                     lex.nextSymbol();
                 }
                 else
@@ -41,12 +46,17 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
                 else
                     fail_flag = true;
 
-                int_const_define->integer = constructInteger(int_idel);
-                if(int_const_define->integer == NULL)
+                integer = constructInteger(int_idel);
+                if(integer == NULL)
                     fail_flag = true;
+
+                if(!fail_flag){
+                    int_const_define->ident_list.push_back(ident);
+                    int_const_define->integer_list.push_back(integer);
+                }
             }while(*lex == sym::COMMA);
 
-            if(fail_flag){
+            if(int_const_define->ident_list.size() < 1){
                 delete int_const_define;
                 int_const_define = NULL;
             }
