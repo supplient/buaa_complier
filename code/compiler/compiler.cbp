@@ -59,7 +59,6 @@
 		<Unit filename="src/elements/VarDecl.h" />
 		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
 		<Unit filename="src/grammar/GrammarAnalyzer.h" />
-		<Unit filename="src/grammar/GrammarAnalyzer_construct.cpp" />
 		<Unit filename="src/grammar/construct/construct_10.cpp" />
 		<Unit filename="src/grammar/construct/construct_11.cpp" />
 		<Unit filename="src/grammar/construct/construct_4.cpp" />

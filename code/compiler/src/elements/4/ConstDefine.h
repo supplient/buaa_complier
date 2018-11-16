@@ -1,8 +1,12 @@
 #ifndef CONST_DEFINE_H
 #define CONST_DEFINE_H
 
-#include "Element.h"
+#include <string>
 
+#include "Element.h"
+#include "Integer.h"
+
+using namespace std;
 
 class ConstDefine : public Element
 {
@@ -16,6 +20,9 @@ class IntConstDefine : public ConstDefine
     public:
         IntConstDefine(){}
         virtual ~IntConstDefine(){}
+
+        string ident;
+        Integer *integer;
 };
 
 class CharConstDefine : public ConstDefine
