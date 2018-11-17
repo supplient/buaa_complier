@@ -14,6 +14,8 @@ class ConstDefine : public Element
     public:
         ConstDefine();
         virtual ~ConstDefine();
+
+        vector<string> ident_list;
 };
 
 class IntConstDefine : public ConstDefine
@@ -22,7 +24,6 @@ class IntConstDefine : public ConstDefine
         IntConstDefine(){}
         virtual ~IntConstDefine(){}
 
-        vector<string> ident_list;
         vector<Integer*> integer_list;
 };
 
@@ -31,6 +32,8 @@ class CharConstDefine : public ConstDefine
     public:
         CharConstDefine(){}
         virtual ~CharConstDefine(){}
+
+        vector<char> char_list;
 };
 
 #endif // CONST_DEFINE_H

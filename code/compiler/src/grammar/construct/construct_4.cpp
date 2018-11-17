@@ -11,7 +11,10 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
     
     ConstDefine *const_define = NULL;
     do{
+        // Int const define
         if(*lex == sym::INT){
+            log::debug << "<int_const_define> once.";
+
             loop_for_error_skip = false;
             IntConstDefine *int_const_define = new IntConstDefine();
             SymSet int_idel = delimiter;
@@ -63,9 +66,67 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
             else
                 const_define = static_cast<ConstDefine*>(int_const_define);
         }
+        // Char const define
         else if(*lex == sym::CHAR){
+            log::debug << "<char_const_define> once.";
+
             loop_for_error_skip = false;
-            // TODO
+            CharConstDefine *char_const_define = new CharConstDefine();
+            SymSet char_idel = delimiter;
+            char_idel.insert(sym::IDENTIFIER);
+            char_idel.insert(sym::ASSIGN);
+            char_idel.insert(sym::CHARACTER);
+            char_idel.insert(sym::COMMA);
+
+            do{
+                bool fail_flag = false;
+                string ident;
+                char character;
+
+                lex.nextSymbol();
+                if(*lex != sym::IDENTIFIER){
+                    errorRepo(ehd + "shoudl assign identifier.");
+                    skip(sym::IDENTIFIER, char_idel);
+                }
+                if(*lex == sym::IDENTIFIER){
+                    ident = lex.getStringValue();
+                    lex.nextSymbol();
+                }
+                else
+                    fail_flag = true;
+
+                if(*lex != sym::ASSIGN){
+                    errorRepo(ehd + "must assign initial value.");
+                    skip(sym::EQUAL, char_idel);
+                }
+                if(*lex == sym::ASSIGN)
+                    lex.nextSymbol();
+                else
+                    fail_flag = true;
+
+                if(*lex != sym::CHARACTER){
+                    errorRepo(ehd + "should assign a character for char const.");
+                    skip(sym::CHARACTER, char_idel);
+                }
+                if(*lex == sym::CHARACTER){
+                    character = lex.getCharValue();
+                    lex.nextSymbol();
+                }
+                else
+                    fail_flag = true;
+
+                if(!fail_flag){
+                    char_const_define->ident_list.push_back(ident);
+                    char_const_define->char_list.push_back(character);
+                }
+            }while(*lex == sym::COMMA);
+
+            if(char_const_define->ident_list.size() < 1){
+                delete char_const_define;
+                char_const_define = NULL;
+            }
+            else
+                const_define = static_cast<ConstDefine*>(char_const_define);
         }
         else{
             errorRepo(ehd + "should start with `int` or `char`.");

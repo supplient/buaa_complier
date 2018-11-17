@@ -109,10 +109,10 @@ effect:
 
 4.
 rule:
-    <int_const_define> ::= int<identifier>=<integer>{,<identifier>=<integer>}
-    <char_const_define> ::= char<identifier>=<character>{,<identifier>=<character>}
-    <const_define> ::= <int_const_define> | <char_const_define>
-    <const_decl>   ::= const<const_define>;{const<const_define>;}
+    O<int_const_define> ::= int<identifier>=<integer>{,<identifier>=<integer>}
+    O<char_const_define> ::= char<identifier>=<character>{,<identifier>=<character>}
+    O<const_define> ::= <int_const_define> | <char_const_define>
+    O<const_decl>   ::= const<const_define>;{const<const_define>;}
     <var_define>   ::= <type_ident>(<identifier>|<identifier>'['<unsigned_integer>']') {,(<identifier>|<identifier>'['<unsigned_integer>']')} //＜无符号整数＞表示数组元素的个数，其值需大于0
     <var_decl>     ::= <var_define>;{<var_define>;}
 example:
