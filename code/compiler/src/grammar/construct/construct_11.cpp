@@ -12,6 +12,7 @@ Program* GrammarAnalyzer::constructProgram(){
     Program *program = new Program();
     lex.nextSymbol();
 
+    // const_decl
     if(*lex == sym::CONST){
         SymSet const_decl_del = idel;
         // TODO insert var_decl 's head
@@ -22,7 +23,18 @@ Program* GrammarAnalyzer::constructProgram(){
     else
         program->const_decl = NULL;
 
-    // TODO add var_decl
+    // var_decl
+    if(*lex == sym::INT || *lex == sym::CHAR){
+        SymSet var_decl_del = idel;
+        // TODO insert func_define 's head
+        var_decl_del.insert(sym::VOID); // main_func 's head
+        program->var_decl = constructVarDecl(var_decl_del);
+        // [Note] var_decl can have a suffix with `int|char identifier(`
+        // When meet this, just stop var_decl, it's valid.
+    }
+    else
+        program->var_decl = NULL;
+
     // TODO add func_define
 
     program->main_func = constructMainFunc(idel);

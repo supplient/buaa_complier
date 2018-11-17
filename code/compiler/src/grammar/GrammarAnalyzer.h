@@ -12,8 +12,10 @@
 //4
 #include "ConstDecl.h"
 #include "ConstDefine.h"
+
 //10
 #include "CompoundStatement.h"
+
 //11
 #include "Program.h"
 #include "MainFunc.h"
@@ -42,6 +44,8 @@ class GrammarAnalyzer{
         // 4
         ConstDefine* constructConstDefine(const SymSet &);
         ConstDecl* constructConstDecl(const SymSet &);
+        VarDefine* constructVarDefine(const SymSet &);
+        VarDecl* constructVarDecl(const SymSet &);
         // 10
         CompoundStatement* constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter);
         // 11

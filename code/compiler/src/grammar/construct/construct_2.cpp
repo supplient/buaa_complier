@@ -5,7 +5,6 @@
 using namespace std;
 
 Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
-    // TODO test this
     const string ehd = "integer: ";
     bool minus = false;
 

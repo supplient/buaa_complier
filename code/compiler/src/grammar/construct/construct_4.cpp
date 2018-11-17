@@ -8,7 +8,7 @@ using namespace std;
 ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
     const string ehd = "const_define: ";
     bool loop_for_error_skip = false;
-    
+
     ConstDefine *const_define = NULL;
     do{
         // Int const define
@@ -187,4 +187,130 @@ ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
     }
 
     return const_decl;
+}
+
+
+VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
+    const string ehd = "var_define: ";
+    SymSet idel;
+    idel.insert(sym::INT);
+    idel.insert(sym::CHAR);
+    idel.insert(sym::IDENTIFIER);
+    idel.insert(sym::LEFT_SQUARE);
+    idel.insert(sym::UNSIGNED_INTEGER);
+    idel.insert(sym::RIGHT_SQUARE);
+    idel.insert(sym::COMMA);
+
+    VarDefine *var_define = new VarDefine();
+    if(*lex != sym::INT && *lex != sym::CHAR){
+        errorRepo(ehd + "type can only be char or int.");
+        skip(idel, delimiter);
+    }
+    if(*lex == sym::INT || *lex == sym::CHAR){
+        var_define->type = *lex;
+    }
+    idel.erase(sym::INT);
+    idel.erase(sym::CHAR);
+
+    do{
+        log::debug << "<var_define> once.";
+        bool fail_flag = false;
+        string ident;
+        int dim=1;
+
+        lex.nextSymbol();
+        if(*lex != sym::IDENTIFIER){
+            errorRepo(ehd + "must assign a identifier as name.");
+            skip(idel, delimiter);
+        }
+        if(*lex == sym::IDENTIFIER){
+            ident = lex.getStringValue();
+            lex.nextSymbol();
+        }
+        else
+            fail_flag = true;
+
+        if(*lex == sym::LEFT_SQUARE){
+            // array
+            log::debug << "array";
+            lex.nextSymbol();
+            if(*lex != sym::UNSIGNED_INTEGER){
+                errorRepo(ehd + "array's dim must be an unsigned int.");
+                skip(idel, delimiter);
+            }
+            if(*lex == sym::UNSIGNED_INTEGER){
+                dim = lex.getIntValue();
+                lex.nextSymbol();
+            }
+            else
+                fail_flag = true;
+
+            if(*lex != sym::RIGHT_SQUARE){
+                errorRepo(ehd + "array's dim must be braced by []");
+                skip(idel, delimiter);
+            }
+            if(*lex == sym::RIGHT_SQUARE)
+                lex.nextSymbol();
+            else
+                fail_flag = true;
+        }
+
+        if(!fail_flag){
+            log::debug << "var: " + ident + " with dim[" + std::to_string(dim) + "]";
+            var_define->ident_list.push_back(ident);
+            var_define->dim_list.push_back(dim);
+        }
+    }while(*lex == sym::COMMA);
+
+    if(var_define->ident_list.size() < 1){
+        delete var_define;
+        var_define = NULL;
+    }
+
+    return var_define;
+}
+
+
+VarDecl* GrammarAnalyzer::constructVarDecl(const SymSet &delimiter){
+    const string ehd = "var_decl: ";
+
+    SymSet idel = delimiter;
+    // TODO insert <var_define> 's head
+    idel.insert(sym::SEMICOLON);
+
+    VarDecl *var_decl = new VarDecl();
+    do{
+        // overlook to check whether func_with_return_define
+        lex.nextSymbol(); // we assume this is a `Identifier`, will check later
+        sym::SYMBOL tmp_sym = lex.nextSymbol();
+        lex.goBack();
+        lex.goBack();
+        if(tmp_sym == sym::LEFT_ROUND){
+            // is func_with_return_define
+            break;
+        }
+
+        // is var_decl
+        log::debug << "<var_decl> once.";
+
+        VarDefine *var_define = constructVarDefine(idel);
+        if(var_define != NULL){
+            var_decl->var_define_list.push_back(var_define);
+        }
+
+        if(*lex != sym::SEMICOLON){
+            errorRepo(ehd + "should end with ;");
+            skip(idel, delimiter);
+        }
+        if(*lex == sym::SEMICOLON)
+            lex.nextSymbol();
+    }while(*lex == sym::INT || *lex == sym::CHAR);
+
+    if(var_decl->var_define_list.size() < 1){
+        // No var define succeed
+        delete var_decl;
+        var_decl = NULL;
+    }
+
+    return var_decl;
 }

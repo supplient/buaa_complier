@@ -2,7 +2,7 @@
 #define VAR_DECL_H
 
 #include "Element.h"
-
+#include "VarDefine.h"
 
 class VarDecl : public Element
 {
@@ -10,9 +10,7 @@ class VarDecl : public Element
         VarDecl();
         virtual ~VarDecl();
 
-    protected:
-
-    private:
+        vector<VarDefine*> var_define_list;
 };
 
 #endif // VAR_DECL_H
