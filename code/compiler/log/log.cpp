@@ -14,16 +14,4 @@ namespace log{
     Log::Log(const string &filename, Log *lower)
         :file(filename), lower(lower){
     }
-
-    Log& Log::operator<<(const string &s){
-        if(lower)
-            *lower << s;
-        return *this;
-    }
-
-    Log& Debug::operator<<(const string &s){
-        file << "[DEBUG]" << s << endl;
-        //cerr << "[DEBUG]" << s << endl;
-        return Log::operator<<(s);
-    }
 }
