@@ -12,7 +12,7 @@ using namespace std;
 class Program:public Element
 {
 public:
-    Program(/* args */);
+    Program(/* args */){ele_name = "Program";}
     ~Program();
 
    ConstDecl* const_decl;
