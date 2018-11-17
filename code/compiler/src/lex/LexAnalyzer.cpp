@@ -146,8 +146,7 @@ bool LexAnalyzer::_nextSymbol(sym::SYMBOL &sy){
         if(lookUpReserved(name, sy)){
             // Is reserved
             // sy has been assigned in lookUpReserved
-            // no value need to be assigned
-            ;
+            this->string_value = name;
         }
         else{
             // Is identifier
