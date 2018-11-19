@@ -251,6 +251,15 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
         switch_state->default_state = constructStatement(idel);
         if(switch_state->default_state == NULL)
             fail_flag = true;
+
+        if(*lex != sym::RIGHT_BRACE){
+            errorRepo(ehd + "must be wrapped with {}");
+            skip(idel);
+        }
+        if(*lex == sym::RIGHT_BRACE)
+            lex.nextSymbol();
+        else
+            fail_flag = true;
     }
     else{
         // do not have default
