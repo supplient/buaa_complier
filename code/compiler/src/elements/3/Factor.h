@@ -2,6 +2,7 @@
 #define FACTOR_H
 
 #include "Element.h"
+#include "FuncCallExp.h"
 
 class Expression;
 class Integer;
@@ -22,7 +23,7 @@ public:
 class FuncFactor: public Factor
 {
 public:
-    // TODO
+    FuncCallExp *call_exp;
 };
 
 class ExpFactor: public Factor

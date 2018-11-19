@@ -83,7 +83,19 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
 
         // func_factor
         if(tmp_sym == sym::LEFT_ROUND){
-            // TODO
+            FuncFactor *func_factor = new FuncFactor();
+            func_factor->call_exp = constructFuncCallExp(delimiter);
+            if(func_factor->call_exp == NULL){
+                delete func_factor;
+                func_factor = NULL;
+            }
+
+            if(func_factor)
+                factor = static_cast<Factor*>(func_factor);
+            
+            #if HW
+            log::hw << "func_factor";
+            #endif//HW
         }
         // var_factor
         else{

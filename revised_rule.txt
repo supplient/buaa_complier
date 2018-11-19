@@ -87,10 +87,10 @@ effect:
 3.
 rule:
     O<var_factor> ::= <identifier> | <identifier>'['<expression>']' 
-    <func_factor> ::= <func_call_exp>
+    O<func_factor> ::= <func_call_exp>
     O<exp_factor> ::= '('<expression>')'
     O<const_factor> ::= <integer> | <character> 
-    <factor>     ::= <var_factor>  | <func_factor>
+    O<factor>     ::= <var_factor>  | <func_factor>
                     | <exp_factor> | <const_factor>
 
                     identifier  |   identifier(
@@ -223,7 +223,7 @@ effect:
 
 8.
 rule:
-    <func_call_exp> ::= <identifier>'('
+    O<func_call_exp> ::= <identifier>'('
                             [<expression>{, <expression>}]
                             ')'
 example:
