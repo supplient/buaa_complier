@@ -12,6 +12,7 @@ Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
     switch(*lex){
         case sym::PLUS: minus = false; lex.nextSymbol(); break;
         case sym::MINUS: minus = true; lex.nextSymbol(); break;
+        default: ;
     }
 
     if(*lex != sym::UNSIGNED_INTEGER){

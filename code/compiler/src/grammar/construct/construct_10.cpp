@@ -168,7 +168,8 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
             state = static_cast<Statement*>(return_state);
 
         #if HW
-        log::hw << "return_state";
+        if(return_state)
+            log::hw << "return_state";
         #endif// HW
     }
     // assign_statement || func_call_statement
@@ -239,9 +240,52 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
                 state = static_cast<Statement*>(assign_state);
 
             #if HW
-            log::hw << "assign_statement";
+            if(assign_state)
+                log::hw << "assign_statement";
             #endif// HW
         }
+    }
+    // braced_statement
+    else if(*lex == sym::LEFT_BRACE){
+        const string ehd = "braced_statement: ";
+        SymSet idel = delimiter;
+        idel.insert(sym::LEFT_BRACE);
+        // TODO insert statement_list 's head
+        idel.insert(sym::RIGHT_BRACE);
+
+        BracedStatement *braced_state = new BracedStatement();
+
+        lex.nextSymbol();
+        SymSet suffix;
+        suffix.insert(sym::LEFT_BRACE);
+        braced_state->state_list = constructStatementList(suffix, idel);
+        if(braced_state->state_list == NULL){
+            delete braced_state;
+            braced_state = NULL;
+        }
+
+        if(*lex != sym::RIGHT_BRACE){
+            errorRepo(ehd + "must be wrapped with {}");
+            skip(idel);
+        }
+        if(*lex == sym::RIGHT_BRACE)
+            lex.nextSymbol();
+
+        if(braced_state)
+            state = static_cast<Statement*>(braced_state);
+
+        #if HW
+        if(braced_state)
+            log::hw << "braced_state";
+        #endif//HW
+    }
+    // empty_statement
+    else if(*lex == sym::SEMICOLON){
+        lex.nextSymbol();
+        state = static_cast<Statement*>(new EmptyStatement());
+        #if HW
+        log::hw << "empty_state";
+        #endif//HW
     }
 
     return state;

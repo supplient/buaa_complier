@@ -243,7 +243,7 @@ effect:
 10.
 rule:
     <func_call_statement>       ::= <func_call_exp>;
-    <assign_statement>                      ::= (
+    O<assign_statement>                      ::= (
                                                 <identifier> = <expression>  
                                              |  <identifier>'['<expression>']' = <expression>
                                              );
@@ -255,7 +255,7 @@ rule:
                                                         ')';
     O<return_statement>                      ::= return['('<expression>')'];
     <empty_statement>                       ::= <empty>;
-    <braced_statement>                  ::= '{'<statement_list>'}'
+    O<braced_statement>                  ::= '{'<statement_list>'}'
     <statement> ::= <if_statement>  |  <while_statement>  |  <switch_statement>  
                   |  <func_call_statement>  |  <assign_statement>  
                   |  <input_statement>  |  <output_statement>  |  <return_statement>

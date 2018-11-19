@@ -4,6 +4,8 @@
 #include "Element.h"
 #include "Expression.h"
 
+class StatementList;
+
 class Statement: public Element
 {
     public:
@@ -65,7 +67,8 @@ class EmptyStatement: public Statement
 
 class BracedStatement: public Statement
 {
-
+public:
+    StatementList *state_list;
 };
 
 #endif//STATEMENT_H
