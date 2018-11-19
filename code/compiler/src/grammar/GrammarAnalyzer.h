@@ -20,6 +20,9 @@
 #include "ConstDecl.h"
 #include "ConstDefine.h"
 
+//8
+#include "FuncCallExp.h"
+
 //10
 #include "Statement.h"
 #include "StatementList.h"
@@ -62,7 +65,13 @@ class GrammarAnalyzer{
         VarDefine* constructVarDefine(const SymSet &);
         VarDecl* constructVarDecl(bool overlook, const SymSet &);
 
+        // 8
+        FuncCallExp* constructFuncCallExp(const SymSet &);
+
         // 10
+        IfStatement* constructIfStatement(const SymSet &);
+        WhileStatement* constructWhileStatement(const SymSet &);
+        SwitchStatement* constructSwitchStatement(const SymSet &);
         Statement* constructStatement(const SymSet &);
         StatementList* constructStatementList(const SymSet &suffix, const SymSet &delimiter);
         CompoundStatement* constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter);

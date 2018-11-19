@@ -5,6 +5,7 @@
 #include "Expression.h"
 
 class StatementList;
+class FuncCallExp;
 
 class Statement: public Element
 {
@@ -22,9 +23,15 @@ class WhileStatement: public Statement
 
 };
 
-class FuncCallStatement: public Statement
+class SwitchStatement: public Statement
 {
 
+};
+
+class FuncCallStatement: public Statement
+{
+public:
+    FuncCallExp *call_exp;
 };
 
 class AssignStatement: public Statement

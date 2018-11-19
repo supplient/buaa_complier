@@ -174,11 +174,35 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
     }
     // assign_statement || func_call_statement
     else if(*lex == sym::IDENTIFIER){
+        // TODO test this
         sym::SYMBOL tmp_sym = lex.nextSymbol();
         lex.goBack();
         // func_call_statement
         if(tmp_sym == sym::LEFT_ROUND){
-            // TODO
+            SymSet idel = delimiter;
+            idel.insert(sym::SEMICOLON);
+
+            FuncCallStatement *call_state = new FuncCallStatement();
+            call_state->call_exp = constructFuncCallExp(idel);
+            if(call_state->call_exp == NULL){
+                delete call_state;
+                call_state = NULL;
+            }
+
+            if(*lex != sym::SEMICOLON){
+                errorRepo("func_call_statement: must end with ;");
+                skip(idel);
+            }
+            if(*lex == sym::SEMICOLON)
+                lex.nextSymbol();
+
+            if(call_state)
+                state = static_cast<Statement*>(call_state);
+            
+            #if HW
+            if(call_state)
+                log::hw << "func_call_statement";
+            #endif//HW
         }
         // assign_statement
         else{
@@ -286,6 +310,30 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
         #if HW
         log::hw << "empty_state";
         #endif//HW
+    }
+    // if_statement
+    else if(*lex == sym::IF){
+        IfStatement *if_state = constructIfStatement(delimiter);
+        if(if_state)
+            state = static_cast<Statement*>(if_state);
+    }
+    // while_statement
+    else if(*lex == sym::WHILE){
+        WhileStatement *while_state = constructWhileStatement(delimiter);
+        if(while_state)
+            state = static_cast<Statement*>(while_state);
+    }
+    // switch_statement
+    else if(*lex == sym::SWITCH){
+        SwitchStatement *switch_state = constructSwitchStatement(delimiter);
+        if(switch_state)
+            state = static_cast<Statement*>(switch_state);
+    }
+    // error
+    else{
+        errorRepo("statement: invalid symbol as statement's head.");
+        // TODO better skip
+        skip(delimiter);
     }
 
     return state;
