@@ -223,8 +223,9 @@ effect:
 
 8.
 rule:
-    <value_param_list> ::= <expression>{, <expression>}  |  <empty>
-    <func_call_exp> ::= <identifier>'('<value_param_list>')'
+    <func_call_exp> ::= <identifier>'('
+                            [<expression>{, <expression>}]
+                            ')'
 example:
     <value_param_list>
         233

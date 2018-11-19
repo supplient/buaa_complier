@@ -281,7 +281,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         lex.nextSymbol();
         SymSet suffix;
-        suffix.insert(sym::LEFT_BRACE);
+        suffix.insert(sym::RIGHT_BRACE);
         braced_state->state_list = constructStatementList(suffix, idel);
         if(braced_state->state_list == NULL){
             delete braced_state;
@@ -344,15 +344,18 @@ StatementList* GrammarAnalyzer::constructStatementList(const SymSet &suffix, con
     SymSet idel = delimiter;
     idel.insert(suffix.begin(), suffix.end());
 
-    Statement *state = constructStatement(idel);
-    while(state != NULL){
-        statement_list->state_list.push_back(state);
-        state = constructStatement(idel);
+    if(suffix.find(*lex) == suffix.end()){
+        Statement *state = constructStatement(idel);
+        while(state != NULL){
+            statement_list->state_list.push_back(state);
+            if(suffix.find(*lex) != suffix.end())
+                break;
+            state = constructStatement(idel);
+        }
     }
 
     #if HW
-    if(statement_list != NULL)
-        log::hw << "statement list";
+    log::hw << "statement list";
     #endif//HW
 
     return statement_list;

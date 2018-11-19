@@ -139,6 +139,11 @@ Item* GrammarAnalyzer::constructItem(const SymSet &delimiter){
 
     Item *item = new Item();
 
+    if(*lex == sym::MULTI || *lex == sym::DIV){
+        errorRepo(ehd + "cannnot start with *, /");
+        lex.nextSymbol();
+    }
+
     do{
         if(*lex == sym::MULTI || *lex == sym::DIV){
             item->op_list.push_back(*lex);
@@ -177,17 +182,19 @@ Expression* GrammarAnalyzer::constructExpression(const SymSet &delimter){
         lex.nextSymbol();
     }
 
-    do{
-        if(*lex == sym::PLUS || *lex == sym::MINUS){
-            exp->op_list.push_back(*lex);
-            lex.nextSymbol();
-        }
+    Item *first_item = constructItem(idel);
+    if(first_item != NULL)
+        exp->item_list.push_back(first_item);
+
+    while(*lex == sym::PLUS || *lex == sym::MINUS){
+        exp->op_list.push_back(*lex);
+        lex.nextSymbol();
 
         Item *item = constructItem(idel);
         if(item != NULL)
             exp->item_list.push_back(item);
         // TODO consider jump a op if item construct fail
-    }while(*lex == sym::PLUS || *lex == sym::MINUS);
+    }
 
     if(exp->item_list.size() < 1){
         delete exp;
