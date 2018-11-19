@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "symbol.h"
+
 using namespace std;
 
 class Element{

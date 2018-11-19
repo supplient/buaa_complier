@@ -86,9 +86,12 @@ effect:
 
 3.
 rule:
-    <factor>     ::= <identifier> | <identifier>'['<expression>']' 
-                    | <func_call_exp>
-                    | '('<expression>')' | <integer> | <character> 
+    <var_factor> ::= <identifier> | <identifier>'['<expression>']' 
+    <func_factor> ::= <func_call_exp>
+    <exp_factor> ::= '('<expression>')'
+    <const_factor> ::= <integer> | <character> 
+    <factor>     ::= <var_factor>  | <func_factor>
+                    | <exp_factor> | <const_factor>
     <item>       ::= <factor>{<mult_op><factor>}
     <expression> ::= [+|-] <item>{<plus_op><item>}  //[+|-]只作用于第一个<项>
 example:
