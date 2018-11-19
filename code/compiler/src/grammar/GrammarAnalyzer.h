@@ -20,6 +20,9 @@
 #include "ConstDecl.h"
 #include "ConstDefine.h"
 
+//5
+#include "FuncDefine.h"
+
 //7
 #include "Condition.h"
 #include "SwitchCase.h"
@@ -69,6 +72,9 @@ class GrammarAnalyzer{
         ConstDecl* constructConstDecl(const SymSet &);
         VarDefine* constructVarDefine(const SymSet &);
         VarDecl* constructVarDecl(bool overlook, const SymSet &);
+
+        // 5
+        FuncDefine* constructFuncDefine(const SymSet &);
 
         // 7
         Condition* constructCondition(const SymSet &);

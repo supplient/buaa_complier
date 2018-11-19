@@ -35,13 +35,32 @@ Program* GrammarAnalyzer::constructProgram(){
     else
         program->var_decl = NULL;
 
-    // TODO add func_define
+
+    do{
+        // check whether main_func
+        sym::SYMBOL tmp_return_type = *lex;
+        sym::SYMBOL tmp_func_name = lex.nextSymbol();
+        lex.goBack();
+        if(tmp_return_type == sym::VOID
+            && tmp_func_name == sym::MAIN)
+            break;
+
+        // TODO add func_define
+        FuncDefine *func_define = constructFuncDefine(idel);
+        if(func_define)
+            program->func_define_list.push_back(func_define);
+    }while(*lex != sym::ENDOFFILE);
 
     program->main_func = constructMainFunc(idel);
     if(program->main_func == NULL){
         errorRepo(ehd + "cannot find main function.");
         delete program;
         program = NULL;
+    }
+
+    if(*lex != sym::ENDOFFILE){
+        errorRepo(ehd + "nothing should occur after main_func");
+        skip(idel);
     }
 
 #if HW

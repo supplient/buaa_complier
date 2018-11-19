@@ -59,7 +59,7 @@ rule:
     <plus_op>       ::= + | -
     <mult_op>       ::= * | /
     <compare_op>    ::= < | <= | > | >= | != | ==
-    <integer>       ::= [+|-]<unsigned_integer>
+    O<integer>       ::= [+|-]<unsigned_integer>
     <type_ident>    ::= int | char
     <constant>      ::= <integer> | <character>
 example:
@@ -149,11 +149,10 @@ effect:
 
 5.
 rule:
-    <decl_head> ::= int <identifier> | char <identifier>
-    <param> ::= <type_ident><identifier>
-    <param_list> ::= <param>{, <param>} | <empty>
-    <func_with_return_define> ::= <decl_head>'('<param_list>')''{'<compound_statement>'}'
-    <func_without_return_define> ::= void <identifier>'('<param_list>')''{'<compound_statement>'}'
+    <param> ::= (int | char)<identifier>
+    <func_define> ::= (void | int | char) <identifier>
+                        '('[<param>{, <param>}]')'
+                                    '{'<compound_statement>'}'
 example:
     <decl_head>
         int a_2
@@ -322,7 +321,7 @@ effect:
 11.
 rule:
     O<main_func> ::= void main '('')''{'<compound_statement>'}'
-    <program> ::= [<const_decl>] [<var_decl>] {<func_with_return_define>|<func_without_return_define>}<main_func>
+    <program> ::= [<const_decl>] [<var_decl>] {<func_define>}<main_func>
 example:
     <main_func>
         void main(){}
