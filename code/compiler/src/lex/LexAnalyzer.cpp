@@ -90,8 +90,10 @@ sym::SYMBOL LexAnalyzer::nextSymbol(){
         }
 
         // Check EOF
-        if(isEOF())
+        if(isEOF()){
+            symbol = sym::ENDOFFILE;
             return sym::ENDOFFILE;
+        }
 
         history.push(getCurrentState()); // Save history
         done = _nextSymbol(res); // Read symbol
