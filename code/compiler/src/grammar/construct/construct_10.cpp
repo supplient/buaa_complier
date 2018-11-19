@@ -171,6 +171,78 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
         log::hw << "return_state";
         #endif// HW
     }
+    // assign_statement || func_call_statement
+    else if(*lex == sym::IDENTIFIER){
+        sym::SYMBOL tmp_sym = lex.nextSymbol();
+        lex.goBack();
+        // func_call_statement
+        if(tmp_sym == sym::LEFT_ROUND){
+            // TODO
+        }
+        // assign_statement
+        else{
+            const string ehd = "assign_statement: ";
+            SymSet idel = delimiter;
+            idel.insert(sym::IDENTIFIER);
+            idel.insert(sym::LEFT_SQUARE);
+            // TODO insert exp's head
+            idel.insert(sym::RIGHT_SQUARE);
+            idel.insert(sym::ASSIGN);
+            bool fail_flag = false;
+
+            AssignStatement *assign_state = new AssignStatement();
+
+            assign_state->ident = lex.getStringValue();
+            if(lex.nextSymbol() == sym::LEFT_SQUARE){
+                // is array
+                assign_state->is_array = true;
+                
+                lex.nextSymbol();
+                assign_state->select = constructExpression(idel);
+                if(assign_state->select == NULL)
+                    fail_flag = true;
+
+                if(*lex != sym::RIGHT_SQUARE){
+                    errorRepo(ehd + "array selector should be wrapped with []");
+                    skip(idel);
+                }
+                if(*lex == sym::RIGHT_SQUARE)
+                    lex.nextSymbol();
+            }
+            else
+                assign_state->is_array = false;
+
+            if(*lex != sym::ASSIGN){
+                errorRepo(ehd + "must have an assign op");
+                skip(idel);
+            }
+            if(*lex == sym::ASSIGN)
+                lex.nextSymbol();
+
+            assign_state->exp = constructExpression(idel);
+            if(assign_state->exp == NULL)
+                fail_flag = true;
+
+            if(fail_flag){
+                delete assign_state;
+                assign_state = NULL;
+            }
+
+            if(*lex != sym::SEMICOLON){
+                errorRepo(ehd + "must end with ;");
+                skip(idel);
+            }
+            if(*lex == sym::SEMICOLON)
+                lex.nextSymbol();
+
+            if(assign_state)
+                state = static_cast<Statement*>(assign_state);
+
+            #if HW
+            log::hw << "assign_statement";
+            #endif// HW
+        }
+    }
 
     return state;
 }

@@ -2,6 +2,9 @@ void main(){
     const int k=2;
     int f;
 
+    b = 3;
+    b[2] = 5+a;
+
     scanf(a);
     printf(a);
     printf(a[2]);

@@ -27,7 +27,12 @@ class FuncCallStatement: public Statement
 
 class AssignStatement: public Statement
 {
+public:
+    string ident;
+    Expression *exp;
 
+    bool is_array;
+    Expression *select;
 };
 
 class InputStatement: public Statement
