@@ -4,6 +4,8 @@ void main(){
 
     func();
     func(233, a+b);
+
+    if()
     {
         b = 3;
         b[2] = 5+a;

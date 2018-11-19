@@ -2,10 +2,11 @@
 #define STATEMENT_H
 
 #include "Element.h"
-#include "Expression.h"
 
+class Expression;
 class StatementList;
 class FuncCallExp;
+class Condition;
 
 class Statement: public Element
 {
@@ -15,7 +16,9 @@ class Statement: public Element
 
 class IfStatement: public Statement
 {
-
+public:
+    Condition *cond;
+    Statement *state;
 };
 
 class WhileStatement: public Statement

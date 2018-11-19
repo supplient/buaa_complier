@@ -180,7 +180,8 @@ effect:
 
 7.
 rule:
-    <condition> ::= <expression> <compare_op> <expression>  |  <expression> //表达式为0条件为假，否则为真
+    <condition> ::= <expression> <compare_op> <expression>  
+                    |  <expression> //表达式为0条件为假，否则为真
 
     <if_statement> ::= if '('<condition>')' <statement>
     
@@ -189,7 +190,8 @@ rule:
     <switch_default> ::= default: <statement>  |  <empty>
     <switch_case> ::= case <constant>: <statement>
     <switch_case_list> ::= <switch_case> {<switch_case>}
-    <switch_statement> ::= switch'('<expression>')' '{'<switch_case_list> <switch_default>'}'
+    <switch_statement> ::= switch'('<expression>')' 
+                        '{'<switch_case_list> <switch_default>'}'
 example:
     <condition>
         a+b

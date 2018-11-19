@@ -29,7 +29,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
         do{
             if(*lex == sym::COMMA)
                 lex.nextSymbol();
-            
+
             if(*lex != sym::IDENTIFIER){
                 errorRepo(ehd + "can only input into some variable.");
                 skip(idel);
@@ -198,7 +198,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
             if(call_state)
                 state = static_cast<Statement*>(call_state);
-            
+
             #if HW
             if(call_state)
                 log::hw << "func_call_statement";
@@ -221,7 +221,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
             if(lex.nextSymbol() == sym::LEFT_SQUARE){
                 // is array
                 assign_state->is_array = true;
-                
+
                 lex.nextSymbol();
                 assign_state->select = constructExpression(idel);
                 if(assign_state->select == NULL)
