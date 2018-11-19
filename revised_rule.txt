@@ -89,11 +89,15 @@ rule:
     <var_factor> ::= <identifier> | <identifier>'['<expression>']' 
     <func_factor> ::= <func_call_exp>
     <exp_factor> ::= '('<expression>')'
-    <const_factor> ::= <integer> | <character> 
+    O<const_factor> ::= <integer> | <character> 
     <factor>     ::= <var_factor>  | <func_factor>
                     | <exp_factor> | <const_factor>
-    <item>       ::= <factor>{<mult_op><factor>}
-    <expression> ::= [+|-] <item>{<plus_op><item>}  //[+|-]只作用于第一个<项>
+
+                    identifier  |   identifier(
+                    |   (       |   +/-/<unsigned_integer>/<character>
+
+    O<item>       ::= <factor>{<mult_op><factor>}
+    O<expression> ::= [+|-] <item>{<plus_op><item>}  //[+|-]只作用于第一个<项>
 example:
     <factor>
         a23  abc[(3+6)]  (a+b)  +233  '2'  func()

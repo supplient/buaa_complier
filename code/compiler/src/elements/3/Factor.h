@@ -4,6 +4,7 @@
 #include "Element.h"
 
 class Expression;
+class Integer;
 
 class Factor: public Element
 {
@@ -33,8 +34,8 @@ public:
 class ConstFactor: public Factor
 {
 public:
-    sym::SYMBOL type;
-    int int_value;
+    bool is_char;
+    Integer *int_value;
     char char_value;
 };
 

@@ -13,6 +13,9 @@
 //2
 #include "Integer.h"
 
+//3
+#include "Expression.h"
+
 //4
 #include "ConstDecl.h"
 #include "ConstDefine.h"
@@ -49,6 +52,8 @@ class GrammarAnalyzer{
         Integer* constructInteger(const SymSet &);
 
         // 3
+        Factor* constructFactor(const SymSet &);
+        Item* constructItem(const SymSet &);
         Expression* constructExpression(const SymSet &);
 
         // 4

@@ -6,7 +6,9 @@
 
 class Item: public Element
 {
-
+public:
+    vector<Factor*> factor_list;
+    vector<sym::SYMBOL> op_list;
 };
 
 #endif//ITEM_H
