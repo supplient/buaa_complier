@@ -45,7 +45,6 @@ Program* GrammarAnalyzer::constructProgram(){
             && tmp_func_name == sym::MAIN)
             break;
 
-        // TODO add func_define
         FuncDefine *func_define = constructFuncDefine(idel);
         if(func_define)
             program->func_define_list.push_back(func_define);

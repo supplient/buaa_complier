@@ -21,6 +21,7 @@
 #include "ConstDefine.h"
 
 //5
+#include "Param.h"
 #include "FuncDefine.h"
 
 //7
@@ -74,6 +75,7 @@ class GrammarAnalyzer{
         VarDecl* constructVarDecl(bool overlook, const SymSet &);
 
         // 5
+        Param* constructParam(const SymSet &);
         FuncDefine* constructFuncDefine(const SymSet &);
 
         // 7

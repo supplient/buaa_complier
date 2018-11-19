@@ -149,8 +149,8 @@ effect:
 
 5.
 rule:
-    <param> ::= (int | char)<identifier>
-    <func_define> ::= (void | int | char) <identifier>
+    O<param> ::= (int | char)<identifier>
+    O<func_define> ::= (void | int | char) <identifier>
                         '('[<param>{, <param>}]')'
                                     '{'<compound_statement>'}'
 example:

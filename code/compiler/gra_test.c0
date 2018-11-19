@@ -1,7 +1,14 @@
-void main(){
+int func(int a, char b){
     const int k=2;
     int f;
 
+}
+
+void void_func(){
+    return(3);
+}
+
+void main(){
     switch(a){
         case 233: {}
         case '1': a = b;
