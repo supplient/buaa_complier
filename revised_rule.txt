@@ -87,7 +87,7 @@ effect:
 3.
 rule:
     <factor>     ::= <identifier> | <identifier>'['<expression>']' 
-                    | <func_with_return_call_exp>
+                    | <func_call_exp>
                     | '('<expression>')' | <integer> | <character> 
     <item>       ::= <factor>{<mult_op><factor>}
     <expression> ::= [+|-] <item>{<plus_op><item>}  //[+|-]只作用于第一个<项>
@@ -229,18 +229,14 @@ effect:
 8.
 rule:
     <value_param_list> ::= <expression>{, <expression>}  |  <empty>
-    <func_with_return_call_exp> ::= <identifier>'('<value_param_list>')'
-    <func_without_return_call_exp> ::= <identifier>'('<value_param_list>')'
+    <func_call_exp> ::= <identifier>'('<value_param_list>')'
     <return_exp> ::= return['('<expression>')']
 example:
     <value_param_list>
         233
         a+b,3
 
-    <func_with_return_call_exp>
-        func()
-        func(a)
-    <func_without_return_call_exp>
+    <func_call_exp>
         func()
         func(a)
     <return_exp>
@@ -279,18 +275,23 @@ effect:
 
 10.
 rule:
-    <func_with_return_call_statement>       ::= <func_with_return_call_exp>;
-    <func_without_return_call_statement>    ::= <func_without_return_call_exp>;
+    <func_call_statement>       ::= <func_call_exp>;
     <assign_statement>                      ::= <assign_exp>;
     <input_statement>                       ::= <input_exp>;
     <output_statement>                      ::= <output_exp>;
     <return_statement>                      ::= <reutrn_exp>;
     <empty_statement>                       ::= <empty>;
-    <braced_statment_list>                  ::= '{'<statement_list>'}'
+    <braced_statement>                  ::= '{'<statement_list>'}'
     <statement> ::= <if_statement>  |  <while_statement>  |  <switch_statement>  
-                  |  <func_with_return_call_statement>  |  <func_without_return_call_statement>  
-                  |  <assign_statement>  |  <input_statement>  |  <output_statement>  |  <return_statement>
-                  |  <empty_statement>  |  <braced_statment_list>
+                  |  <func_call_statement>  |  <assign_statement>  
+                  |  <input_statement>  |  <output_statement>  |  <return_statement>
+                  |  <empty_statement>  |  <braced_statement>
+
+                    if              | while                | switch
+                  |     identifier( |     identifier=     
+                  |   scanf               |   printf      |       return
+                  |     ;               |       {
+
     O<statement_list> ::= {<statement>}
     O<compound_statement> ::= [<const_decl>] [<var_decl>] <statement_list>
 example:
