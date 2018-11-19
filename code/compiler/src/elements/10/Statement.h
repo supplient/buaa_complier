@@ -23,7 +23,9 @@ public:
 
 class WhileStatement: public Statement
 {
-
+public:
+    Condition *cond;
+    Statement *state;
 };
 
 class SwitchStatement: public Statement

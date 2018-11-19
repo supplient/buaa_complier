@@ -180,12 +180,12 @@ effect:
 
 7.
 rule:
-    <condition> ::= <expression> <compare_op> <expression>  
+    O<condition> ::= <expression> <compare_op> <expression>  
                     |  <expression> //表达式为0条件为假，否则为真
 
-    <if_statement> ::= if '('<condition>')' <statement>
+    O<if_statement> ::= if '('<condition>')' <statement>
     
-    <while_statement> ::= while '('<condition>')' <statement>
+    O<while_statement> ::= while '('<condition>')' <statement>
 
     <switch_default> ::= default: <statement>  |  <empty>
     <switch_case> ::= case <constant>: <statement>
