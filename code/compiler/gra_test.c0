@@ -2,8 +2,10 @@ void main(){
     const int k=2;
     int f;
 
-    while(a < a+1)
-    {
+    switch(a){
+        case 233: {}
+        case '1': a = b;
+        default: printf(a);
     }
 
 }

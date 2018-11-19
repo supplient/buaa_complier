@@ -7,6 +7,7 @@ class Expression;
 class StatementList;
 class FuncCallExp;
 class Condition;
+class SwitchCaseList;
 
 class Statement: public Element
 {
@@ -30,7 +31,10 @@ public:
 
 class SwitchStatement: public Statement
 {
-
+public:
+    Expression *exp;
+    SwitchCaseList *case_list;
+    Statement *default_state;
 };
 
 class FuncCallStatement: public Statement

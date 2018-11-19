@@ -187,11 +187,12 @@ rule:
     
     O<while_statement> ::= while '('<condition>')' <statement>
 
-    <switch_default> ::= default: <statement>  |  <empty>
-    <switch_case> ::= case <constant>: <statement>
-    <switch_case_list> ::= <switch_case> {<switch_case>}
-    <switch_statement> ::= switch'('<expression>')' 
-                        '{'<switch_case_list> <switch_default>'}'
+    O<switch_case> ::= case <constant>: <statement>
+    O<switch_case_list> ::= <switch_case> {<switch_case>}
+    O<switch_statement> ::= switch'('<expression>')' 
+                        '{'<switch_case_list> 
+                            [default: <statement>]
+                            '}'
 example:
     <condition>
         a+b

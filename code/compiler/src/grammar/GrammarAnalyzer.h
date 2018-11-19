@@ -22,6 +22,8 @@
 
 //7
 #include "Condition.h"
+#include "SwitchCase.h"
+#include "SwitchCaseList.h"
 
 //8
 #include "FuncCallExp.h"
@@ -70,6 +72,8 @@ class GrammarAnalyzer{
 
         // 7
         Condition* constructCondition(const SymSet &);
+        SwitchCase* constructSwitchCase(const SymSet &);
+        SwitchCaseList* constructSwitchCaseList(const SymSet &);
 
         // 8
         FuncCallExp* constructFuncCallExp(const SymSet &);
