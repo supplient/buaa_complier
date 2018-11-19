@@ -48,6 +48,9 @@ class GrammarAnalyzer{
         // 2
         Integer* constructInteger(const SymSet &);
 
+        // 3
+        Expression* constructExpression(const SymSet &);
+
         // 4
         ConstDefine* constructConstDefine(const SymSet &);
         ConstDecl* constructConstDecl(const SymSet &);

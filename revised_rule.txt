@@ -170,18 +170,6 @@ effect:
     函数是程序的执行块的单位。扩充c0不支持分程序，所以每一个函数都是同级的。
     与数据单元一样，扩充c0也要求每一个执行块在被使用前被声明。
 
-6.
-rule:
-    <assign_exp> ::= 
-example:
-    <assign_exp>
-        a = b+3
-        a[3] = 7
-restriction:
-    array's member can be the left value.
-    The right value can be any valid expression.
-effect:
-    表示赋值操作的语句。
 
 7.
 rule:
@@ -230,7 +218,6 @@ effect:
 rule:
     <value_param_list> ::= <expression>{, <expression>}  |  <empty>
     <func_call_exp> ::= <identifier>'('<value_param_list>')'
-    <return_exp> ::= 
 example:
     <value_param_list>
         233
@@ -239,35 +226,12 @@ example:
     <func_call_exp>
         func()
         func(a)
-    <return_exp>
-        return
-        return a
 restriction:
     Empty is allowed for `value_param_list`.
     "(" and ")" are necessary for function's call.
-    "(" and ")" are necessary for return statement.
 effect:
     函数相关的跳转语句。与7的控制语句共同构成非线性程序的基础。
 
-9.
-rule:
-    <input_exp> ::= 
-    <output_exp> ::= 
-example:
-    <input_exp>
-        scanf(a, b, c)
-        scanf(a)
-    <output_exp>
-        printf("233", 233)
-        printf("233")
-        printf(233)
-restriction:
-    Only `identifier` is allowed for scanf's param.
-    Only `string` and `expression` are allowed for printf's param.
-    If `string` and `expression` are set as printf's param at the same time, `string` must be the first param.
-    printf can have at most one `string` param and at most one `expression` param, and should have at least one param of `string` or `expression`.
-effect:
-    IO语句。
 
 10.
 rule:
@@ -276,8 +240,8 @@ rule:
                                                 <identifier> = <expression>  
                                              |  <identifier>'['<expression>']' = <expression>
                                              );
-    <input_statement>                       ::= scanf'('<identifier>{, <identifier>}')';
-    <output_statement>                      ::= printf'('
+    O<input_statement>                       ::= scanf'('<identifier>{, <identifier>}')';
+    O<output_statement>                      ::= printf'('
                                                         <string>, <expression>
                                                         | <string>
                                                         | <expression>
@@ -298,6 +262,19 @@ rule:
     O<statement_list> ::= {<statement>}
     O<compound_statement> ::= [<const_decl>] [<var_decl>] <statement_list>
 example:
+    <input_exp>
+        scanf(a, b, c)
+        scanf(a)
+    <output_exp>
+        printf("233", 233)
+        printf("233")
+        printf(233)
+    <return_exp>
+        return
+        return a
+    <assign_exp>
+        a = b+3
+        a[3] = 7
     <statement>
         if(1)return;
         func();
@@ -314,6 +291,16 @@ example:
         a=3;if(a)return;
 
 restriction:
+    Only `identifier` is allowed for scanf's param.
+    Only `string` and `expression` are allowed for printf's param.
+    If `string` and `expression` are set as printf's param at the same time, `string` must be the first param.
+    printf can have at most one `string` param and at most one `expression` param, and should have at least one param of `string` or `expression`.
+
+    array's member can be the left value.
+    The right value can be any valid expression.
+
+    "(" and ")" are necessary for return statement.
+
     A single ';' is valid for `statement`.
     Empty is valid for `statement_list`.
     Each element of `compound_statement`(declaraions for constant and variables, statments) can be omitted.

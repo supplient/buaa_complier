@@ -9,7 +9,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
     // input_statement
     if(*lex == sym::SCANF){
-        const string ehd = "scanf statement: ";
+        const string ehd = "input_statement: ";
         SymSet idel = delimiter;
         idel.insert(sym::LEFT_ROUND);
         idel.insert(sym::IDENTIFIER);
@@ -62,7 +62,66 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
             state = static_cast<Statement*>(input_state);
 
         #if HW
-        log::hw << "input statement";
+        if(input_state)
+            log::hw << "input statement";
+        #endif//HW
+    }
+    // output_statement
+    else if(*lex == sym::PRINTF){
+        const string ehd = "output_statement: ";
+        SymSet idel = delimiter;
+        idel.insert(sym::LEFT_ROUND);
+        idel.insert(sym::STRING);
+        // TODO insert expression 's head
+        idel.insert(sym::RIGHT_ROUND);
+
+        OutputStatement *output_state = new OutputStatement();
+
+        lex.nextSymbol();
+        if(*lex != sym::LEFT_ROUND){
+            errorRepo(ehd + "should be wrapped with ()");
+            skip(idel);
+        }
+        if(*lex == sym::LEFT_ROUND)
+            lex.nextSymbol();
+
+        // If start with string
+        if(*lex == sym::STRING){
+            output_state->has_string = true;
+            output_state->str_value = lex.getStringValue();
+            lex.nextSymbol();
+
+            // check whether followed by an expression
+            if(*lex == sym::COMMA)
+                lex.nextSymbol();
+        }
+
+        output_state->exp_value = constructExpression(idel);
+
+        if(*lex != sym::RIGHT_ROUND){
+            errorRepo(ehd + "should be wrapped with ().");
+            skip(idel);
+        }
+        if(*lex == sym::RIGHT_ROUND)
+            lex.nextSymbol();
+
+        if(*lex != sym::SEMICOLON){
+            errorRepo(ehd + "should end with ;");
+            skip(idel);
+        }
+        if(*lex == sym::SEMICOLON)
+            lex.nextSymbol();
+
+        if(!output_state->has_string && output_state->exp_value==NULL){
+            delete output_state;
+            output_state = NULL;
+        }
+        else
+            state = static_cast<Statement*>(output_state);
+
+        #if HW
+        if(output_state)
+            log::hw << "output statement";
         #endif//HW
     }
 

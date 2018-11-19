@@ -2,6 +2,7 @@
 #define STATEMENT_H
 
 #include "Element.h"
+#include "Expression.h"
 
 class Statement: public Element
 {
@@ -37,7 +38,13 @@ public:
 
 class OutputStatement: public Statement
 {
-
+public:
+    OutputStatement():Statement(){
+        has_string=false;
+        }
+    bool has_string;
+    string str_value;
+    Expression *exp_value;
 };
 
 class ReturnStatement: public Statement
