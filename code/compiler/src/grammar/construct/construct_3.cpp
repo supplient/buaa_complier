@@ -76,6 +76,57 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
         log::hw << "exp_factor";
         #endif// HW
     }
+    // var_factor || func_factor
+    else if(*lex == sym::IDENTIFIER){
+        sym::SYMBOL tmp_sym = lex.nextSymbol();
+        lex.goBack();
+
+        // func_factor
+        if(tmp_sym == sym::LEFT_ROUND){
+            // TODO
+        }
+        // var_factor
+        else{
+            const string ehd = "var_factor";
+            SymSet idel = delimiter;
+            idel.insert(sym::IDENTIFIER);
+            idel.insert(sym::LEFT_SQUARE);
+            // TODO insert exp's head
+            idel.insert(sym::RIGHT_SQUARE);
+
+            VarFactor *var_factor = new VarFactor();
+            var_factor->ident = lex.getStringValue();
+            
+            lex.nextSymbol();
+            if(*lex == sym::LEFT_SQUARE){
+                // is array
+                var_factor->is_array = true;
+
+                lex.nextSymbol();
+                var_factor->select = constructExpression(idel);
+                if(var_factor->select == NULL){
+                    delete var_factor;
+                    var_factor = NULL;
+                }
+
+                if(*lex != sym::RIGHT_SQUARE){
+                    errorRepo(ehd + "the array selector should be wrapped with []");
+                    skip(idel);
+                }
+                if(*lex == sym::RIGHT_SQUARE)
+                    lex.nextSymbol();
+            }
+            else
+                var_factor->is_array = false;
+
+            if(var_factor)
+                factor = static_cast<Factor*>(var_factor);
+
+            #if HW
+            log::hw << "var_factor";
+            #endif// HW
+        }
+    }
     return factor;
 }
 
