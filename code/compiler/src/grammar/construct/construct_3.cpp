@@ -45,7 +45,37 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
             log::hw << "const_factor";
         #endif// HW
     }
-    // TODO
+    // exp_factor
+    else if(*lex == sym::LEFT_ROUND){
+        const string ehd = "exp_factor";
+        SymSet idel = delimiter;
+        idel.insert(sym::LEFT_ROUND);
+        // TODO insert exp's head
+        idel.insert(sym::RIGHT_ROUND);
+
+        ExpFactor *exp_factor = new ExpFactor();
+
+        lex.nextSymbol();
+        exp_factor->exp = constructExpression(idel);
+        if(exp_factor->exp == NULL){
+            delete exp_factor;
+            exp_factor = NULL;
+        }
+
+        if(*lex != sym::RIGHT_ROUND){
+            errorRepo(ehd + "should be wrapped with ()");
+            skip(idel);
+        }
+        if(*lex == sym::RIGHT_ROUND)
+            lex.nextSymbol();
+
+        if(exp_factor)
+            factor = static_cast<Factor*>(exp_factor);
+        
+        #if HW
+        log::hw << "exp_factor";
+        #endif// HW
+    }
     return factor;
 }
 

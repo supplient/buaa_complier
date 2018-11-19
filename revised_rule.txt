@@ -88,7 +88,7 @@ effect:
 rule:
     <var_factor> ::= <identifier> | <identifier>'['<expression>']' 
     <func_factor> ::= <func_call_exp>
-    <exp_factor> ::= '('<expression>')'
+    O<exp_factor> ::= '('<expression>')'
     O<const_factor> ::= <integer> | <character> 
     <factor>     ::= <var_factor>  | <func_factor>
                     | <exp_factor> | <const_factor>

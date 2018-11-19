@@ -3,6 +3,6 @@ void main(){
     int f;
 
     scanf(a);
-    printf('a');
+    printf(('a'));
     printf("233", 2);
 }
