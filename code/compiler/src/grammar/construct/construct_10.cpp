@@ -124,6 +124,53 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
             log::hw << "output statement";
         #endif//HW
     }
+    // return_statement
+    else if(*lex == sym::RETURN){
+        const string ehd = "return_statement: ";
+        SymSet idel = delimiter;
+        idel.insert(sym::RETURN);
+        idel.insert(sym::LEFT_ROUND);
+        // TODO insert exp's head
+        idel.insert(sym::RIGHT_ROUND);
+        idel.insert(sym::SEMICOLON);
+
+        ReturnStatement *return_state = new ReturnStatement();
+
+        lex.nextSymbol();
+        if(*lex == sym::LEFT_ROUND){
+            // have return value`
+            lex.nextSymbol();
+
+            return_state->exp = constructExpression(idel);
+            if(return_state->exp == NULL){
+                delete return_state;
+                return_state = NULL;
+            }
+
+            if(*lex != sym::RIGHT_ROUND){
+                errorRepo(ehd + "return value shoudl be wrapped with ()");
+                skip(idel);
+            }
+            if(*lex == sym::RIGHT_ROUND)
+                lex.nextSymbol();
+        }
+        else
+            return_state->exp = NULL;
+
+        if(*lex != sym::SEMICOLON){
+            errorRepo(ehd + "should end with ;");
+            skip(idel);
+        }
+        if(*lex == sym::SEMICOLON)
+            lex.nextSymbol();
+
+        if(return_state)
+            state = static_cast<Statement*>(return_state);
+
+        #if HW
+        log::hw << "return_state";
+        #endif// HW
+    }
 
     return state;
 }

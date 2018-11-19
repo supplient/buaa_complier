@@ -253,7 +253,7 @@ rule:
                                                         | <string>
                                                         | <expression>
                                                         ')';
-    <return_statement>                      ::= return['('<expression>')'];
+    O<return_statement>                      ::= return['('<expression>')'];
     <empty_statement>                       ::= <empty>;
     <braced_statement>                  ::= '{'<statement_list>'}'
     <statement> ::= <if_statement>  |  <while_statement>  |  <switch_statement>  

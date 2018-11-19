@@ -49,7 +49,8 @@ public:
 
 class ReturnStatement: public Statement
 {
-
+public:
+    Expression *exp;
 };
 
 class EmptyStatement: public Statement
