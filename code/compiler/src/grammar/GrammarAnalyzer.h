@@ -43,6 +43,7 @@ class GrammarAnalyzer{
         void fatalRepo(string reason);
         void skip(sym::SYMBOL valid_sym, const SymSet &delimiter);
         void skip(const SymSet &valid_set, const SymSet &delimiter);
+        void skip(const SymSet &delimiter);
 
         // 2
         Integer* constructInteger(const SymSet &);

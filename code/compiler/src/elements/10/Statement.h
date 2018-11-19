@@ -31,7 +31,8 @@ class AssignStatement: public Statement
 
 class InputStatement: public Statement
 {
-
+public:
+    vector<string> ident_list;
 };
 
 class OutputStatement: public Statement

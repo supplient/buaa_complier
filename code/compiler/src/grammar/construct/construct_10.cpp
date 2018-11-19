@@ -5,7 +5,68 @@
 using namespace std;
 
 Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
-    return NULL;
+    Statement *state = NULL;
+
+    // input_statement
+    if(*lex == sym::SCANF){
+        const string ehd = "scanf statement: ";
+        SymSet idel = delimiter;
+        idel.insert(sym::LEFT_ROUND);
+        idel.insert(sym::IDENTIFIER);
+        idel.insert(sym::COMMA);
+        idel.insert(sym::RIGHT_ROUND);
+
+        InputStatement *input_state = new InputStatement();
+
+        lex.nextSymbol();
+        if(*lex != sym::LEFT_ROUND){
+            errorRepo(ehd + "should be wrapped with ()");
+            skip(idel);
+        }
+        if(*lex == sym::LEFT_ROUND)
+            lex.nextSymbol();
+
+        do{
+            if(*lex == sym::COMMA)
+                lex.nextSymbol();
+            
+            if(*lex != sym::IDENTIFIER){
+                errorRepo(ehd + "can only input into some variable.");
+                skip(idel);
+            }
+            if(*lex == sym::IDENTIFIER){
+                input_state->ident_list.push_back(lex.getStringValue());
+                lex.nextSymbol();
+            }
+        }while(*lex == sym::COMMA);
+
+        if(*lex != sym::RIGHT_ROUND){
+            errorRepo(ehd + "should be wrapped with ().");
+            skip(idel);
+        }
+        if(*lex == sym::RIGHT_ROUND)
+            lex.nextSymbol();
+
+        if(*lex != sym::SEMICOLON){
+            errorRepo(ehd + "should end with ;");
+            skip(idel);
+        }
+        if(*lex == sym::SEMICOLON)
+            lex.nextSymbol();
+
+        if(input_state->ident_list.size() < 1){
+            delete input_state;
+            input_state = NULL;
+        }
+        else
+            state = static_cast<Statement*>(input_state);
+
+        #if HW
+        log::hw << "input statement";
+        #endif//HW
+    }
+
+    return state;
 }
 
 StatementList* GrammarAnalyzer::constructStatementList(const SymSet &suffix, const SymSet &delimiter){

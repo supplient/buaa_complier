@@ -4,4 +4,6 @@ int a, b[2];
 void main(){
     const int k=2;
     int f;
+
+    scanf(a);
 }

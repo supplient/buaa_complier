@@ -30,6 +30,10 @@ void GrammarAnalyzer::skip(sym::SYMBOL valid_sym, const SymSet &delimiter){
 void GrammarAnalyzer::skip(const SymSet &valid_set, const SymSet &delimiter){
     SymSet skip_set = valid_set;
     skip_set.insert(delimiter.begin(), delimiter.end()); // Merge
+    skip(skip_set);
+}
+
+void GrammarAnalyzer::skip(const SymSet &skip_set){
     if(skip_set.find(lex.getSymbol()) != skip_set.end())
         return;
     while(skip_set.find(lex.nextSymbol()) == skip_set.end())

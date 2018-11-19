@@ -172,7 +172,7 @@ effect:
 
 6.
 rule:
-    <assign_exp> ::= <identifier> = <expression>  |  <identifier>'['<expression>']' = <expression>
+    <assign_exp> ::= 
 example:
     <assign_exp>
         a = b+3
@@ -230,7 +230,7 @@ effect:
 rule:
     <value_param_list> ::= <expression>{, <expression>}  |  <empty>
     <func_call_exp> ::= <identifier>'('<value_param_list>')'
-    <return_exp> ::= return['('<expression>')']
+    <return_exp> ::= 
 example:
     <value_param_list>
         233
@@ -251,12 +251,8 @@ effect:
 
 9.
 rule:
-    <input_exp> ::= scanf'('<identifier>{, <identifier>}')'
-    <output_exp> ::= printf'('
-                                <string>, <expression>
-                                | <string>
-                                | <expression>
-                                ')'
+    <input_exp> ::= 
+    <output_exp> ::= 
 example:
     <input_exp>
         scanf(a, b, c)
@@ -276,10 +272,17 @@ effect:
 10.
 rule:
     <func_call_statement>       ::= <func_call_exp>;
-    <assign_statement>                      ::= <assign_exp>;
-    <input_statement>                       ::= <input_exp>;
-    <output_statement>                      ::= <output_exp>;
-    <return_statement>                      ::= <reutrn_exp>;
+    <assign_statement>                      ::= (
+                                                <identifier> = <expression>  
+                                             |  <identifier>'['<expression>']' = <expression>
+                                             );
+    <input_statement>                       ::= scanf'('<identifier>{, <identifier>}')';
+    <output_statement>                      ::= printf'('
+                                                        <string>, <expression>
+                                                        | <string>
+                                                        | <expression>
+                                                        ')';
+    <return_statement>                      ::= return['('<expression>')'];
     <empty_statement>                       ::= <empty>;
     <braced_statement>                  ::= '{'<statement_list>'}'
     <statement> ::= <if_statement>  |  <while_statement>  |  <switch_statement>  
@@ -288,7 +291,7 @@ rule:
                   |  <empty_statement>  |  <braced_statement>
 
                     if              | while                | switch
-                  |     identifier( |     identifier=     
+                  |     identifier( |     identifier=/[    
                   |   scanf               |   printf      |       return
                   |     ;               |       {
 
