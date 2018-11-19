@@ -15,8 +15,8 @@ public:
     Program(/* args */){ele_name = "Program";}
     ~Program();
 
-   ConstDecl* const_decl;
-   VarDecl* var_decl;
+    ConstDecl* const_decl;
+    VarDecl* var_decl;
     vector<FuncDefine*> func_define_list;
     MainFunc* main_func;
 };

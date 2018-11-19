@@ -28,7 +28,7 @@ Program* GrammarAnalyzer::constructProgram(){
         SymSet var_decl_del = idel;
         // TODO insert func_define 's head
         var_decl_del.insert(sym::VOID); // main_func 's head
-        program->var_decl = constructVarDecl(var_decl_del);
+        program->var_decl = constructVarDecl(true, var_decl_del);
         // [Note] var_decl can have a suffix with `int|char identifier(`
         // When meet this, just stop var_decl, it's valid.
     }
@@ -43,6 +43,11 @@ Program* GrammarAnalyzer::constructProgram(){
         delete program;
         program = NULL;
     }
+
+#if HW
+    if(program != NULL)
+        log::hw << "program";
+#endif//HW
 
     return program;
 }
@@ -135,6 +140,11 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     else
         lex.nextSymbol();
     idel.erase(check_sym);
+
+#if HW
+    if(main_func != NULL)
+        log::hw << "main function";
+#endif//HW
 
     return main_func;
 }

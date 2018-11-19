@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -37,11 +38,25 @@ namespace log{
             }
     };
 
+    class Homework:public Log{
+        public:
+            Homework(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~Homework(){}
+
+            template<class T>
+            Homework& operator<<(const T &s){
+                clog << "This is " << s << "!" << endl;
+                return dynamic_cast<Homework&>(Log::operator<<(s));
+            }
+    };
+
     extern Debug fatal;
     extern Debug error;
     extern Debug warning;
     extern Debug info;
     extern Debug debug;
+
+    extern Homework hw;
 }
 
 #endif//LOG_H

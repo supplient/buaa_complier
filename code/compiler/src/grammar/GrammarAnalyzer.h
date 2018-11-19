@@ -3,8 +3,12 @@
 
 #include <string>
 #include <set>
+#include <iostream>
 
 #include "LexAnalyzer.h"
+#include "log.h"
+
+#define HW true
 
 //2
 #include "Integer.h"
@@ -14,6 +18,8 @@
 #include "ConstDefine.h"
 
 //10
+#include "Statement.h"
+#include "StatementList.h"
 #include "CompoundStatement.h"
 
 //11
@@ -45,9 +51,13 @@ class GrammarAnalyzer{
         ConstDefine* constructConstDefine(const SymSet &);
         ConstDecl* constructConstDecl(const SymSet &);
         VarDefine* constructVarDefine(const SymSet &);
-        VarDecl* constructVarDecl(const SymSet &);
+        VarDecl* constructVarDecl(bool overlook, const SymSet &);
+
         // 10
+        Statement* constructStatement(const SymSet &);
+        StatementList* constructStatementList(const SymSet &suffix, const SymSet &delimiter);
         CompoundStatement* constructCompoundStatement(const SymSet &suffix, const SymSet &delimiter);
+
         // 11
         MainFunc* constructMainFunc(const SymSet &);
 };

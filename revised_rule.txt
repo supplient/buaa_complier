@@ -113,8 +113,8 @@ rule:
     O<char_const_define> ::= char<identifier>=<character>{,<identifier>=<character>}
     O<const_define> ::= <int_const_define> | <char_const_define>
     O<const_decl>   ::= const<const_define>;{const<const_define>;}
-    <var_define>   ::= <type_ident>(<identifier>|<identifier>'['<unsigned_integer>']') {,(<identifier>|<identifier>'['<unsigned_integer>']')} //＜无符号整数＞表示数组元素的个数，其值需大于0
-    <var_decl>     ::= <var_define>;{<var_define>;}
+    O<var_define>   ::= <type_ident>(<identifier>|<identifier>'['<unsigned_integer>']') {,(<identifier>|<identifier>'['<unsigned_integer>']')} //＜无符号整数＞表示数组元素的个数，其值需大于0
+    O<var_decl>     ::= <var_define>;{<var_define>;}
 example:
     <const_define>
         int a=2,b=6
@@ -229,7 +229,7 @@ effect:
 8.
 rule:
     <value_param_list> ::= <expression>{, <expression>}  |  <empty>
-    <func_with_return_call_exp_exp> ::= <identifier>'('<value_param_list>')'
+    <func_with_return_call_exp> ::= <identifier>'('<value_param_list>')'
     <func_without_return_call_exp> ::= <identifier>'('<value_param_list>')'
     <return_exp> ::= return['('<expression>')']
 example:
@@ -291,8 +291,8 @@ rule:
                   |  <func_with_return_call_statement>  |  <func_without_return_call_statement>  
                   |  <assign_statement>  |  <input_statement>  |  <output_statement>  |  <return_statement>
                   |  <empty_statement>  |  <braced_statment_list>
-    <statement_list> ::= {<statement>}
-    <compound_statement> ::= [<const_decl>] [<var_decl>] <statement_list>
+    O<statement_list> ::= {<statement>}
+    O<compound_statement> ::= [<const_decl>] [<var_decl>] <statement_list>
 example:
     <statement>
         if(1)return;

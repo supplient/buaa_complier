@@ -11,6 +11,8 @@ namespace log{
     Debug error("log/error.log", &warning);
     Debug fatal("log/fatal.log", &error);
 
+    Homework hw("log/hw.log");
+
     Log::Log(const string &filename, Log *lower)
         :file(filename), lower(lower){
     }

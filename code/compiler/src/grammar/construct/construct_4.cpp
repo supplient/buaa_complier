@@ -141,6 +141,11 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
         }
     }while(loop_for_error_skip);
 
+    #if HW
+    if(const_define != NULL)
+        log::hw << "const define";
+    #endif//HW
+
     return const_define;
 }
 
@@ -185,6 +190,11 @@ ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
         delete const_decl;
         const_decl = NULL;
     }
+
+    #if HW
+    if(const_decl != NULL)
+        log::hw << "const decl";
+    #endif//HW
 
     return const_decl;
 }
@@ -267,11 +277,16 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
         var_define = NULL;
     }
 
+    #if HW
+    if(var_define != NULL)
+        log::hw << "var define";
+    #endif//HW
+
     return var_define;
 }
 
 
-VarDecl* GrammarAnalyzer::constructVarDecl(const SymSet &delimiter){
+VarDecl* GrammarAnalyzer::constructVarDecl(bool overlook, const SymSet &delimiter){
     const string ehd = "var_decl: ";
 
     SymSet idel = delimiter;
@@ -280,14 +295,16 @@ VarDecl* GrammarAnalyzer::constructVarDecl(const SymSet &delimiter){
 
     VarDecl *var_decl = new VarDecl();
     do{
-        // overlook to check whether func_with_return_define
-        lex.nextSymbol(); // we assume this is a `Identifier`, will check later
-        sym::SYMBOL tmp_sym = lex.nextSymbol();
-        lex.goBack();
-        lex.goBack();
-        if(tmp_sym == sym::LEFT_ROUND){
-            // is func_with_return_define
-            break;
+        if(overlook){
+            // overlook to check whether func_with_return_define
+            lex.nextSymbol(); // we assume this is a `Identifier`, will check later
+            sym::SYMBOL tmp_sym = lex.nextSymbol();
+            lex.goBack();
+            lex.goBack();
+            if(tmp_sym == sym::LEFT_ROUND){
+                // is func_with_return_define
+                break;
+            }
         }
 
         // is var_decl
@@ -311,6 +328,11 @@ VarDecl* GrammarAnalyzer::constructVarDecl(const SymSet &delimiter){
         delete var_decl;
         var_decl = NULL;
     }
+
+    #if HW
+    if(var_decl != NULL)
+        log::hw << "var decl";
+    #endif//HW
 
     return var_decl;
 }

@@ -30,5 +30,10 @@ Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
         integer = NULL;
     }
 
+    #if HW
+    if(integer != NULL)
+        log::hw << "integer";
+    #endif//HW
+
     return integer;
 }

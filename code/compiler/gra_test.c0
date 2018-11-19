@@ -2,5 +2,6 @@ const int a=3, b=1;
 const char c='c', d='d';
 int a, b[2];
 void main(){
-
+    const int k=2;
+    int f;
 }
