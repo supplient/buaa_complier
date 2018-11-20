@@ -5,14 +5,16 @@ using namespace std;
 
 void lexTest(string filename);
 void graTest(string filename);
+void semTest(string filename);
 
 void graInterface();
 
 int main()
 {
     //lexTest("lex_test.txt");
-    graTest("gra_test.c0");
+    //graTest("sem_test.c0");
     //graTest("example.c0");
+    semTest("sem_test.c0");
 
     //graInterface();
 

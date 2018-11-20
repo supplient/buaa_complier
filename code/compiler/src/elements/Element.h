@@ -5,13 +5,26 @@
 #include <string>
 
 #include "symbol.h"
+#include "Tuple.h"
+#include "NameTable.h"
 
 using namespace std;
 
 class Element{
     public:
         Element(){}
-        //virtual bool evaluate()=0;
+        virtual ~Element(){}
+        virtual vector<Tuple*> dump(NameTable &tab){vector<Tuple*> res; return res;}
+
+        void errorRepo(string msg){
+            errorRepo(msg, start_line, end_line);
+        }
+
+        void errorRepo(string msg, int start_line, int end_line){
+            // TODO print origin code line.
+            cerr << "Semantics Error from line[" << start_line << "] to line[" << end_line << "]--" << endl;
+            cerr << "\t" << msg << endl;
+        }
 
         int start_line;
         int end_line;

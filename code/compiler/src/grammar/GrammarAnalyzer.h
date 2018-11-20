@@ -8,7 +8,7 @@
 #include "LexAnalyzer.h"
 #include "log.h"
 
-#define HW true
+#define HW false
 
 //2
 #include "Integer.h"
