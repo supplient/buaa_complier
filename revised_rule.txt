@@ -321,7 +321,7 @@ effect:
 11.
 rule:
     O<main_func> ::= void main '('')''{'<compound_statement>'}'
-    <program> ::= [<const_decl>] [<var_decl>] {<func_define>}<main_func>
+    O<program> ::= [<const_decl>] [<var_decl>] {<func_define>}<main_func>
 example:
     <main_func>
         void main(){}

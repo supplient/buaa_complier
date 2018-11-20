@@ -9,7 +9,8 @@ void graTest(string filename);
 int main()
 {
     //lexTest("lex_test.txt");
-    graTest("gra_test.c0");
+    //graTest("gra_test.c0");
+    graTest("example.c0");
 
     cout << "Hello world!" << endl;
     return 0;

@@ -236,7 +236,7 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
         }
         if(*lex == sym::DEFAULT)
             lex.nextSymbol();
-        else 
+        else
             fail_flag = true;
 
         if(*lex != sym::COLON){
@@ -276,7 +276,7 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
         log::hw << "switch_statement";
     #endif// HW
 
-    return NULL;
+    return switch_state;
 }
 
 SwitchCase* GrammarAnalyzer::constructSwitchCase(const SymSet &delimiter){
