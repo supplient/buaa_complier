@@ -241,7 +241,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
         log::debug << "<var_define> once.";
         bool fail_flag = false;
         string ident;
-        int dim=1;
+        int dim=0;
 
         lex.nextSymbol();
         if(*lex != sym::IDENTIFIER){

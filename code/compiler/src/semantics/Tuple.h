@@ -1,8 +1,10 @@
 #ifndef TUPLE_H
 #define TUPLE_H
 
-#include "Operand.h"
 #include <iostream>
+#include <vector>
+
+#include "Operand.h"
 
 using namespace std;
 
@@ -46,5 +48,7 @@ public:
         return s;
     }
 };
+
+typedef vector<Tuple*> Tuples;
 
 #endif//TUPLE_H

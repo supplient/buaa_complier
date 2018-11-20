@@ -7,6 +7,7 @@
 #include "symbol.h"
 #include "Tuple.h"
 #include "NameTable.h"
+#include "log.h"
 
 using namespace std;
 

@@ -27,13 +27,19 @@ void semTest(string filename){
     vector<Tuple*> tuples = program->dump(tab);
 
     cout << "Start dump name table." << endl;
+    cout << "---------------------------" << endl;
     cout << tab.toString();
+    cout << "---------------------------" << endl;
     cout << "Dump done." << endl;
 
+    cout << endl;
+
     cout << "Start dump tuples." << endl;
+    cout << "---------------------------" << endl;
     for(Tuple* tuple : tuples){
         cout << tuple->toString() << endl;
         delete tuple;
     }
+    cout << "---------------------------" << endl;
     cout << "Dump done." << endl;
 }

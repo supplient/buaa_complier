@@ -82,6 +82,7 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     SymSet idel = delimiter;// internal delimiter -- just a temp SymSet for skip
     sym::SYMBOL check_sym;// the symbol to be checked -- just a temp SYMBOL to reduce code.
     int start_line = lex.getLineNo();
+    bool fail_flag = false;
 
     // init idel
     idel.insert(sym::VOID);
@@ -100,8 +101,10 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
 
     check_sym = sym::MAIN;
@@ -111,8 +114,10 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
 
     check_sym = sym::LEFT_ROUND;
@@ -122,8 +127,10 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
 
     check_sym = sym::RIGHT_ROUND;
@@ -133,8 +140,10 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
 
     check_sym = sym::LEFT_BRACE;
@@ -144,14 +153,18 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
 
     SymSet suffix;
     suffix.insert(sym::RIGHT_BRACE);
     main_func->compound_statement =
         constructCompoundStatement(suffix, delimiter);
+    if(main_func->compound_statement == NULL)
+        fail_flag = true;
     // Should have nextSymboled
     // TODO erase compound_statement's head from idel
     // Note: Must reserve RIGHT_BRACE, use set's diff to do this.
@@ -163,9 +176,16 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
         if(*lex == check_sym)
             lex.nextSymbol();
     }
-    else
+    if(*lex == check_sym)
         lex.nextSymbol();
+    else
+        fail_flag = true;
     idel.erase(check_sym);
+
+    if(fail_flag){
+        delete main_func;
+        main_func = NULL;
+    }
 
     int end_line = lex.getLineNo();
     if(main_func){
