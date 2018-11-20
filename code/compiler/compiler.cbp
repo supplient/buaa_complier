@@ -47,6 +47,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="interface/gra_interface.cpp" />
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
@@ -69,13 +70,12 @@
 		<Unit filename="src/elements/4/VarDecl.h" />
 		<Unit filename="src/elements/4/VarDefine.h" />
 		<Unit filename="src/elements/5/FuncDefine.h" />
+		<Unit filename="src/elements/5/Param.h" />
 		<Unit filename="src/elements/7/Condition.h" />
 		<Unit filename="src/elements/7/SwitchCase.h" />
 		<Unit filename="src/elements/7/SwitchCaseList.h" />
 		<Unit filename="src/elements/8/FuncCallExp.h" />
 		<Unit filename="src/elements/Element.h" />
-		<Unit filename="src/elements/FuncDefine.cpp" />
-		<Unit filename="src/elements/FuncDefine.h" />
 		<Unit filename="src/elements/Program.cpp" />
 		<Unit filename="src/elements/Program.h" />
 		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
