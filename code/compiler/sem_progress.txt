@@ -1,0 +1,34 @@
+2
+    Integer
+
+3
+    Expression
+    Factor
+    Item
+
+4
+    ConstDecl
+    ConstDefine
+  O VarDecl
+  O VarDefine
+
+5
+    FuncDefine
+    Param
+
+7
+    Condition
+    SwitchCase
+    SwitchCaseList
+
+8
+    FuncCallExp
+
+10
+    CompoundStatement
+    Statement
+    StatementList
+
+11
+    MainFunc
+    Program
