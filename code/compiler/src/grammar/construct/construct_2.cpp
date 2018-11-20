@@ -7,6 +7,7 @@ using namespace std;
 Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
     const string ehd = "integer: ";
     bool minus = false;
+    int start_line = lex.getLineNo();
 
     Integer *integer = new Integer();
     switch(*lex){
@@ -29,6 +30,12 @@ Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
     else{
         delete integer;
         integer = NULL;
+    }
+
+    int end_line = lex.getLineNo();
+    if(integer){
+        integer->start_line = start_line;
+        integer->end_line = end_line;
     }
 
     #if HW

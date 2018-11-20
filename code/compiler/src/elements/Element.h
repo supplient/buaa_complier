@@ -10,10 +10,11 @@ using namespace std;
 
 class Element{
     public:
-        Element():ele_name("Element"){}
+        Element(){}
         //virtual bool evaluate()=0;
 
-        string ele_name;
+        int start_line;
+        int end_line;
 };
 
 #endif//ELEMENT_H

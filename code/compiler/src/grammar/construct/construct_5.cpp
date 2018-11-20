@@ -11,6 +11,7 @@ Param* GrammarAnalyzer::constructParam(const SymSet &delimiter){
     idel.insert(sym::CHAR);
     idel.insert(sym::IDENTIFIER);
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     Param *param = new Param();
 
@@ -48,6 +49,12 @@ Param* GrammarAnalyzer::constructParam(const SymSet &delimiter){
         param = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(param){
+        param->start_line = start_line;
+        param->end_line = end_line;
+    }
+
     #if HW
     if(param)
         log::hw << "param";
@@ -70,6 +77,7 @@ FuncDefine* GrammarAnalyzer::constructFuncDefine(const SymSet &delimiter){
     // TODO insert compound_statement's head
     idel.insert(sym::RIGHT_BRACE);
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     FuncDefine *func_def = new FuncDefine();
 
@@ -166,6 +174,12 @@ FuncDefine* GrammarAnalyzer::constructFuncDefine(const SymSet &delimiter){
     if(fail_flag){
         delete func_def;
         func_def = NULL;
+    }
+
+    int end_line = lex.getLineNo();
+    if(func_def){
+        func_def->start_line = start_line;
+        func_def->end_line = end_line;
     }
 
     #if HW

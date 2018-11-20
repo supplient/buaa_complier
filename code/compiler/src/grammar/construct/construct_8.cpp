@@ -12,6 +12,7 @@ FuncCallExp* GrammarAnalyzer::constructFuncCallExp(const SymSet &delimiter){
     // TODO insert value_param_list 's head
     idel.insert(sym::RIGHT_ROUND);
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     FuncCallExp *call_exp = new FuncCallExp();
 
@@ -71,8 +72,15 @@ FuncCallExp* GrammarAnalyzer::constructFuncCallExp(const SymSet &delimiter){
         call_exp = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(call_exp){
+        call_exp->start_line = start_line;
+        call_exp->end_line = end_line;
+    }
+
     #if HW
-    log::hw << "func_call_expression";
+    if(call_exp)
+        log::hw << "func_call_expression";
     #endif//HW
 
     return call_exp;

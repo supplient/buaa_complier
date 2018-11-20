@@ -11,10 +11,10 @@ void graInterface();
 int main()
 {
     //lexTest("lex_test.txt");
-    //graTest("gra_test.c0");
+    graTest("gra_test.c0");
     //graTest("example.c0");
 
-    graInterface();
+    //graInterface();
 
     //cout << "Hello world!" << endl;
     return 0;

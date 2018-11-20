@@ -18,8 +18,16 @@ class LexAnalyzer
         sym::SYMBOL nextSymbol();
         bool goBack();
 
-        int getLineNo()const{return history.top().line;}
-        int getColumnNo()const{return history.top().column;}
+        int getLineNo()const{
+            if(history.size() < 1)
+                return 1;
+            return history.top().line;
+        }
+        int getColumnNo()const{
+            if(history.size() < 1)
+                return 0;
+            return history.top().column;
+        }
 
         sym::SYMBOL getSymbol(){return symbol;}
         int getIntValue()const{return int_value;}

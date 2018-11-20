@@ -8,6 +8,7 @@ Program* GrammarAnalyzer::constructProgram(){
     const string ehd = "program: ";
     SymSet idel;
     idel.insert(sym::ENDOFFILE);
+    int start_line = lex.getLineNo();
 
     Program *program = new Program();
     lex.nextSymbol();
@@ -62,6 +63,12 @@ Program* GrammarAnalyzer::constructProgram(){
         skip(idel);
     }
 
+    int end_line = lex.getLineNo();
+    if(program){
+        program->start_line = start_line;
+        program->end_line = end_line;
+    }
+
 #if HW
     if(program != NULL)
         log::hw << "program";
@@ -74,6 +81,7 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     const string ehd = "main_func: ";// error head
     SymSet idel = delimiter;// internal delimiter -- just a temp SymSet for skip
     sym::SYMBOL check_sym;// the symbol to be checked -- just a temp SYMBOL to reduce code.
+    int start_line = lex.getLineNo();
 
     // init idel
     idel.insert(sym::VOID);
@@ -158,6 +166,12 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
     else
         lex.nextSymbol();
     idel.erase(check_sym);
+
+    int end_line = lex.getLineNo();
+    if(main_func){
+        main_func->start_line = start_line;
+        main_func->end_line = end_line;
+    }
 
 #if HW
     if(main_func != NULL)

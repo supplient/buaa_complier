@@ -6,6 +6,7 @@ using namespace std;
 
 Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
     Factor *factor = NULL;
+    int start_line = lex.getLineNo();
 
     // const_factor
     if(*lex == sym::PLUS
@@ -139,6 +140,13 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
             #endif// HW
         }
     }
+
+    int end_line = lex.getLineNo();
+    if(factor){
+        factor->start_line = start_line;
+        factor->end_line = end_line;
+    }
+
     return factor;
 }
 
@@ -148,6 +156,7 @@ Item* GrammarAnalyzer::constructItem(const SymSet &delimiter){
     // TODO insert Factor's head
     idel.insert(sym::MULTI);
     idel.insert(sym::DIV);
+    int start_line = lex.getLineNo();
 
     Item *item = new Item();
 
@@ -173,8 +182,15 @@ Item* GrammarAnalyzer::constructItem(const SymSet &delimiter){
         item = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(item){
+        item->start_line = start_line;
+        item->end_line = end_line;
+    }
+
 #if HW
-    log::hw << "item";
+    if(item)
+        log::hw << "item";
 #endif// HW
 
     return item;
@@ -186,6 +202,7 @@ Expression* GrammarAnalyzer::constructExpression(const SymSet &delimter){
     idel.insert(sym::PLUS);
     idel.insert(sym::MINUS);
     // TODO insert item's head
+    int start_line = lex.getLineNo();
 
     Expression *exp = new Expression();
 
@@ -213,8 +230,15 @@ Expression* GrammarAnalyzer::constructExpression(const SymSet &delimter){
         exp = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(exp){
+        exp->start_line = start_line;
+        exp->end_line = end_line;
+    }
+
 #if HW
-    log::hw << "expression";
+    if(exp)
+        log::hw << "expression";
 #endif// HW
 
     return exp;

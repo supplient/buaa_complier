@@ -8,6 +8,7 @@ using namespace std;
 ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
     const string ehd = "const_define: ";
     bool loop_for_error_skip = false;
+    int start_line = lex.getLineNo();
 
     ConstDefine *const_define = NULL;
     do{
@@ -141,6 +142,12 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
         }
     }while(loop_for_error_skip);
 
+    int end_line = lex.getLineNo();
+    if(const_define){
+        const_define->start_line = start_line;
+        const_define->end_line = end_line;
+    }
+
     #if HW
     if(const_define != NULL)
         log::hw << "const define";
@@ -151,6 +158,7 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
 
 ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
     const string ehd = "const_decl: ";
+    int start_line = lex.getLineNo();
 
     SymSet idel = delimiter;
     idel.insert(sym::CONST);
@@ -191,6 +199,12 @@ ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
         const_decl = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(const_decl){
+        const_decl->start_line = start_line;
+        const_decl->end_line = end_line;
+    }
+
     #if HW
     if(const_decl != NULL)
         log::hw << "const decl";
@@ -210,6 +224,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
     idel.insert(sym::UNSIGNED_INTEGER);
     idel.insert(sym::RIGHT_SQUARE);
     idel.insert(sym::COMMA);
+    int start_line = lex.getLineNo();
 
     VarDefine *var_define = new VarDefine();
     if(*lex != sym::INT && *lex != sym::CHAR){
@@ -277,6 +292,12 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
         var_define = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(var_define){
+        var_define->start_line = start_line;
+        var_define->end_line = end_line;
+    }
+
     #if HW
     if(var_define != NULL)
         log::hw << "var define";
@@ -288,6 +309,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
 
 VarDecl* GrammarAnalyzer::constructVarDecl(bool overlook, const SymSet &delimiter){
     const string ehd = "var_decl: ";
+    int start_line = lex.getLineNo();
 
     SymSet idel = delimiter;
     // TODO insert <var_define> 's head
@@ -327,6 +349,12 @@ VarDecl* GrammarAnalyzer::constructVarDecl(bool overlook, const SymSet &delimite
         // No var define succeed
         delete var_decl;
         var_decl = NULL;
+    }
+
+    int end_line = lex.getLineNo();
+    if(var_decl){
+        var_decl->start_line = start_line;
+        var_decl->end_line = end_line;
     }
 
     #if HW

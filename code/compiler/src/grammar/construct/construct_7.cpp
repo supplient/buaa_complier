@@ -13,6 +13,7 @@ Condition* GrammarAnalyzer::constructCondition(const SymSet &delimiter){
     idel.insert(sym::MOREOREQUAL);
     idel.insert(sym::NOTEQUAL);
     idel.insert(sym::EQUAL);
+    int start_line = lex.getLineNo();
 
     Condition *cond = new Condition();
 
@@ -42,6 +43,12 @@ Condition* GrammarAnalyzer::constructCondition(const SymSet &delimiter){
         cond = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(cond){
+        cond->start_line = start_line;
+        cond->end_line = end_line;
+    }
+
     #if HW
     if(cond)
         log::hw << "condition";
@@ -59,6 +66,7 @@ IfStatement* GrammarAnalyzer::constructIfStatement(const SymSet &delimiter){
     idel.insert(sym::RIGHT_ROUND);
     // TODO insert statement's head
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     IfStatement *if_state = new IfStatement();
 
@@ -102,6 +110,12 @@ IfStatement* GrammarAnalyzer::constructIfStatement(const SymSet &delimiter){
         if_state = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(if_state){
+        if_state->start_line = start_line;
+        if_state->end_line = end_line;
+    }
+
     #if HW
     if(if_state)
         log::hw << "if statement";
@@ -119,6 +133,7 @@ WhileStatement* GrammarAnalyzer::constructWhileStatement(const SymSet &delimiter
     idel.insert(sym::RIGHT_ROUND);
     // TODO insert statement 's head
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     WhileStatement *while_state = new WhileStatement();
 
@@ -162,6 +177,12 @@ WhileStatement* GrammarAnalyzer::constructWhileStatement(const SymSet &delimiter
         while_state = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(while_state){
+        while_state->start_line = start_line;
+        while_state->end_line = end_line;
+    }
+
     #if HW
     if(while_state)
         log::hw << "while statement";
@@ -181,6 +202,7 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
     // TODO insert switch_case_list & switch_default 's head
     idel.insert(sym::RIGHT_BRACE);
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     SwitchStatement *switch_state = new SwitchStatement();
 
@@ -271,6 +293,12 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
         switch_state = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(switch_state){
+        switch_state->start_line = start_line;
+        switch_state->end_line = end_line;
+    }
+
     #if HW
     if(switch_state)
         log::hw << "switch_statement";
@@ -288,6 +316,7 @@ SwitchCase* GrammarAnalyzer::constructSwitchCase(const SymSet &delimiter){
     idel.insert(sym::CHARACTER);
     // TODO insert statment 's head
     bool fail_flag = false;
+    int start_line = lex.getLineNo();
 
     SwitchCase *switch_case = new SwitchCase();
 
@@ -332,6 +361,12 @@ SwitchCase* GrammarAnalyzer::constructSwitchCase(const SymSet &delimiter){
         switch_case = NULL;
     }
 
+    int end_line = lex.getLineNo();
+    if(switch_case){
+        switch_case->start_line = start_line;
+        switch_case->end_line = end_line;
+    }
+
     #if HW
     if(switch_case)
         log::hw << "switch_case";
@@ -342,6 +377,7 @@ SwitchCase* GrammarAnalyzer::constructSwitchCase(const SymSet &delimiter){
 
 SwitchCaseList* GrammarAnalyzer::constructSwitchCaseList(const SymSet &delimiter){
     SwitchCaseList *case_list = new SwitchCaseList();
+    int start_line = lex.getLineNo();
 
     while(*lex == sym::CASE){
         SwitchCase *switch_case = constructSwitchCase(delimiter);
@@ -352,6 +388,12 @@ SwitchCaseList* GrammarAnalyzer::constructSwitchCaseList(const SymSet &delimiter
     if(case_list->case_list.size() < 1){
         delete case_list;
         case_list = NULL;
+    }
+
+    int end_line = lex.getLineNo();
+    if(case_list){
+        case_list->start_line = start_line;
+        case_list->end_line = end_line;
     }
 
     #if HW

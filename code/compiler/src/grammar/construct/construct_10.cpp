@@ -6,6 +6,7 @@ using namespace std;
 
 Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
     Statement *state = NULL;
+    int start_line = lex.getLineNo();
 
     // input_statement
     if(*lex == sym::SCANF){
@@ -336,6 +337,12 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
         skip(delimiter);
     }
 
+    int end_line = lex.getLineNo();
+    if(state){
+        state->start_line = start_line;
+        state->end_line = end_line;
+    }
+
     return state;
 }
 
@@ -343,6 +350,7 @@ StatementList* GrammarAnalyzer::constructStatementList(const SymSet &suffix, con
     StatementList *statement_list = new StatementList();
     SymSet idel = delimiter;
     idel.insert(suffix.begin(), suffix.end());
+    int start_line = lex.getLineNo();
 
     if(suffix.find(*lex) == suffix.end()){
         Statement *state = constructStatement(idel);
@@ -354,8 +362,15 @@ StatementList* GrammarAnalyzer::constructStatementList(const SymSet &suffix, con
         }
     }
 
+    int end_line = lex.getLineNo();
+    if(statement_list){
+        statement_list->start_line = start_line;
+        statement_list->end_line = end_line;
+    }
+
     #if HW
-    log::hw << "statement list";
+    if(statement_list)
+        log::hw << "statement list";
     #endif//HW
 
     return statement_list;
@@ -366,6 +381,7 @@ CompoundStatement* GrammarAnalyzer::constructCompoundStatement(const SymSet &suf
     SymSet idel = delimiter;
     // TODO insert const_decl, var_decl, statement_list's head
     idel.insert(suffix.begin(), suffix.end());
+    int start_line = lex.getLineNo();
 
     // const_decl
     if(*lex == sym::CONST){
@@ -383,6 +399,12 @@ CompoundStatement* GrammarAnalyzer::constructCompoundStatement(const SymSet &suf
 
     // statment_list
     com_stat->statement_list = constructStatementList(suffix, idel);
+
+    int end_line = lex.getLineNo();
+    if(com_stat){
+        com_stat->start_line = start_line;
+        com_stat->end_line = end_line;
+    }
 
     #if HW
     if(com_stat != NULL)
