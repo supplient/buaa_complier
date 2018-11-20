@@ -1,4 +1,6 @@
-int a;
+const char c='c';
+const int b = 6;
+int a[2];
 
 void main(){
     

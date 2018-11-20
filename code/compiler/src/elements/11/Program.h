@@ -24,10 +24,14 @@ public:
         vector<Tuple*> tuples;
 
         // TODO const_decl
+        if(const_decl){
+            Tuples sub_tuples = const_decl->dump(tab, sem::GLOBAL_FUNC_NAME);
+            tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
+        }
 
         if(var_decl){
-            Tuples var_decl_tuples = var_decl->dump(tab, sem::GLOBAL_FUNC_NAME);
-            tuples.insert(tuples.end(), var_decl_tuples.begin(), var_decl_tuples.end());
+            Tuples sub_tuples = var_decl->dump(tab, sem::GLOBAL_FUNC_NAME);
+            tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
         }
 
         // TODO func_define_list

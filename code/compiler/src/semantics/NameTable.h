@@ -32,7 +32,23 @@ public:
         if(lookUp(name))
             return false; // the same name has been declared in this func
         VarEntry *entry = new VarEntry(name, this, type, dim);
-        entries.push_back(static_cast<VarEntry*>(entry));
+        entries.push_back(static_cast<NameTableEntry*>(entry));
+        return true;
+    }
+
+    bool insertIntConst(string name, int value){
+        if(lookUp(name))
+            return false;
+        ConstEntry *entry = new ConstEntry(name, this, value);
+        entries.push_back(static_cast<NameTableEntry*>(entry));
+        return true;
+    }
+
+    bool insertCharConst(string name, char value){
+        if(lookUp(name))
+            return false;
+        ConstEntry *entry = new ConstEntry(name, this, value);
+        entries.push_back(static_cast<NameTableEntry*>(entry));
         return true;
     }
 
@@ -90,6 +106,14 @@ public:
 
     bool insertVar(string func_name, string name, sym::SYMBOL type, int dim){
         return func_map[func_name]->insertVar(name, type, dim);
+    }
+
+    bool insertIntConst(string func_name, string name, int value){
+        return func_map[func_name]->insertIntConst(name, value);
+    }
+
+    bool insertCharConst(string func_name, string name, char value){
+        return func_map[func_name]->insertCharConst(name, value);
     }
     // TODO insertConst, insertFunc
 

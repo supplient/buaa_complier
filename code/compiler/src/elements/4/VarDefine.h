@@ -27,7 +27,9 @@ class VarDefine: public Element
                 string ident = ident_list[i];
                 unsigned int dim = dim_list[i];
 
-                tab.insertVar(func_name, ident, type, dim);
+                if(!tab.insertVar(func_name, ident, type, dim)){
+                    errorRepo("multi defination for " + ident);
+                }
             }
 
             return tuples;
