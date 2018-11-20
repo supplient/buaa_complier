@@ -25,6 +25,19 @@ namespace log{
             Log *lower;
     };
 
+    class Fatal:public Log{
+        public:
+            Fatal(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~Fatal(){}
+
+            template<class T>
+            Fatal& operator<<(const T &s){
+                file << "[FATAL]" << s << endl;
+                cerr << "[FATAL]" << s << endl;
+                return dynamic_cast<Fatal&>(Log::operator<<(s));
+            }
+    };
+
     class Debug:public Log{
         public:
             Debug(const string &filename, Log *lower=NULL):Log(filename, lower){}
@@ -50,7 +63,7 @@ namespace log{
             }
     };
 
-    extern Debug fatal;
+    extern Fatal fatal;
     extern Debug error;
     extern Debug warning;
     extern Debug info;

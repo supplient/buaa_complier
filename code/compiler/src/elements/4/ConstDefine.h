@@ -38,7 +38,7 @@ class IntConstDefine : public ConstDefine
             // TODO dump info tuples
 
             // fill table
-            for(int i=0;i<ident_list.size();i++){
+            for(unsigned int i=0;i<ident_list.size();i++){
                 if(!tab.insertIntConst(func_name, ident_list[i], integer_list[i]->value)){
                     errorRepo("multi defination for " + ident_list[i]);
                 }
@@ -67,7 +67,7 @@ class CharConstDefine : public ConstDefine
             // TODO dump info tuples
 
             // fill table
-            for(int i=0;i<ident_list.size();i++){
+            for(unsigned int i=0;i<ident_list.size();i++){
                 if(!tab.insertCharConst(func_name, ident_list[i], char_list[i])){
                     errorRepo("multi defination for " + ident_list[i]);
                 }

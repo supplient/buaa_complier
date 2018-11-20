@@ -17,6 +17,7 @@
 					<Add directory="src/lex" />
 					<Add directory="src/grammar" />
 					<Add directory="src/elements" />
+					<Add directory="src/semantics" />
 					<Add directory="log" />
 					<Add directory="src/elements/2" />
 					<Add directory="src/elements/3" />
@@ -46,6 +47,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="src/elements" />
 		</Compiler>
 		<Unit filename="interface/gra_interface.cpp" />
 		<Unit filename="log/log.cpp" />
@@ -57,16 +59,14 @@
 		<Unit filename="src/elements/10/StatementList.h" />
 		<Unit filename="src/elements/11/MainFunc.cpp" />
 		<Unit filename="src/elements/11/MainFunc.h" />
+		<Unit filename="src/elements/11/Program.h" />
 		<Unit filename="src/elements/2/Integer.cpp" />
 		<Unit filename="src/elements/2/Integer.h" />
 		<Unit filename="src/elements/3/Expression.h" />
 		<Unit filename="src/elements/3/Factor.h" />
 		<Unit filename="src/elements/3/Item.h" />
-		<Unit filename="src/elements/4/ConstDecl.cpp" />
 		<Unit filename="src/elements/4/ConstDecl.h" />
-		<Unit filename="src/elements/4/ConstDefine.cpp" />
 		<Unit filename="src/elements/4/ConstDefine.h" />
-		<Unit filename="src/elements/4/VarDecl.cpp" />
 		<Unit filename="src/elements/4/VarDecl.h" />
 		<Unit filename="src/elements/4/VarDefine.h" />
 		<Unit filename="src/elements/5/FuncDefine.h" />
@@ -76,8 +76,6 @@
 		<Unit filename="src/elements/7/SwitchCaseList.h" />
 		<Unit filename="src/elements/8/FuncCallExp.h" />
 		<Unit filename="src/elements/Element.h" />
-		<Unit filename="src/elements/Program.cpp" />
-		<Unit filename="src/elements/Program.h" />
 		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
 		<Unit filename="src/grammar/GrammarAnalyzer.h" />
 		<Unit filename="src/grammar/construct/construct_10.cpp" />
@@ -91,10 +89,17 @@
 		<Unit filename="src/lex/LexAnalyzer.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
+		<Unit filename="src/semantics/NameTable.h" />
+		<Unit filename="src/semantics/NameTableEntry.cpp" />
+		<Unit filename="src/semantics/NameTableEntry.h" />
+		<Unit filename="src/semantics/Operand.h" />
+		<Unit filename="src/semantics/Tuple.cpp" />
+		<Unit filename="src/semantics/Tuple.h" />
 		<Unit filename="src/symbol.cpp" />
 		<Unit filename="src/symbol.h" />
 		<Unit filename="test/gra_test.cpp" />
 		<Unit filename="test/lex_test.cpp" />
+		<Unit filename="test/sem_test.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

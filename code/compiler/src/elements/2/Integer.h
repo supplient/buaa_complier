@@ -14,6 +14,13 @@ class Integer : public Element
         virtual ~Integer();
 
         int value;
+
+        virtual Tuples dump(NameTable &tab){
+            Tuples tuples;
+            log::fatal << "Integer: should never dump Integer!";
+            exit(-1);
+            return tuples;
+        }
 };
 
 #endif // CONST_DECL_H

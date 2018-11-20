@@ -23,7 +23,7 @@ class VarDefine: public Element
             // TODO dump info tuples
 
             // fill tab
-            for(int i=0;i<ident_list.size();i++){
+            for(unsigned int i=0;i<ident_list.size();i++){
                 string ident = ident_list[i];
                 unsigned int dim = dim_list[i];
 

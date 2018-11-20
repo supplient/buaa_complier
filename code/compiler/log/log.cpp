@@ -9,7 +9,7 @@ namespace log{
     Debug info("log/info.log", &debug);
     Debug warning("log/warning.log", &info);
     Debug error("log/error.log", &warning);
-    Debug fatal("log/fatal.log", &error);
+    Fatal fatal("log/fatal.log", &error);
 
     Homework hw("log/hw.log");
 

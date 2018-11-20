@@ -1,5 +1,5 @@
 2
-    Integer
+  X Integer
 
 3
     Expression
@@ -7,8 +7,8 @@
     Item
 
 4
-    ConstDecl
-    ConstDefine
+  O ConstDecl
+  O ConstDefine
   O VarDecl
   O VarDefine
 
