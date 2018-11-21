@@ -9,10 +9,17 @@ class CompoundStatement;
 class FuncDefine: public Element
 {
 public:
+    FuncDefine(){}
+    virtual ~FuncDefine(){}
+
     sym::SYMBOL return_type;
     string func_name;
     vector<Param*> param_list;
     CompoundStatement *compound_state;
+
+    virtual Tuples dump(NameTable &tab){
+        Tuples tuples;
+    }
 };
 
 #endif//FUNC_DEFINE_H

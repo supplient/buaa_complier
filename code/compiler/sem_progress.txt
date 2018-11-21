@@ -3,8 +3,8 @@
 
 3
     Expression
-    Factor
     Item
+    Factor
 
 4
   O ConstDecl
