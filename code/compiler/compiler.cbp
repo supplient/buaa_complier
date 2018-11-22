@@ -55,6 +55,7 @@
 		<Unit filename="main.cpp" />
 		<Unit filename="src/elements/10/CompoundStatement.cpp" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />
+		<Unit filename="src/elements/10/Statement.cpp" />
 		<Unit filename="src/elements/10/Statement.h" />
 		<Unit filename="src/elements/10/StatementList.h" />
 		<Unit filename="src/elements/11/MainFunc.cpp" />
@@ -95,6 +96,7 @@
 		<Unit filename="src/semantics/NameUtil.cpp" />
 		<Unit filename="src/semantics/NameUtil.h" />
 		<Unit filename="src/semantics/Operand.h" />
+		<Unit filename="src/semantics/TempVarPool.h" />
 		<Unit filename="src/semantics/Tuple.cpp" />
 		<Unit filename="src/semantics/Tuple.h" />
 		<Unit filename="src/symbol.cpp" />
