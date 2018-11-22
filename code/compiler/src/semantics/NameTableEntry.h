@@ -2,10 +2,12 @@
 #define NAME_TABLE_ENTRY_H
 
 #include <string>
+#include <vector>
 
 #include "symbol.h"
 #include "log.h"
 
+class Tuple;
 class FuncNameTable;
 
 using namespace std;
@@ -30,14 +32,17 @@ public:
         :name(name), entry_type(entry_type), owner(owner){
     }
 
+    string getOwnerName();
+
     virtual string toString(){
         string s = sem::ENTRY_TYPE_NAME[entry_type];
         s += " " + name;
+        s += " [" + getOwnerName() + "]";
         return s;
     }
 
-    const sem::ENTRY_TYPE entry_type;
     const string name;
+    const sem::ENTRY_TYPE entry_type;
 
 private:
     FuncNameTable *owner;
@@ -94,6 +99,29 @@ public:
     const sym::SYMBOL type;
     const int int_value;
     const char char_value;
+};
+
+class FuncEntry: public NameTableEntry
+{
+public:
+    FuncEntry(const string &name, FuncNameTable *owner,
+            sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple)
+            :   NameTableEntry(name, sem::FUNC_ENTRY, owner),
+                return_type(return_type),
+                param_list(param_list),
+                start_tuple(start_tuple)
+    {}
+
+    virtual string toString(){
+        string s = NameTableEntry::toString();
+        s += " ";
+        s += sym::SYMBOL_NAME[return_type];
+        return s;
+    }
+
+    const sym::SYMBOL return_type;
+    const vector<VarEntry*> param_list;
+    const Tuple *start_tuple;
 };
 
 // TODO FuncEntry

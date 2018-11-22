@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "string": "cpp"
+        "string": "cpp",
+        "xstring": "cpp"
     },
     "files.exclude": {
         "**/*.cbp": true,

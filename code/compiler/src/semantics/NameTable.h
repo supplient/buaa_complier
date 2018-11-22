@@ -28,28 +28,36 @@ public:
         return NULL;
     }
 
-    bool insertVar(string name, sym::SYMBOL type, int dim){
+    VarEntry* insertVar(string name, sym::SYMBOL type, int dim){
         if(lookUp(name))
-            return false; // the same name has been declared in this func
+            return NULL; // the same name has been declared in this func
         VarEntry *entry = new VarEntry(name, this, type, dim);
         entries.push_back(static_cast<NameTableEntry*>(entry));
-        return true;
+        return entry;
     }
 
-    bool insertIntConst(string name, int value){
+    ConstEntry* insertIntConst(string name, int value){
         if(lookUp(name))
-            return false;
+            return NULL;
         ConstEntry *entry = new ConstEntry(name, this, value);
         entries.push_back(static_cast<NameTableEntry*>(entry));
-        return true;
+        return entry;
     }
 
-    bool insertCharConst(string name, char value){
+    ConstEntry* insertCharConst(string name, char value){
         if(lookUp(name))
-            return false;
+            return NULL;
         ConstEntry *entry = new ConstEntry(name, this, value);
         entries.push_back(static_cast<NameTableEntry*>(entry));
-        return true;
+        return entry;
+    }
+
+    FuncEntry* insertFunc(string name, sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple){
+        if(lookUp(name))
+            return NULL;
+        FuncEntry *entry = new FuncEntry(name, this, return_type, param_list, start_tuple);
+        entries.push_back(static_cast<NameTableEntry*>(entry));
+        return entry;
     }
 
     string toString(){
@@ -60,8 +68,9 @@ public:
         return s;
     }
 
+    const string func_name;
+
 private:
-    string func_name;
     vector<NameTableEntry*> entries;
 };
 
@@ -104,18 +113,27 @@ public:
     }
     // TODO lookUpConst, lookUpFunc
 
-    bool insertVar(string func_name, string name, sym::SYMBOL type, int dim){
+    VarEntry* insertVar(string func_name, string name, sym::SYMBOL type, int dim){
+        if(func_map.find(func_name) == func_map.end())
+            func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertVar(name, type, dim);
     }
 
-    bool insertIntConst(string func_name, string name, int value){
+    ConstEntry* insertIntConst(string func_name, string name, int value){
+        if(func_map.find(func_name) == func_map.end())
+            func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertIntConst(name, value);
     }
 
-    bool insertCharConst(string func_name, string name, char value){
+    ConstEntry* insertCharConst(string func_name, string name, char value){
+        if(func_map.find(func_name) == func_map.end())
+            func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertCharConst(name, value);
     }
-    // TODO insertConst, insertFunc
+
+    FuncEntry* insertFunc(string name, sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple){
+        return func_map[sem::GLOBAL_FUNC_NAME]->insertFunc(name, return_type, param_list, start_tuple);
+    }
 
     string toString(){
         string s = "";
