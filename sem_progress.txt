@@ -13,7 +13,7 @@
   O VarDefine
 
 5
-   FuncDefine
+  O FuncDefine
   O Param
 
 7
@@ -25,9 +25,19 @@
     FuncCallExp
 
 10
-    CompoundStatement
+  O CompoundStatement
     Statement
-    StatementList
+      IfStatement
+      WhileStatement
+      SwitchStatement
+      FuncCallStatement
+      AssignStatement
+      InputStatement
+      OutputStatement
+      ReturnStatement
+      EmptyStatement
+      BracedStatement
+  O StatementList
 
 11
     MainFunc

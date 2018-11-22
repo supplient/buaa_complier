@@ -11,8 +11,12 @@ class SwitchCaseList;
 
 class Statement: public Element
 {
-    public:
-
+public:
+    virtual Tuples dump(NameTable &tab, const string &func_name){
+        throw string("Not implemented.");
+        Tuples tuples;// Only for no compile warning
+        return tuples;
+    }
 };
 
 class IfStatement: public Statement
@@ -78,13 +82,20 @@ public:
 
 class EmptyStatement: public Statement
 {
-
+public:
+    virtual Tuples dump(NameTable &tab, const string &func_name){
+        Tuples tuples;
+        // Empty
+        return tuples;
+    }
 };
 
 class BracedStatement: public Statement
 {
 public:
     StatementList *state_list;
+
+    virtual Tuples dump(NameTable &tab, const string &func_name);
 };
 
 #endif//STATEMENT_H
