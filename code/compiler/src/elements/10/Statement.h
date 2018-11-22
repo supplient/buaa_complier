@@ -13,6 +13,11 @@ class Statement: public Element
 {
 public:
     virtual Tuples dump(NameTable &tab, const string &func_name){
+        TempVarPool tvp(tab, func_name);
+        return dump_int(tab, func_name, tvp);
+    }
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
         throw string("Not implemented.");
         Tuples tuples;// Only for no compile warning
         return tuples;
@@ -55,6 +60,8 @@ public:
 
     bool is_array;
     Expression *select;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class InputStatement: public Statement

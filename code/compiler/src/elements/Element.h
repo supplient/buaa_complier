@@ -9,6 +9,7 @@
 #include "NameTable.h"
 #include "log.h"
 #include "NameUtil.h"
+#include "TempVarPool.h"
 
 using namespace std;
 

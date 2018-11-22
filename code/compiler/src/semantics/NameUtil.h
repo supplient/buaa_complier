@@ -15,6 +15,10 @@ public:
     }
 
     static string genEntryName(const NameTableEntry *entry);
+
+    static string genTempVarName(int index){
+        return "#" + to_string(index);
+    }
 };
 
 #endif//NAME_UTIL_H

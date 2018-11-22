@@ -107,10 +107,22 @@ public:
     }
 
     // Maybe useless functions, do not add more if no need.
+    VarEntry* lookUpVarOnlyCurrentFunc(string func_name, string name){
+        NameTableEntry* entry = lookUpOnlyCurrentFunc(func_name, name);
+        if(entry)
+            return dynamic_cast<VarEntry*>(entry);
+        else
+            return NULL;
+    }
+
     VarEntry* lookUpVar(string func_name, string name){
         NameTableEntry* entry = lookUp(func_name, name);
-        return dynamic_cast<VarEntry*>(entry);
+        if(entry)
+            return dynamic_cast<VarEntry*>(entry);
+        else
+            return NULL;
     }
+
     // TODO lookUpConst, lookUpFunc
 
     VarEntry* insertVar(string func_name, string name, sym::SYMBOL type, int dim){
