@@ -8,6 +8,7 @@
 #include "Tuple.h"
 #include "NameTable.h"
 #include "log.h"
+#include "NameUtil.h"
 
 using namespace std;
 

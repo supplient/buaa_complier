@@ -31,6 +31,8 @@ public:
         // create a tuple as the entrance
         // TODO
         Tuple *start_tuple = new Tuple();
+        start_tuple->op = sem::LABEL;
+        start_tuple->left = new Operand(NameUtil::genFuncLabel(func_name));
         tuples.insert(tuples.begin(), start_tuple); // should be at the head
 
         // dump compound_state

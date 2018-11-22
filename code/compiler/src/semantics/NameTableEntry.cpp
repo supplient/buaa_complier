@@ -10,7 +10,7 @@ namespace sem{
     };
 }
 
-string NameTableEntry::getOwnerName(){
+string NameTableEntry::getOwnerName()const{
     if(owner)
         return owner->func_name;
     else

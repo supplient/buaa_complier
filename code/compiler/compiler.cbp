@@ -92,6 +92,8 @@
 		<Unit filename="src/semantics/NameTable.h" />
 		<Unit filename="src/semantics/NameTableEntry.cpp" />
 		<Unit filename="src/semantics/NameTableEntry.h" />
+		<Unit filename="src/semantics/NameUtil.cpp" />
+		<Unit filename="src/semantics/NameUtil.h" />
 		<Unit filename="src/semantics/Operand.h" />
 		<Unit filename="src/semantics/Tuple.cpp" />
 		<Unit filename="src/semantics/Tuple.h" />

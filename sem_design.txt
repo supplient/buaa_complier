@@ -1,0 +1,7 @@
+根据op类型来进行Tuple的分类
+
+EMPTY
+
+LABEL
+    left: string. label name.
+    effect: Do nothing. Only for jump.

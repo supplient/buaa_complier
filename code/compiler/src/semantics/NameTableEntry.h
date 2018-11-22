@@ -32,7 +32,7 @@ public:
         :name(name), entry_type(entry_type), owner(owner){
     }
 
-    string getOwnerName();
+    string getOwnerName()const;
 
     virtual string toString(){
         string s = sem::ENTRY_TYPE_NAME[entry_type];

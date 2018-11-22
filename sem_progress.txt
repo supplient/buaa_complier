@@ -13,8 +13,8 @@
   O VarDefine
 
 5
-    FuncDefine
-    Param
+   FuncDefine
+  O Param
 
 7
     Condition

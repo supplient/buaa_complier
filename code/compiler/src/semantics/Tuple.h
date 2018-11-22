@@ -12,6 +12,7 @@ namespace sem{
 
     enum OP{
         EMPTY = 0,
+        LABEL,
         // TODO
     };
 
