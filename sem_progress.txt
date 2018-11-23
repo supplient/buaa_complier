@@ -2,13 +2,13 @@
   X Integer
 
 3
-    Expression
-    Item
+  O Expression
+  O Item
     Factor
       VarFactor
       FuncFactor
       ExpFactor
-      ConstFactor
+  O   ConstFactor
 
 4
   O ConstDecl
@@ -35,7 +35,7 @@
       WhileStatement
       SwitchStatement
       FuncCallStatement
-      AssignStatement
+  O   AssignStatement
       InputStatement
       OutputStatement
       ReturnStatement

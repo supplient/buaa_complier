@@ -4,7 +4,7 @@ int a[2];
 int d;
 
 void func(int a){
-    d = 3;
+    d = - 'c' + 10/5;
 }
 
 void main(){

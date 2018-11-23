@@ -10,3 +10,14 @@ ASSIGN
     left: any type. value to assign.
     res: var. var to be assigned
     effect: res = left
+
+NEG
+    left: any type
+    res: var.
+    effect: res = -left
+
+ADD, SUB, MUL, DIV
+    left: any type.
+    right: any type.
+    res: var.
+    effect: res = left X right

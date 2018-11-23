@@ -14,6 +14,11 @@ namespace sem{
         EMPTY = 0,
         LABEL,
         ASSIGN,
+        NEG,
+        ADD,
+        SUB,
+        MUL,
+        DIV,
         // TODO
     };
 

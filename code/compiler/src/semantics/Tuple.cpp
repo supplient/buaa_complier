@@ -5,5 +5,10 @@ namespace sem{
         "EMPTY",
         "LABEL",
         "ASSIGN",
+        "NEG",
+        "ADD",
+        "SUB",
+        "MUL",
+        "DIV",
     };
 }

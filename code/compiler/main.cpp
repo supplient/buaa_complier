@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include "log.h"
 
 using namespace std;
 
@@ -11,13 +12,18 @@ void graInterface();
 
 int main()
 {
-    //lexTest("lex_test.txt");
-    //graTest("sem_test.c0");
-    //graTest("example.c0");
-    semTest("sem_test.c0");
+    try{
+        //lexTest("lex_test.txt");
+        //graTest("sem_test.c0");
+        //graTest("example.c0");
+        semTest("sem_test.c0");
 
-    //graInterface();
+        //graInterface();
 
-    //cout << "Hello world!" << endl;
+        //cout << "Hello world!" << endl;
+    }
+    catch(string s){
+        log::fatal << s;
+    }
     return 0;
 }
