@@ -35,7 +35,7 @@ public:
 
         for(FuncDefine *func_define: func_define_list){
             if(!func_define)
-                continue;
+                throw string("Func Define should never be NULL.");
             Tuples sub_tuples = func_define->dump(tab);
             tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
         }

@@ -90,7 +90,7 @@ public:
                 s += " " + string(1, char_value);
                 break;
             default:
-                log::fatal << "const entry: invalid type [" << type << "]";
+                log::error << "const entry: invalid type [" << type << "]";
                 exit(-1);
         }
         return s;

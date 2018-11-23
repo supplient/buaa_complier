@@ -46,7 +46,7 @@ Tuples BracedStatement::dump(NameTable &tab, const string &func_name){
         tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
     }
     else
-        log::fatal << "NULL state_list in BracedStatement";
+        log::error << "NULL state_list in BracedStatement";
 
     return tuples;
 }

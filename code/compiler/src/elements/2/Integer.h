@@ -17,7 +17,7 @@ class Integer : public Element
 
         virtual Tuples dump(NameTable &tab){
             Tuples tuples;
-            log::fatal << "Integer: should never dump Integer!";
+            log::error << "Integer: should never dump Integer!";
             exit(-1);
             return tuples;
         }

@@ -16,7 +16,7 @@ class VarDefine: public Element
             Tuples tuples;
 
             if(ident_list.size() != dim_list.size()){
-                log::fatal << "var's number is not equal with dim's number";
+                log::error << "var's number is not equal with dim's number";
                 exit(-1);
             }
 

@@ -38,6 +38,19 @@ namespace log{
             }
     };
 
+    class Error:public Log{
+        public:
+            Error(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~Error(){}
+
+            template<class T>
+            Error& operator<<(const T &s){
+                file << "[Error]" << s << endl;
+                cerr << "[Error]" << s << endl;
+                return dynamic_cast<Error&>(Log::operator<<(s));
+            }
+    }
+
     class Debug:public Log{
         public:
             Debug(const string &filename, Log *lower=NULL):Log(filename, lower){}
@@ -64,7 +77,7 @@ namespace log{
     };
 
     extern Fatal fatal;
-    extern Debug error;
+    extern Error error;
     extern Debug warning;
     extern Debug info;
     extern Debug debug;

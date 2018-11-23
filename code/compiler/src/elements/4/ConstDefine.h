@@ -31,7 +31,7 @@ class IntConstDefine : public ConstDefine
             Tuples tuples;
 
             if(ident_list.size() != integer_list.size()){
-                log::fatal << "const define: ident size != integer size.";
+                log::error << "const define: ident size != integer size.";
                 exit(-1);
             }
 
@@ -60,7 +60,7 @@ class CharConstDefine : public ConstDefine
             Tuples tuples;
 
             if(ident_list.size() != char_list.size()){
-                log::fatal << "const define: ident size != char size.";
+                log::error << "const define: ident size != char size.";
                 exit(-1);
             }
 
