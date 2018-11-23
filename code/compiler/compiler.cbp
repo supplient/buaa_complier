@@ -53,6 +53,7 @@
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/config.h" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />
 		<Unit filename="src/elements/10/Statement.cpp" />
 		<Unit filename="src/elements/10/Statement.h" />
