@@ -26,13 +26,28 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
             return tuples;
         }
 
+        // check whether is an array name
+        if(left_var->dim != 0){
+            errorRepo("Cannot assign to an array!");
+            return tuples;
+        }
+
         // evaluate right value
         if(!exp){
             log::error << "AssignMent: exp is NULL!";
             exit(-1);
         }
-        Tuples sub_tuples = exp->dump(tab, func_name, tvp, left_var); // TODO
+        Operand *right_ord = NULL;
+        Tuples sub_tuples = exp->dump(tab, func_name, tvp, &right_ord);
         tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
+
+        // assign right value to left value
+        Operand *left_ord = new Operand(left_var);
+        Tuple *assign_tuple = new Tuple();
+        assign_tuple->op = sem::ASSIGN;
+        assign_tuple->left = right_ord;
+        assign_tuple->res = left_ord;
+        tuples.insert(tuples.end(), assign_tuple);
     }
 
     return tuples;

@@ -15,13 +15,7 @@ public:
     vector<sym::SYMBOL> op_list;
 
     virtual Tuples dump(NameTable &tab, const string &func_name, 
-            TempVarPool &tvp, VarEntry *res_entry){
-        Operand *res_ord = new Operand(res_entry);
-        return dump(tab, func_name, tvp, &res_ord);
-    }
-
-    virtual Tuples dump(NameTable &tab, const string &func_name, 
-            TempVarPool &tvp, Operand **res_ord){
+            TempVarPool &tvp, Operand **ret_ord){
         const string ehd = "Expression: ";
         Tuples tuples;
 
@@ -35,34 +29,27 @@ public:
             return tuples;
         }
 
-        // check res_ord
-        if(*res_ord){
-            // user assign a res_ord to store
-            // check whether it is a variable
-            if(*res_ord->type != Operand::ENTRY){
-                log::error << "Expression received a res_ord of non-entry type.";
-                return tuples;
-            }
-            if(*res_ord->entry->entry_type != sem::VAR_ENTRY){
-                log::error << "Expression recevied a res_ord of non-var entry";
-                return tuples;
-            }
-
-            // It's OK, no operation is needed to be done
-        }
-        else{
-            // ask for a temp var to save result
-            VarEntry *temp_var_entry = tvp.getNewIntTempVar();
-            *res_ord = new Operand(temp_var_entry);
-        }
-
         // evaluate the first item
         if(item_list[0] == NULL)
-            throw string("Item should never be NULL."):
-        Tuples sub_tuples = item_list[0]->dump(tab, func_name, tvp, res_ord);
+            throw string("Item should never be NULL.");
+        Operand *first_ord = NULL;
+        Tuples sub_tuples = item_list[0]->dump(tab, func_name, tvp, &first_ord);
         tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
 
-        // do minus
+        // check whether only one item && not need any operation
+        if(item_list.size() == 1 && minus == false){
+            *ret_ord = first_ord;
+            return tuples;
+        }
+
+        throw string("Not implemented");
+
+        // ask for a temp var to save result
+        VarEntry *res_int_var = tvp.getNewIntTempVar();
+        *ret_ord = new Operand(res_int_var);
+
+        // do minus on the first item
+        // first_ord will be replaced
         if(minus){
             // TODO
         }

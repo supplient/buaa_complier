@@ -49,7 +49,7 @@ namespace log{
                 cerr << "[Error]" << s << endl;
                 return dynamic_cast<Error&>(Log::operator<<(s));
             }
-    }
+    };
 
     class Debug:public Log{
         public:

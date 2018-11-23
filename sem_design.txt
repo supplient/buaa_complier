@@ -5,3 +5,8 @@ EMPTY
 LABEL
     left: string. label name.
     effect: Do nothing. Only for jump.
+
+ASSIGN
+    left: any type. value to assign.
+    res: var. var to be assigned
+    effect: res = left

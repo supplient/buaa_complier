@@ -1,9 +1,10 @@
 const char c='c';
 const int b = 6;
 int a[2];
+int d;
 
 void func(int a){
-    
+    d = 3;
 }
 
 void main(){

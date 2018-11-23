@@ -11,7 +11,7 @@ class Factor: public Element
 {
 public:
     virtual Tuples dump(NameTable &tab, const string &func_name, 
-            TempVarPool &tvp, VarEntry *res_entry=NULL){
+            TempVarPool &tvp, Operand **ret_ord){
         throw string("Not implemented.");
         Tuples tuples;
         return tuples;
@@ -46,12 +46,7 @@ public:
     char char_value;
 
     virtual Tuples dump(NameTable &tab, const string &func_name, 
-            TempVarPool &tvp, VarEntry *res_entry=NULL){
-        if(is_char)// TODO char need conv into int
-            throw string("Not implemented.");
-        Tuples tuples;// Just return empty tuples since no executing.
-        return tuples;
-    }
+            TempVarPool &tvp, Operand **ret_ord);
 };
 
 #endif//FACTOR_H
