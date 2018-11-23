@@ -53,7 +53,6 @@
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/elements/10/CompoundStatement.cpp" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />
 		<Unit filename="src/elements/10/Statement.cpp" />
 		<Unit filename="src/elements/10/Statement.h" />
@@ -64,12 +63,14 @@
 		<Unit filename="src/elements/2/Integer.cpp" />
 		<Unit filename="src/elements/2/Integer.h" />
 		<Unit filename="src/elements/3/Expression.h" />
+		<Unit filename="src/elements/3/Factor.cpp" />
 		<Unit filename="src/elements/3/Factor.h" />
 		<Unit filename="src/elements/3/Item.h" />
 		<Unit filename="src/elements/4/ConstDecl.h" />
 		<Unit filename="src/elements/4/ConstDefine.h" />
 		<Unit filename="src/elements/4/VarDecl.h" />
 		<Unit filename="src/elements/4/VarDefine.h" />
+		<Unit filename="src/elements/5/FuncDefine.cpp" />
 		<Unit filename="src/elements/5/FuncDefine.h" />
 		<Unit filename="src/elements/5/Param.h" />
 		<Unit filename="src/elements/7/Condition.h" />
