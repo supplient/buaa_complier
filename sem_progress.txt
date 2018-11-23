@@ -5,6 +5,10 @@
     Expression
     Item
     Factor
+      VarFactor
+      FuncFactor
+      ExpFactor
+      ConstFactor
 
 4
   O ConstDecl
