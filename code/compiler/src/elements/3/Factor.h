@@ -24,6 +24,9 @@ public:
     bool is_array;
     string ident;
     Expression *select;
+
+    virtual Tuples dump(NameTable &tab, const string &func_name, 
+            TempVarPool &tvp, Operand **ret_ord);
 };
 
 class FuncFactor: public Factor
@@ -36,6 +39,9 @@ class ExpFactor: public Factor
 {
 public:
     Expression *exp;
+
+    virtual Tuples dump(NameTable &tab, const string &func_name, 
+            TempVarPool &tvp, Operand **ret_ord);
 };
 
 class ConstFactor: public Factor

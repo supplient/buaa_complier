@@ -14,7 +14,7 @@ public:
     vector<Item*> item_list;
     vector<sym::SYMBOL> op_list;
 
-    virtual Tuples dump(NameTable &tab, const string &func_name, 
+    virtual Tuples dump(NameTable &tab, const string &func_name,
             TempVarPool &tvp, Operand **ret_ord){
         const string ehd = "Expression: ";
         Tuples tuples;
@@ -63,7 +63,7 @@ public:
         unsigned int ri = 1;
         Operand *left_ord = first_ord;
 
-        do{
+        while(ri < item_list.size()){
             Tuple *tuple = new Tuple();
             switch(op_list[ri-1]){
                 case sym::PLUS:
@@ -93,7 +93,7 @@ public:
             left_ord = new Operand(res_int_var);
 
             ri++;
-        }while(ri < item_list.size());
+        }
 
         return tuples;
     }
