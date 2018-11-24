@@ -48,3 +48,13 @@ CALL
             push all cached params into stack.
             save the call tuple.
 
+INPUT
+    res: var
+    effect: read a value from input,
+            and save into res.
+
+OUTPUT
+    left[optional]: string.
+    right[optional]: any type.
+    effect: if left is set, output left's string.
+            if right is set, output right's value.

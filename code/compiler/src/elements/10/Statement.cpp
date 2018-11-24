@@ -87,6 +87,62 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
     return tuples;
 }
 
+Tuples InputStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    Tuples tuples;
+
+    for(const string &ident: ident_list){
+        NameTableEntry *gen_entry = tab.lookUp(func_name, ident);
+        // check if declared
+        if(!gen_entry){
+            errorRepo("Identifier " + ident + " is used before declared.");
+            return tuples;
+        }
+
+        VarEntry *var_entry = dynamic_cast<VarEntry*>(gen_entry);
+        // check if is var
+        if(!var_entry || gen_entry->entry_type != sem::VAR_ENTRY){
+            errorRepo("Cannot input into a non-var: " + ident);
+            return tuples;
+        }
+
+        // do input
+        Tuple *input_tuple = new Tuple();
+        input_tuple->op = sem::INPUT;
+        input_tuple->res = new Operand(gen_entry);
+        tuples.push_back(input_tuple);
+    }
+
+    return tuples;
+}
+
+
+Tuples OutputStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    Tuples tuples;
+
+    Operand *left_ord = NULL;
+    Operand *right_ord = NULL;
+
+    if(has_string){
+        // dump string
+        left_ord = new Operand(str_value);
+    }
+
+    if(exp_value){
+        // dump exp
+        Tuples sub_tuples = exp_value->dump(tab, func_name, tvp, &right_ord);
+        tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
+    }
+
+    Tuple *output_tuple = new Tuple();
+    output_tuple->op = sem::OUTPUT;
+    output_tuple->left = left_ord;
+    output_tuple->right = right_ord;
+    tuples.push_back(output_tuple);
+
+    return tuples;
+}
+
+
 Tuples ReturnStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
     Tuples tuples;
 

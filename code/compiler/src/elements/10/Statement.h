@@ -70,6 +70,8 @@ class InputStatement: public Statement
 {
 public:
     vector<string> ident_list;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class OutputStatement: public Statement
@@ -81,6 +83,8 @@ public:
     bool has_string;
     string str_value;
     Expression *exp_value;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class ReturnStatement: public Statement

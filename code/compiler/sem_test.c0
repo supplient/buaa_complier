@@ -4,8 +4,14 @@ int a[2];
 int d;
 
 int func(int a){
+    scanf(a, d);
+
     d = 2+3;
     d = func(b);
+
+    printf(a);
+    printf("233");
+    printf("233", a);
     return(a);
 }
 

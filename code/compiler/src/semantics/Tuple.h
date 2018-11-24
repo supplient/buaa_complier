@@ -24,6 +24,8 @@ namespace sem{
         RET,
         PARAM,
         CALL,
+        INPUT,
+        OUTPUT,
         // TODO
     };
 

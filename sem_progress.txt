@@ -40,7 +40,7 @@
   O   AssignStatement
       InputStatement
       OutputStatement
-      ReturnStatement
+  O   ReturnStatement
   O   EmptyStatement
   O   BracedStatement
   O StatementList
