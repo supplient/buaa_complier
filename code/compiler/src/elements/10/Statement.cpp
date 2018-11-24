@@ -187,13 +187,13 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
         // dump default statement
         Tuples default_tuples = default_state->dump(tab, func_name);
         tuples.insert(tuples.end(), default_tuples.begin(), default_tuples.end());
-
-        // jump to exit
-        Tuple *jmp_tuple = new Tuple();
-        jmp_tuple->op = sem::JMP;
-        jmp_tuple->res = new Operand(exit_label_name);
-        tuples.push_back(jmp_tuple);
     }
+
+    // jump to exit
+    Tuple *jmp_tuple = new Tuple();
+    jmp_tuple->op = sem::JMP;
+    jmp_tuple->res = new Operand(exit_label_name);
+    tuples.push_back(jmp_tuple);
 
     // dump cases
     for(Tuples &case_tuples: case_tuples_list){

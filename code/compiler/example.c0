@@ -3,6 +3,10 @@ int i;
 int c[100];
 int ci;
 
+void fb(){
+    
+}
+
 void printchar(char c)
 {
     char k;

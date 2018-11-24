@@ -8,6 +8,10 @@ int func(int a){
     return(a);
 }
 
+void fb(){
+    
+}
+
 void fv(){
     func(a[1]);
 }

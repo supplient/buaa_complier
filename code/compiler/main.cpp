@@ -16,7 +16,7 @@ int main()
         //lexTest("lex_test.txt");
         //graTest("sem_test.c0");
         //graTest("example.c0");
-        semTest("sem_test.c0");
+        semTest("example.c0");
 
         //graInterface();
 

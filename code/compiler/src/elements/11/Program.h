@@ -23,10 +23,16 @@ public:
     virtual vector<Tuple*> dump(NameTable &tab){
         vector<Tuple*> tuples;
 
-        // jump to main function
+        // create start label
+        string start_label_name = NameUtil::genFuncLabel(sem::GLOBAL_FUNC_NAME);
+        Tuple *start_label = new Tuple();
+        start_label->op = sem::LABEL;
+        start_label->res = new Operand(start_label_name);
+
+        // jump to start label
         Tuple *jmp_tuple = new Tuple();
         jmp_tuple->op = sem::JMP;
-        jmp_tuple->res = new Operand(NameUtil::genFuncLabel(sem::MAIN_FUNC_NAME));
+        jmp_tuple->res = new Operand(start_label_name);
         tuples.push_back(jmp_tuple);
 
         // dump const decl if exist
@@ -52,6 +58,15 @@ public:
         // dump main_func
         Tuples main_tuples = main_func->dump(tab);
         tuples.insert(tuples.end(), main_tuples.begin(), main_tuples.end());
+
+        // mark the program start
+        tuples.push_back(start_label);
+
+        // call main function
+        Tuple *call_tuple = new Tuple();
+        call_tuple->op = sem::CALL;
+        call_tuple->res = new Operand(tab.lookUp(sem::GLOBAL_FUNC_NAME, sem::MAIN_FUNC_NAME));
+        tuples.push_back(call_tuple);
 
         return tuples;
     }

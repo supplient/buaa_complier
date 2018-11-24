@@ -34,6 +34,13 @@ class MainFunc : public Element
             Tuples state_tuples = compound_statement->dump(tab, sem::MAIN_FUNC_NAME);
             tuples.insert(tuples.end(), state_tuples.begin(), state_tuples.end());
 
+            // do return implictly if the last tuple is not RET
+            if(tuples.size() < 1 || tuples[tuples.size()-1]->op != sem::RET){
+                Tuple *ret_tuple = new Tuple();
+                ret_tuple->op = sem::RET;
+                tuples.push_back(ret_tuple);
+            }
+
             return tuples;
         }
 };

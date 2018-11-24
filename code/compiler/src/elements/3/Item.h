@@ -42,6 +42,15 @@ public:
         VarEntry *res_int_var = tvp.getNewIntTempVar();
         *ret_ord = new Operand(res_int_var);
 
+        // assign the first factor to the temp var
+        Tuple *first_assign_tuple = new Tuple();
+        first_assign_tuple->op = sem::ASSIGN;
+        first_assign_tuple->left = first_ord;
+        first_assign_tuple->res = new Operand(res_int_var);
+        tuples.push_back(first_assign_tuple);
+
+        first_ord = new Operand(res_int_var);
+
         // loop process the following
         unsigned int ri = 1;
         Operand *left_ord = first_ord;

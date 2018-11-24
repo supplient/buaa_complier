@@ -27,5 +27,15 @@ Tuples FuncDefine::dump(NameTable &tab){
     Tuples state_tuples = compound_state->dump(tab, func_name);
     tuples.insert(tuples.end(), state_tuples.begin(), state_tuples.end());
 
+    // TODO 
+    // check when this function need return value, if user give a return statement with return value.
+
+    // do return implictly if the last tuple is not RET
+    if(tuples.size() < 1 || tuples[tuples.size()-1]->op != sem::RET){
+        Tuple *ret_tuple = new Tuple();
+        ret_tuple->op = sem::RET;
+        tuples.push_back(ret_tuple);
+    }
+
     return tuples;
 }
