@@ -74,9 +74,12 @@
 		<Unit filename="src/elements/5/FuncDefine.cpp" />
 		<Unit filename="src/elements/5/FuncDefine.h" />
 		<Unit filename="src/elements/5/Param.h" />
+		<Unit filename="src/elements/7/Condition.cpp" />
 		<Unit filename="src/elements/7/Condition.h" />
+		<Unit filename="src/elements/7/SwitchCase.cpp" />
 		<Unit filename="src/elements/7/SwitchCase.h" />
 		<Unit filename="src/elements/7/SwitchCaseList.h" />
+		<Unit filename="src/elements/8/FuncCallExp.cpp" />
 		<Unit filename="src/elements/8/FuncCallExp.h" />
 		<Unit filename="src/elements/Element.h" />
 		<Unit filename="src/grammar/GrammarAnalyzer.cpp" />
@@ -97,6 +100,7 @@
 		<Unit filename="src/semantics/NameTableEntry.h" />
 		<Unit filename="src/semantics/NameUtil.cpp" />
 		<Unit filename="src/semantics/NameUtil.h" />
+		<Unit filename="src/semantics/Operand.cpp" />
 		<Unit filename="src/semantics/Operand.h" />
 		<Unit filename="src/semantics/TempVarPool.h" />
 		<Unit filename="src/semantics/Tuple.cpp" />
