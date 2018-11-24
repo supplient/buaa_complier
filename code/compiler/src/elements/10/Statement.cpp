@@ -1,6 +1,16 @@
 #include "Statement.h"
 #include "StatementList.h"
 #include "Expression.h"
+#include "FuncCallExp.h"
+
+Tuples FuncCallStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    if(!call_exp){
+        log::error << "FunCallStatement: call_exp is NULL";
+        Tuples tuples;
+        return tuples;
+    }
+    return call_exp->dump(tab, func_name, tvp);
+}
 
 Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
     Tuples tuples;
@@ -14,7 +24,7 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
 
     // cast to var entry
     VarEntry *left_var = dynamic_cast<VarEntry*>(left_entry);
-        
+
     // check whether is var
     if(left_var == NULL || left_entry->entry_type != sem::VAR_ENTRY){
         errorRepo("Left_value must be variable.");

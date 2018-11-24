@@ -3,10 +3,9 @@ const int b = 6;
 int a[2];
 int d;
 
-void func(){
-    a[0] = 2 + 3;
-    a[1] = a[0] + 1;
-    d = d+3;
+int func(int a){
+    d = 2+3;
+    d = func(b);
 }
 
 void main(){

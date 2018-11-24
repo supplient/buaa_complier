@@ -19,6 +19,14 @@ public:
     static string genTempVarName(int index){
         return "#" + to_string(index);
     }
+
+    static string getIntReturnVarName(){
+        return "#RV#INT";
+    }
+
+    static string getCharReturnVarName(){
+        return "#RV#CHAR";
+    }
 };
 
 #endif//NAME_UTIL_H

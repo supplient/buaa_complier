@@ -1,6 +1,7 @@
 #include "Factor.h"
 #include "Integer.h"
 #include "Expression.h"
+#include "FuncCallExp.h"
 
 Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp, Operand **ret_ord){
     const string ehd = "VarFactor: ";
@@ -54,6 +55,16 @@ Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
     }
 
     return tuples;
+}
+
+Tuples FuncFactor::dump(NameTable &tab, const string &func_name,
+            TempVarPool &tvp, Operand **ret_ord){
+    if(!call_exp){
+        log::error << "FuncFactor: call_exp is NULL.";
+        Tuples tuples;
+        return tuples;
+    }
+    return call_exp->dump(tab, func_name, tvp, ret_ord);
 }
 
 Tuples ExpFactor::dump(NameTable &tab, const string &func_name,

@@ -50,6 +50,8 @@ class FuncCallStatement: public Statement
 {
 public:
     FuncCallExp *call_exp;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class AssignStatement: public Statement

@@ -12,5 +12,8 @@ namespace sem{
         "DIV",
         "WARRAY",
         "RARRAY",
+        "RET",
+        "PARAM",
+        "CALL",
     };
 }

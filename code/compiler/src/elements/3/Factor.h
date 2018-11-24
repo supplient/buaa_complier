@@ -33,6 +33,9 @@ class FuncFactor: public Factor
 {
 public:
     FuncCallExp *call_exp;
+
+    Tuples dump(NameTable &tab, const string &func_name, 
+            TempVarPool &tvp, Operand **ret_ord);
 };
 
 class ExpFactor: public Factor

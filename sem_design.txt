@@ -33,3 +33,18 @@ RARRAY
     right: any type. selector
     res: var. var to be assign
     effect: res = right[left]
+
+RET
+    effect: free current function's stack
+            jump back to the call tuple.
+
+PARAM
+    res: any type. param value to be passed. 
+    effect: when next CALL tuple, this value wiil be a passed param.
+
+CALL
+    res: func. func to be called.
+    effect: alloc called func's stack.
+            push all cached params into stack.
+            save the call tuple.
+

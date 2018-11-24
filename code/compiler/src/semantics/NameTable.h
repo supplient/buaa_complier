@@ -6,6 +6,7 @@
 #include <map>
 
 #include "NameTableEntry.h"
+#include "NameUtil.h"
 
 using namespace std;
 
@@ -81,6 +82,10 @@ public:
         // Init global table
         func_map[sem::GLOBAL_FUNC_NAME] = new FuncNameTable(sem::GLOBAL_FUNC_NAME);
         global_tab = func_map[sem::GLOBAL_FUNC_NAME];
+
+        // Insert return vars
+        global_tab->insertVar(NameUtil::getIntReturnVarName(), sym::INT, 0);
+        global_tab->insertVar(NameUtil::getCharReturnVarName(), sym::CHAR, 0);
     }
 
     NameTableEntry* lookUpOnlyCurrentFunc(string func_name, string name){
