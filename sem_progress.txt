@@ -39,7 +39,7 @@
       WhileStatement
       SwitchStatement
       FuncCallStatement
-      AssignStatement
+  O   AssignStatement
       InputStatement
       OutputStatement
       ReturnStatement
