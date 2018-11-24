@@ -13,6 +13,8 @@ public:
     Integer *int_value;
     char char_value;
     Statement *state;
+
+    virtual Tuples dump(NameTable &tab, const string &func_name, TempVarPool &tvp, Operand **ret_ord);
 };
 
 #endif// SWITCH_CASE_H

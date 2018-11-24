@@ -70,6 +70,12 @@ BEZ
     res: string. label name
     effect: jump to res if left is zero.
 
+BEQ
+    left: any type.
+    right: any type.
+    res: string. label name
+    effect: jump to res if left == right
+
 JMP
     res: string. label name
     effect: jump to res

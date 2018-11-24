@@ -23,19 +23,19 @@
   O Param
 
 7
-    Condition
-    SwitchCase
-    SwitchCaseList
+  O Condition
+  O SwitchCase
+  O SwitchCaseList
 
 8
-    FuncCallExp
+  O FuncCallExp
 
 10
   O CompoundStatement
-    Statement
+  O Statement
   O   IfStatement
   O   WhileStatement
-      SwitchStatement
+  O   SwitchStatement
   O   FuncCallStatement
   O   AssignStatement
   O   InputStatement

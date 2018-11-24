@@ -16,7 +16,7 @@ public:
 
     static string genUniBranchLabel(){
         static int branch_label_count = 0;
-        string res = "$$" + to_string(branch_label_count);
+        string res = "~" + to_string(branch_label_count) + "~";
         branch_label_count++;
         return res;
     }

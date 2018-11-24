@@ -24,6 +24,7 @@ namespace sem{
         "NOTEQUAL",
         "EQUAL",
         "BEZ",
+        "BEQ",
         "JMP",
     };
 }

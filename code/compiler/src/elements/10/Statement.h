@@ -48,6 +48,8 @@ public:
     Expression *exp;
     SwitchCaseList *case_list;
     Statement *default_state;
+    
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class FuncCallStatement: public Statement
