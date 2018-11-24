@@ -6,6 +6,7 @@ int d;
 int func(int a){
     d = 2+3;
     d = func(b);
+    return(a);
 }
 
 void main(){

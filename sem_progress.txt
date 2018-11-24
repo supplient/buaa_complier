@@ -6,9 +6,9 @@
 [TODO: Add type conversation & check.]
   O Expression
   O Item
-    Factor
+  O Factor
   O   VarFactor
-      FuncFactor
+  O   FuncFactor
   O   ExpFactor
   O   ConstFactor
 
@@ -36,7 +36,7 @@
       IfStatement
       WhileStatement
       SwitchStatement
-      FuncCallStatement
+  O   FuncCallStatement
   O   AssignStatement
       InputStatement
       OutputStatement

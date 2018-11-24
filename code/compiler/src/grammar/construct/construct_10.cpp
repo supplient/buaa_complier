@@ -139,7 +139,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         lex.nextSymbol();
         if(*lex == sym::LEFT_ROUND){
-            // have return value`
+            // have return value
             lex.nextSymbol();
 
             return_state->exp = constructExpression(idel);

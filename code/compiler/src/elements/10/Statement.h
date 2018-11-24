@@ -87,6 +87,8 @@ class ReturnStatement: public Statement
 {
 public:
     Expression *exp;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class EmptyStatement: public Statement

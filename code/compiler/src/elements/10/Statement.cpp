@@ -87,6 +87,56 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
     return tuples;
 }
 
+Tuples ReturnStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    Tuples tuples;
+
+    // check function's return type
+    FuncEntry *func_entry = tab.lookUpFunc(func_name);
+    if(func_entry->return_type == sym::VOID && exp){
+        errorRepo("Function " + func_name + " should have no return value, while a return expression is given.");
+        return tuples;
+    }
+    if(func_entry->return_type != sym::VOID && !exp){
+        errorRepo("Function " + func_name + " must have a return value.");
+        return tuples;
+    }
+
+    if(func_entry->return_type != sym::VOID){
+        // function has return value
+
+        // evaluate return value
+        Operand *rv_ord = NULL;
+        Tuples rv_tuples = exp->dump(tab, func_name, tvp, &rv_ord);
+        tuples.insert(tuples.end(), rv_tuples.begin(), rv_tuples.end());
+
+        // assign to return var
+        string rv_name;
+        switch(func_entry->return_type){
+            case sym::INT:
+                rv_name = NameUtil::getIntReturnVarName();
+                break;
+            case sym::CHAR:
+                rv_name = NameUtil::getCharReturnVarName();
+                break;
+            default:
+                log::error << "Invalid type for return value: " << func_entry->return_type;
+                return tuples;
+        }
+        Tuple *assign_tuple = new Tuple();
+        assign_tuple->op = sem::ASSIGN;
+        assign_tuple->res = new Operand(tab.lookUp(func_name, rv_name));
+        assign_tuple->left = rv_ord;
+        tuples.push_back(assign_tuple);
+    }
+
+    // return
+    Tuple *return_tuple = new Tuple();
+    return_tuple->op = sem::RET;
+    tuples.push_back(return_tuple);
+
+    return tuples;
+}
+
 Tuples BracedStatement::dump(NameTable &tab, const string &func_name){
     Tuples tuples;
 

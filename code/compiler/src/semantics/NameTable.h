@@ -127,7 +127,14 @@ public:
         else
             return NULL;
     }
-    // TODO lookUpFunc
+
+    FuncEntry* lookUpFunc(string name){
+        NameTableEntry* entry = global_tab->lookUp(name);
+        if(entry)
+            return dynamic_cast<FuncEntry*>(entry);
+        else
+            return NULL;
+    }
 
     VarEntry* insertVar(string func_name, string name, sym::SYMBOL type, int dim){
         if(func_map.find(func_name) == func_map.end())
