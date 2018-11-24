@@ -1,13 +1,17 @@
+
+
 2
   X Integer
 
-3
+3 
+[TODO: Add res_entry to save temp var.]
+[TODO: Add type conversation.]
   O Expression
   O Item
     Factor
-      VarFactor
+  O   VarFactor
       FuncFactor
-      ExpFactor
+  O   ExpFactor
   O   ConstFactor
 
 4

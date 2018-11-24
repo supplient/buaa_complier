@@ -21,3 +21,15 @@ ADD, SUB, MUL, DIV
     right: any type.
     res: var.
     effect: res = left X right
+
+WARRAY
+    left: any type. selector
+    right: any type. value to assign
+    res: var with dim > 0. the array
+    effect: res[left] = right
+
+RARRAY
+    left: var with dim > 0. the array
+    right: any type. selector
+    res: var. var to be assign
+    effect: res = right[left]

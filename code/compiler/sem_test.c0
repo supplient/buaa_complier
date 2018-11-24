@@ -3,8 +3,8 @@ const int b = 6;
 int a[2];
 int d;
 
-void func(int a){
-    d = -('c' + 10)/5;
+void func(){
+    d = a[0] + 1;
     d = d+3;
 }
 

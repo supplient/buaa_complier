@@ -15,8 +15,33 @@ Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
     }
 
     if(is_array){
-        // TODO
-        throw string("VarFactor::array not implemented.");
+        // dim check
+        if(entry->dim == 0){
+            errorRepo("Variable " + ident + " is not an array, cannot have a selector.");
+            return tuples;
+        }
+        // select check
+        if(!select){
+            log::error << "VarFactor has a NULL select when its is_array is true.";
+            return tuples;
+        }
+
+        // ask for a temp var to save read result
+        // & fill ret_ord
+        VarEntry *tv_entry = tvp.getNewIntTempVar();
+        *ret_ord = new Operand(tv_entry);
+
+        // construct load tuple
+        Tuple *tuple = new Tuple();
+        tuple->op = sem::RARRAY;
+        tuple->left = new Operand(entry);
+
+        Tuples sel_tuples = select->dump(tab, func_name, tvp, &tuple->right);
+        tuples.insert(tuples.end(), sel_tuples.begin(), sel_tuples.end());
+
+        tuple->res = new Operand(tv_entry);
+
+        tuples.push_back(tuple);
     }
     else{
         // dim check

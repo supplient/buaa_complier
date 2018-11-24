@@ -10,5 +10,7 @@ namespace sem{
         "SUB",
         "MUL",
         "DIV",
+        "WARRAY",
+        "RARRAY",
     };
 }
