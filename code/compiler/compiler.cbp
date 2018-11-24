@@ -58,7 +58,6 @@
 		<Unit filename="src/elements/10/Statement.cpp" />
 		<Unit filename="src/elements/10/Statement.h" />
 		<Unit filename="src/elements/10/StatementList.h" />
-		<Unit filename="src/elements/11/MainFunc.cpp" />
 		<Unit filename="src/elements/11/MainFunc.h" />
 		<Unit filename="src/elements/11/Program.h" />
 		<Unit filename="src/elements/2/Integer.cpp" />
