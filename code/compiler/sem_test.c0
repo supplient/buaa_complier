@@ -4,18 +4,16 @@ int a[2];
 int d;
 
 int func(int a){
-    switch(2){
-        case 3: d=1;
-        case 4: d=2;
-        default: printf("233");
-    }
-
-    printf(a);
-    printf("233");
-    printf("233", a);
+    a = 2;
     return(a);
 }
 
+void fv(){
+    func(a[1]);
+}
+
 void main(){
-    
+    a[1] = func(2);
+
+    printf("233");
 }
