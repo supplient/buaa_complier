@@ -29,6 +29,8 @@ class IfStatement: public Statement
 public:
     Condition *cond;
     Statement *state;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class WhileStatement: public Statement
@@ -36,6 +38,8 @@ class WhileStatement: public Statement
 public:
     Condition *cond;
     Statement *state;
+
+    virtual Tuples dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp);
 };
 
 class SwitchStatement: public Statement

@@ -33,13 +33,13 @@
 10
   O CompoundStatement
     Statement
-      IfStatement
-      WhileStatement
+  O   IfStatement
+  O   WhileStatement
       SwitchStatement
   O   FuncCallStatement
   O   AssignStatement
-      InputStatement
-      OutputStatement
+  O   InputStatement
+  O   OutputStatement
   O   ReturnStatement
   O   EmptyStatement
   O   BracedStatement

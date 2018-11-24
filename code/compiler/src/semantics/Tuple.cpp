@@ -17,5 +17,13 @@ namespace sem{
         "CALL",
         "INPUT",
         "OUTPUT",
+        "LESS",
+        "LESSOREQUAL",
+        "MORE",
+        "MOREOREQUAL",
+        "NOTEQUAL",
+        "EQUAL",
+        "BEZ",
+        "JMP",
     };
 }

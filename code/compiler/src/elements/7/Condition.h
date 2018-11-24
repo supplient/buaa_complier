@@ -13,6 +13,9 @@ public:
     Expression *left_exp;
     sym::SYMBOL op;
     Expression *right_exp;
+
+    virtual Tuples dump(NameTable &tab, const string &func_name,
+            TempVarPool &tvp, Operand **ret_ord);
 };
 
 #endif// CONDITION_H

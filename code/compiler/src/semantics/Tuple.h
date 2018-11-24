@@ -26,6 +26,14 @@ namespace sem{
         CALL,
         INPUT,
         OUTPUT,
+        LESS,
+        LESSOREQUAL,
+        MORE,
+        MOREOREQUAL,
+        NOTEQUAL,
+        EQUAL,
+        BEZ,
+        JMP,
         // TODO
     };
 
@@ -50,7 +58,7 @@ public:
     Operand *right;
     Operand *res;
 
-    string toString(){
+    string toString()const{
         string s = sem::TUPLE_OP_NAME[op];
         s += " ";
         if(res)

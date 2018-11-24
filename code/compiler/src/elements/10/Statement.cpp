@@ -2,6 +2,108 @@
 #include "StatementList.h"
 #include "Expression.h"
 #include "FuncCallExp.h"
+#include "Condition.h"
+
+Tuples IfStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    Tuples tuples;
+
+    // check cond & state
+    if(!cond){
+        log::error << "IfStatement: cond is NULL.";
+        return tuples;
+    }
+    if(!state){
+        log::error << "IfStatement: state is NULL.";
+        return tuples;
+    }
+
+    // evaluate cond
+    Operand *cond_ord = NULL;
+    Tuples cond_tuples = cond->dump(tab, func_name, tvp, &cond_ord);
+    tuples.insert(tuples.end(), cond_tuples.begin(), cond_tuples.end());
+
+    // create label tuple as if's exit
+    string exit_label_name = NameUtil::genUniBranchLabel();
+
+    Tuple *exit_tuple = new Tuple();
+    exit_tuple->op = sem::LABEL;
+    exit_tuple->res = new Operand(exit_label_name);
+
+    // branch if zero
+    Tuple *beq_tuple = new Tuple();
+    beq_tuple->op = sem::BEZ;
+    beq_tuple->left = cond_ord;
+    beq_tuple->res = new Operand(exit_label_name);
+    tuples.push_back(beq_tuple);
+
+    // dump statement
+    Tuples state_tuples = state->dump(tab, func_name);
+    tuples.insert(tuples.end(), state_tuples.begin(), state_tuples.end());
+
+    // mark exit
+    tuples.push_back(exit_tuple);
+
+    return tuples;
+}
+
+Tuples WhileStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
+    Tuples tuples;
+
+    // check cond & state
+    if(!cond){
+        log::error << "WhileStatement: cond is NULL.";
+        return tuples;
+    }
+    if(!state){
+        log::error << "WhileStatement: state is NULL.";
+        return tuples;
+    }
+
+    // create label tuple as entrance
+    string ent_label_name = NameUtil::genUniBranchLabel();
+
+    Tuple *ent_tuple = new Tuple();
+    ent_tuple->op = sem::LABEL;
+    ent_tuple->res = new Operand(ent_label_name);
+
+    // mark entrance
+    tuples.push_back(ent_tuple);
+
+    // evaluate cond
+    Operand *cond_ord = NULL;
+    Tuples cond_tuples = cond->dump(tab, func_name, tvp, &cond_ord);
+    tuples.insert(tuples.end(), cond_tuples.begin(), cond_tuples.end());
+
+    // create label tuple as exit
+    string exit_label_name = NameUtil::genUniBranchLabel();
+
+    Tuple *exit_tuple = new Tuple();
+    exit_tuple->op = sem::LABEL;
+    exit_tuple->res = new Operand(exit_label_name);
+
+    // branch if zero
+    Tuple *beq_tuple = new Tuple();
+    beq_tuple->op = sem::BEZ;
+    beq_tuple->left = cond_ord;
+    beq_tuple->res = new Operand(exit_label_name);
+    tuples.push_back(beq_tuple);
+
+    // dump statement
+    Tuples state_tuples = state->dump(tab, func_name);
+    tuples.insert(tuples.end(), state_tuples.begin(), state_tuples.end());
+
+    // jump
+    Tuple *jmp_tuple = new Tuple();
+    jmp_tuple->op = sem::JMP;
+    jmp_tuple->res = new Operand(ent_label_name);
+    tuples.push_back(jmp_tuple);
+
+    // mark exit
+    tuples.push_back(exit_tuple);
+
+    return tuples;
+}
+
 
 Tuples FuncCallStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
     if(!call_exp){
@@ -11,6 +113,7 @@ Tuples FuncCallStatement::dump_int(NameTable &tab, const string &func_name, Temp
     }
     return call_exp->dump(tab, func_name, tvp);
 }
+
 
 Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
     Tuples tuples;

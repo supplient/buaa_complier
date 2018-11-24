@@ -14,6 +14,13 @@ public:
         return "$" + func_name;
     }
 
+    static string genUniBranchLabel(){
+        static int branch_label_count = 0;
+        string res = "$$" + to_string(branch_label_count);
+        branch_label_count++;
+        return res;
+    }
+
     static string genEntryName(const NameTableEntry *entry);
 
     static string genTempVarName(int index){

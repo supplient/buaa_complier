@@ -58,3 +58,18 @@ OUTPUT
     right[optional]: any type.
     effect: if left is set, output left's string.
             if right is set, output right's value.
+
+LESS, LESSOREQUAL, MORE, MOREOREQUAL, NOEQUAL, EQUAL
+    left: any type.
+    right: any type.
+    res: var.
+    effect: res = left X right
+
+BEZ
+    left: any type.
+    res: string. label name
+    effect: jump to res if left is zero.
+
+JMP
+    res: string. label name
+    effect: jump to res
