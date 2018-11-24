@@ -36,18 +36,18 @@ public:
         return entry;
     }
 
-    ConstEntry* insertIntConst(string name, int value){
+    VarEntry* insertIntConst(string name, int value){
         if(lookUp(name))
             return NULL;
-        ConstEntry *entry = new ConstEntry(name, this, value);
+        VarEntry *entry = new VarEntry(name, this, value);
         entries.push_back(static_cast<NameTableEntry*>(entry));
         return entry;
     }
 
-    ConstEntry* insertCharConst(string name, char value){
+    VarEntry* insertCharConst(string name, char value){
         if(lookUp(name))
             return NULL;
-        ConstEntry *entry = new ConstEntry(name, this, value);
+        VarEntry *entry = new VarEntry(name, this, value);
         entries.push_back(static_cast<NameTableEntry*>(entry));
         return entry;
     }
@@ -122,8 +122,7 @@ public:
         else
             return NULL;
     }
-
-    // TODO lookUpConst, lookUpFunc
+    // TODO lookUpFunc
 
     VarEntry* insertVar(string func_name, string name, sym::SYMBOL type, int dim){
         if(func_map.find(func_name) == func_map.end())
@@ -131,13 +130,13 @@ public:
         return func_map[func_name]->insertVar(name, type, dim);
     }
 
-    ConstEntry* insertIntConst(string func_name, string name, int value){
+    VarEntry* insertIntConst(string func_name, string name, int value){
         if(func_map.find(func_name) == func_map.end())
             func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertIntConst(name, value);
     }
 
-    ConstEntry* insertCharConst(string func_name, string name, char value){
+    VarEntry* insertCharConst(string func_name, string name, char value){
         if(func_map.find(func_name) == func_map.end())
             func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertCharConst(name, value);
