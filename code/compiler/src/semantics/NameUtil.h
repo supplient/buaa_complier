@@ -34,6 +34,17 @@ public:
     static string getCharReturnVarName(){
         return "#RV#CHAR";
     }
+
+    static bool isSpecialVarName(string var_name){
+        if(var_name.size() < 1)
+            throw string("NameUtil: empty string should never be a var's name.");
+        return var_name == getIntReturnVarName()
+            || var_name == getCharReturnVarName();
+    }
+
+    static string genGlobalVarLabel(string var_name){
+        return var_name;
+    }
 };
 
 #endif//NAME_UTIL_H

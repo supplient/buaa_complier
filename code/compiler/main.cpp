@@ -7,6 +7,7 @@ using namespace std;
 void lexTest(string filename);
 void graTest(string filename);
 void semTest(string filename);
+void backTest(string filename);
 
 void graInterface();
 
@@ -16,7 +17,8 @@ int main()
         //lexTest("lex_test.txt");
         //graTest("sem_test.c0");
         //graTest("example.c0");
-        semTest("example.c0");
+        //semTest("example.c0");
+        backTest("back_test.c0");
 
         //graInterface();
 

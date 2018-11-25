@@ -106,6 +106,7 @@
 		<Unit filename="src/semantics/Tuple.h" />
 		<Unit filename="src/symbol.cpp" />
 		<Unit filename="src/symbol.h" />
+		<Unit filename="test/back_test.cpp" />
 		<Unit filename="test/gra_test.cpp" />
 		<Unit filename="test/lex_test.cpp" />
 		<Unit filename="test/sem_test.cpp" />

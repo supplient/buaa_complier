@@ -32,7 +32,7 @@ RARRAY
     left: var with dim > 0. the array
     right: any type. selector
     res: var. var to be assign
-    effect: res = right[left]
+    effect: res = left[right]
 
 RET
     effect: free current function's stack

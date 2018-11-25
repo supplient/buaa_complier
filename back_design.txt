@@ -1,0 +1,101 @@
+* Three kinds of labels:
+    1. jump labels: two kinds
+        a. function label
+        b. auto-generaterd label
+    2. var labels: all global varaibles
+    3. string labels: use string table to save map relations.
+
+
+Following is Tuple-MIPS 's mapping relation.
+    * All assumes values are registers or intermediate values.
+        global variable is an expection, we use its label format.
+    * For char type, we just save/load one byte when saving/loading the char var.
+        After it is loaded into memory, we operate as a int.
+        For a char array, each element is aligned to one word in memory.
+        All char element is save in one word in memory.
+    * For each map, allow one temp register. Represented by $T
+    * For a string, use its label.
+
+EMPTY
+    <NONE>
+
+LABEL<Not function>
+    left:
+
+ASSIGN
+    move res, left
+
+NEG
+    neg res, left
+
+ADD, SUB, MUL, DIV
+    add/sub/mul/div res, left, right
+
+WARRAY
+    sll $T, left, 2
+    sw  right, res($T)
+
+RARRAY
+    sll $T, right, 2
+    lw  res, left($T)
+
+LABEL<Function>
+    <stack_size>: local vars & GPR saved area.
+    left:
+    add $sp, $sp, -<stack_size>
+    sw  $ra, xxx($sp)
+    sw  $s?, xxx($sp)
+    ...
+    sw  $s0, 0($sp)
+
+PARAM
+    add $sp, $sp, -4
+    sw  res, 0($sp)
+    # add <param_count>
+
+CALL
+    jal res
+    add $sp, $sp, 4*<param_count>
+
+RET
+    <stack_size>: local vars & GPR saved area.
+    lw  $s0, 0($sp)
+    ...
+    lw  $s?, xxx($sp)
+    lw  $ra, xxx($sp)
+    add $sp, $sp, <stack_size>
+    jr  $ra
+
+INPUT
+    <sys_num-- 
+        char: 12
+        int: 5
+        >
+    li  $v0, <sys_num>
+    syscall
+    move res, $v0
+
+OUTPUT
+    * if left is set,
+        la  $a0, left
+        li  $v0, 4
+        syscall
+    * if right is set,
+        <sys_num-- 
+            char: 11
+            int: 1
+            >
+        li  $v0, <sys_num>
+        syscall
+
+LESS, LESSOREQUAL, MORE, MOREOREQUAL, NOEQUAL, EQUAL
+    slt/sle/sgt/sge/sne/seq res, left, right
+
+BEZ
+    beqz left, res
+
+BEQ
+    beqz left, right, res
+
+JMP
+    j res

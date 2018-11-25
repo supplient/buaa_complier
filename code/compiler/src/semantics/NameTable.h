@@ -62,6 +62,23 @@ public:
         return entry;
     }
 
+    vector<VarEntry*> getUnconstVars(){
+        vector<VarEntry*> res;
+        
+        for(NameTableEntry* entry: entries){
+            VarEntry* var_entry = dynamic_cast<VarEntry*>(entry);
+            if(!var_entry || entry->entry_type != sem::VAR_ENTRY)
+                continue;
+            if(var_entry->is_const)
+                continue;
+            if(NameUtil::isSpecialVarName(var_entry->name))
+                continue;
+            res.push_back(var_entry);
+        }
+
+        return res;
+    }
+
     string toString(){
         string s = "";
         for(auto it: entries){
@@ -157,6 +174,22 @@ public:
 
     FuncEntry* insertFunc(string name, sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple){
         return func_map[sem::GLOBAL_FUNC_NAME]->insertFunc(name, return_type, param_list, start_tuple);
+    }
+
+    FuncNameTable* getFuncNameTable(string func_name){
+        if(func_map.find(func_name) == func_map.end())
+            return NULL;
+        return func_map[func_name];
+    }
+
+    vector<FuncNameTable*> getAllLocalFuncNameTable(){
+        vector<FuncNameTable*> res;
+        for(auto pair: func_map){
+            if(pair.first == sem::GLOBAL_FUNC_NAME)
+                continue;
+            res.push_back(pair.second);
+        }
+        return res;
     }
 
     string toString(){
