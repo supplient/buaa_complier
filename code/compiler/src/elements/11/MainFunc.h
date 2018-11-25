@@ -22,13 +22,15 @@ class MainFunc : public Element
             // create a tuple as the entrance
             Tuple *start_tuple = new Tuple();
             start_tuple->op = sem::FUNC;
-            start_tuple->left = new Operand(NameUtil::genFuncLabel(sem::MAIN_FUNC_NAME));
             tuples.insert(tuples.begin(), start_tuple); // should be at the head
 
             // fill tab
             vector<VarEntry *> empty_param_list;
             if(!tab.insertFunc(sem::MAIN_FUNC_NAME, sym::VOID, empty_param_list, start_tuple))
                 errorRepo("multiple defination for main function");
+
+            // back enter start_tuple's entry ref
+            start_tuple->left = new Operand(tab.lookUp(sem::GLOBAL_FUNC_NAME, sem::MAIN_FUNC_NAME));
 
             // dump compound_state
             Tuples state_tuples = compound_statement->dump(tab, sem::MAIN_FUNC_NAME);

@@ -16,12 +16,14 @@ Tuples FuncDefine::dump(NameTable &tab){
     // create a tuple as the entrance
     Tuple *start_tuple = new Tuple();
     start_tuple->op = sem::FUNC;
-    start_tuple->left = new Operand(NameUtil::genFuncLabel(func_name));
     tuples.insert(tuples.begin(), start_tuple); // should be at the head
 
     // fill tab
     if(!tab.insertFunc(func_name, return_type, param_entry_list, start_tuple))
         errorRepo("multiple defination for function: " + func_name);
+
+    // back enter start_tuple's left
+    start_tuple->left = new Operand(tab.lookUp(sem::GLOBAL_FUNC_NAME, func_name));
 
     // dump compound_state
     Tuples state_tuples = compound_state->dump(tab, func_name);

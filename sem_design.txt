@@ -36,7 +36,7 @@ RARRAY
     effect: res = left[right]
 
 FUNC
-    res: string. function name
+    res: entry. func entry.
     effect: mark the function's start label.
         move stack pointer & save used GPR.
 
