@@ -6,6 +6,7 @@ LABEL
     left: string. label name.
     effect: Do nothing. Only for jump.
 
+
 ASSIGN
     left: any type. value to assign.
     res: var. var to be assigned
@@ -34,9 +35,10 @@ RARRAY
     res: var. var to be assign
     effect: res = left[right]
 
-RET
-    effect: free current function's stack
-            jump back to the call tuple.
+FUNC
+    res: string. function name
+    effect: mark the function's start label.
+        move stack pointer & save used GPR.
 
 PARAM
     res: any type. param value to be passed. 
@@ -47,6 +49,10 @@ CALL
     effect: alloc called func's stack.
             push all cached params into stack.
             save the call tuple.
+
+RET
+    effect: free current function's stack
+            jump back to the call tuple.
 
 INPUT
     res: var

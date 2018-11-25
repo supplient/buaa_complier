@@ -15,7 +15,7 @@ Tuples FuncDefine::dump(NameTable &tab){
 
     // create a tuple as the entrance
     Tuple *start_tuple = new Tuple();
-    start_tuple->op = sem::LABEL;
+    start_tuple->op = sem::FUNC;
     start_tuple->left = new Operand(NameUtil::genFuncLabel(func_name));
     tuples.insert(tuples.begin(), start_tuple); // should be at the head
 

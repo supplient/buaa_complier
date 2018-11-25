@@ -39,7 +39,7 @@ RARRAY
     sll $T, right, 2
     lw  res, left($T)
 
-LABEL<Function>
+FUNC
     <stack_size>: local vars & GPR saved area.
     left:
     add $sp, $sp, -<stack_size>
