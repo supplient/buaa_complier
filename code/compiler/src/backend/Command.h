@@ -1,6 +1,10 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
+#include <string>
+
+using namespace std;
+
 class DataCmd
 {
 public:
@@ -12,9 +16,10 @@ public:
         SPACE, // for array
     };
 
-    string name;
+    string label;
     OP op;
     unsigned int size;
+    string str_value;
 };
 
 class InstCmd

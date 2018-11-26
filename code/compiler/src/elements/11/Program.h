@@ -41,13 +41,13 @@ public:
             if(!func_define)
                 throw string("Func Define should never be NULL.");
             Tuples sub_tuples = func_define->dump(tab);
-            FuncTuple *func_tuple = new FuncTuple(sub_tuples, func_define->func_name);
+            FuncTuple *func_tuple = new FuncTuple(sub_tuples, tab.lookUpFunc(func_define->func_name));
             func_tuples.push_back(func_tuple);
         }
 
         // dump main_func
         Tuples main_tuples = main_func->dump(tab);
-        FuncTuple *func_tuple = new FuncTuple(main_tuples, sem::MAIN_FUNC_NAME);
+        FuncTuple *func_tuple = new FuncTuple(main_tuples, tab.lookUpFunc(sem::MAIN_FUNC_NAME));
         func_tuples.push_back(func_tuple);
 
         return func_tuples;

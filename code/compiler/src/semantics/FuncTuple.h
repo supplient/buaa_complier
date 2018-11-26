@@ -2,13 +2,17 @@
 #define FUNC_TUPLE_H
 
 #include "Tuple.h"
+#include "NameTableEntry.h"
 
 class FuncTuple
 {
 public:
-    FuncTuple(const Tuples &tuples, const string &func_name)
-        :tuples(tuples), func_name(func_name)
-    {}
+    FuncTuple(const Tuples &tuples, const FuncEntry *func_entry)
+        :tuples(tuples), func_entry(func_entry)
+    {
+        if(!func_entry)
+            throw string("FuncTuple: func_entry is NULL.");
+    }
 
     string toString(){
         string s = "";
@@ -20,7 +24,7 @@ public:
     }
 
     const Tuples tuples;
-    const string func_name;
+    const FuncEntry* func_entry;
 };
 
 #endif//FUNC_TUPLE_H
