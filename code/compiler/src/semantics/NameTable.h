@@ -38,6 +38,14 @@ public:
         return entry;
     }
 
+    VarEntry* insertParam(string name, sym::SYMBOL type){
+        if(lookUp(name))
+            return NULL;
+        VarEntry *entry = new VarEntry(name, this, type, 0, true); // We do not allow array param
+        entries.push_back(static_cast<NameTableEntry*>(entry));
+        return entry;
+    }
+
     VarEntry* insertIntConst(string name, int value){
         if(lookUp(name))
             return NULL;
@@ -180,6 +188,12 @@ public:
         if(func_map.find(func_name) == func_map.end())
             func_map[func_name] = new FuncNameTable(func_name);
         return func_map[func_name]->insertVar(name, type, dim);
+    }
+
+    VarEntry* insertParam(string func_name, string name, sym::SYMBOL type){
+        if(func_map.find(func_name) == func_map.end())
+            func_map[func_name] = new FuncNameTable(func_name);
+        return func_map[func_name]->insertParam(name, type);
     }
 
     VarEntry* insertIntConst(string func_name, string name, int value){

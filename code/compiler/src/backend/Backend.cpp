@@ -7,12 +7,6 @@
 
 using namespace std;
 
-
-namespace back
-{
-    typedef unsigned int size; // count by byte
-} // back
-
 void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples, 
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
         
@@ -52,11 +46,11 @@ void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples,
     // build func backends
     vector<FuncBackend*> func_backends;
     for(FuncTuple *func_tuple: func_tuples)
-        func_backends.push_back(new FuncBackend(func_tuple));
+        func_backends.push_back(new FuncBackend(tab, func_tuple));
 
     // trans each function
     for(FuncBackend *func_backend: func_backends)
-        func_backend->trans(tab, str_tab, data_cmds, inst_cmds);
+        func_backend->trans(str_tab, data_cmds, inst_cmds);
 
     // program concered trans
     // TODO

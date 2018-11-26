@@ -6,8 +6,11 @@ Tuples FuncDefine::dump(NameTable &tab){
     Tuples tuples;
 
     // dump param_list
+    // Note: dump in the reversed order
     vector<VarEntry*> param_entry_list;
-    for(Param *param: param_list){
+    vector<Param*> reversed_param_list = param_list;
+    reverse(reversed_param_list.begin(), reversed_param_list.end());
+    for(Param *param: reversed_param_list){
         VarEntry *param_entry = param->dump(tab, func_name);
         if(param_entry != NULL)
             param_entry_list.push_back(param_entry);

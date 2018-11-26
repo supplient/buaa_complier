@@ -50,14 +50,14 @@ private:
 class VarEntry: public NameTableEntry
 {
 public:
-    VarEntry(const string &name, FuncNameTable *owner, sym::SYMBOL type, int dim, bool is_const=false)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), type(type), dim(dim), is_const(is_const), int_value(0), char_value(0){
+    VarEntry(const string &name, FuncNameTable *owner, sym::SYMBOL type, int dim, bool is_param=false, bool is_const=false)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(type), dim(dim), is_const(is_const), int_value(0), char_value(0){
     }
-    VarEntry(const string &name, FuncNameTable *owner, int value, bool is_const=true)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), type(sym::INT), dim(0), is_const(is_const), int_value(value), char_value(0){
+    VarEntry(const string &name, FuncNameTable *owner, int value, bool is_param=false, bool is_const=true)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(sym::INT), dim(0), is_const(is_const), int_value(value), char_value(0){
     }
-    VarEntry(const string &name, FuncNameTable *owner, char value, bool is_const=true)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), type(sym::CHAR), dim(0), is_const(is_const), int_value(0), char_value(value){
+    VarEntry(const string &name, FuncNameTable *owner, char value, bool is_param=false, bool is_const=true)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(sym::CHAR), dim(0), is_const(is_const), int_value(0), char_value(value){
     }
 
     virtual string toString(){
@@ -79,8 +79,12 @@ public:
                     exit(-1);
             }
         }
+        if(is_param)
+            s+= " PARAM";
         return s;
     }
+
+    const bool is_param;
 
     const sym::SYMBOL type;
     const int dim;

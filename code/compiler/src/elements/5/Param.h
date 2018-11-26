@@ -13,7 +13,7 @@ public:
     string ident;
 
     virtual VarEntry* dump(NameTable &tab, string func_name){
-        VarEntry *entry = tab.insertVar(func_name, ident, type, 0); // We do not allow array param
+        VarEntry *entry = tab.insertParam(func_name, ident, type);
         if(entry == NULL)
             errorRepo("multi defination for param: " + ident);
         return entry;

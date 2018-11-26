@@ -1,6 +1,38 @@
-Process timeline----
-    * Declare var labels.
-    * Process tuple one by one.
+
+Stack----
+    High
+     |    
+     |    <caller function's stack>
+     |    
+     |    param  x
+     |    param ...
+     |    param  1
+     |    param  0
+     |    
+     |    <$sp when enter function>
+     |    
+     |    local  x
+     |    local ...
+     |    local  1          <Note: local and temp can be mixed.>
+     |    local  0
+     |    
+     |    temp   x
+     |    temp  ...
+     |    temp   1
+     |    temp   0
+     |    
+     |    $ra
+     |    
+     |    $s0
+     |    $s1
+     |    $s...
+     |    $sx
+     |    
+     |    <$sp before starting function exectuing>
+     |    
+     ↓    
+    Low
+
 
 DataCmd----
 
@@ -119,7 +151,7 @@ InstCmd----
         beqz left, res
 
     BEQ
-        beqz left, right, res
+        beq left, right, res
 
     JMP
         j res
