@@ -18,6 +18,7 @@
 					<Add directory="src/grammar" />
 					<Add directory="src/elements" />
 					<Add directory="src/semantics" />
+					<Add directory="src/backend" />
 					<Add directory="log" />
 					<Add directory="src/elements/2" />
 					<Add directory="src/elements/3" />
@@ -53,6 +54,15 @@
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/NameUtil.cpp" />
+		<Unit filename="src/NameUtil.h" />
+		<Unit filename="src/backend/Backend.cpp" />
+		<Unit filename="src/backend/Backend.h" />
+		<Unit filename="src/backend/Command.h" />
+		<Unit filename="src/backend/FuncBackend.h" />
+		<Unit filename="src/backend/Reg.h" />
+		<Unit filename="src/backend/RegPool.h" />
+		<Unit filename="src/backend/TempRegPool.h" />
 		<Unit filename="src/config.h" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />
 		<Unit filename="src/elements/10/Statement.cpp" />
@@ -94,11 +104,10 @@
 		<Unit filename="src/lex/LexAnalyzer.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
+		<Unit filename="src/semantics/FuncTuple.h" />
 		<Unit filename="src/semantics/NameTable.h" />
 		<Unit filename="src/semantics/NameTableEntry.cpp" />
 		<Unit filename="src/semantics/NameTableEntry.h" />
-		<Unit filename="src/semantics/NameUtil.cpp" />
-		<Unit filename="src/semantics/NameUtil.h" />
 		<Unit filename="src/semantics/Operand.cpp" />
 		<Unit filename="src/semantics/Operand.h" />
 		<Unit filename="src/semantics/TempVarPool.h" />
