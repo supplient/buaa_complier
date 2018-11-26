@@ -11,7 +11,7 @@ public:
         // fill reg_list with NULL
         for(unsigned int i=0; i<back::TEMP_REG_UP - back::t0; i++)
             reg_list.push_back(NULL);
-        
+
         // init index
         ng = back::t0;
     }
@@ -30,14 +30,14 @@ public:
             throw string("TempRegPool: cannot reg a NULL entry on a temp reg.");
 
         // check if exists
-        if(lookUpTempReg(in_entry) != back::NO_REG){
+        if(lookUpReg(in_entry) != back::NO_REG){
             *out_entry = NULL;
-            return lookUpTempReg(in_entry);
+            return lookUpReg(in_entry);
         }
 
         back::REG res;
-            
-        if(!nowRegEntry()){ 
+
+        if(!nowRegEntry()){
             // nowReg is free
             // no need to free now reg
             *out_entry = NULL;
@@ -60,7 +60,7 @@ public:
         if(!entry)
             return back::NO_REG;
 
-        for(int i=0; i<reg_list.size();i++){
+        for(unsigned int i=0; i<reg_list.size();i++){
             if(reg_list[i] == entry)
                 return static_cast<back::REG>(i+back::t0);
         }

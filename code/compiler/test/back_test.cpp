@@ -4,6 +4,7 @@
 #include "LexAnalyzer.h"
 #include "GrammarAnalyzer.h"
 #include "log.h"
+#include "ConstVarRemover.h"
 
 using namespace std;
 
@@ -26,6 +27,8 @@ void backTest(string filename){
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
+    ConstVarRemover::work(tab, func_tuples);
+
     cout << "Start dump name table." << endl;
     cout << "---------------------------" << endl;
     cout << tab.toString();
@@ -38,8 +41,12 @@ void backTest(string filename){
     cout << "---------------------------" << endl;
     for(FuncTuple* func_tuple : func_tuples){
         cout << func_tuple->toString() << endl;
-        delete func_tuple;
     }
     cout << "---------------------------" << endl;
     cout << "Dump done." << endl;
+
+    // Release memory
+    delete program;
+    for(auto func_tuple: func_tuples)
+        delete func_tuple;
 }

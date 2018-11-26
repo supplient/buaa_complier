@@ -1,4 +1,7 @@
+const int b=2;
+const char c='a';
 int a;
 void main(){
-    a = 2;
+    a = b;
+    a = a + c;
 }

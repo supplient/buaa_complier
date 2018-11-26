@@ -79,6 +79,28 @@ public:
         return res;
     }
 
+    void removeConstVar(){
+        auto it = entries.begin();
+        while(it != entries.end()){
+            NameTableEntry* entry = *it;
+            VarEntry* var_entry = dynamic_cast<VarEntry*>(entry);
+            if(!var_entry || entry->entry_type != sem::VAR_ENTRY){
+                it++;
+                continue;
+            }
+            if(!var_entry->is_const){
+                it++;
+                continue;
+            }
+            if(NameUtil::isSpecialVarName(var_entry->name)){
+                it++;
+                continue;
+            }
+
+            entries.erase(it);
+        }
+    }
+
     string toString(){
         string s = "";
         for(auto it: entries){
@@ -190,6 +212,11 @@ public:
             res.push_back(pair.second);
         }
         return res;
+    }
+
+    void removeConstVar(){
+        for(auto pair: func_map)
+            pair.second->removeConstVar();
     }
 
     string toString(){
