@@ -17,7 +17,11 @@ class Element{
     public:
         Element(){}
         virtual ~Element(){}
-        virtual vector<Tuple*> dump(NameTable &tab){vector<Tuple*> res; return res;}
+        virtual vector<Tuple*> dump(NameTable &tab){
+            throw string("Element: dump not implemented.");
+            vector<Tuple*> res; 
+            return res;
+        }
 
         void errorRepo(string msg){
             errorRepo(msg, start_line, end_line);

@@ -24,7 +24,7 @@ void backTest(string filename){
     file.close();
     
     NameTable tab;
-    vector<Tuple*> tuples = program->dump(tab);
+    vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
     cout << "Start dump name table." << endl;
     cout << "---------------------------" << endl;
@@ -36,9 +36,9 @@ void backTest(string filename){
 
     cout << "Start dump tuples." << endl;
     cout << "---------------------------" << endl;
-    for(Tuple* tuple : tuples){
-        cout << tuple->toString() << endl;
-        delete tuple;
+    for(FuncTuple* func_tuple : func_tuples){
+        cout << func_tuple->toString() << endl;
+        delete func_tuple;
     }
     cout << "---------------------------" << endl;
     cout << "Dump done." << endl;
