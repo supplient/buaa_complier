@@ -7,11 +7,11 @@ Tuples SwitchCase::dump(NameTable &tab, const string &func_name, TempVarPool &tv
 
     // check
     if(!state){
-        log::error << "SwitchCase: state is NULL.";
+        mylog::error << "SwitchCase: state is NULL.";
         return tuples;
     }
     if(is_int_const && !int_value){
-        log::error << "SwitchCase: int_value is NULL when is_int_const is true.";
+        mylog::error << "SwitchCase: int_value is NULL when is_int_const is true.";
         return tuples;
     }
 

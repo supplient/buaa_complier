@@ -71,7 +71,7 @@ Program* GrammarAnalyzer::constructProgram(){
 
 #if HW
     if(program != NULL)
-        log::hw << "program";
+        mylog::hw << "program";
 #endif//HW
 
     return program;
@@ -195,7 +195,7 @@ MainFunc* GrammarAnalyzer::constructMainFunc(const SymSet &delimiter){
 
 #if HW
     if(main_func != NULL)
-        log::hw << "main function";
+        mylog::hw << "main function";
 #endif//HW
 
     return main_func;

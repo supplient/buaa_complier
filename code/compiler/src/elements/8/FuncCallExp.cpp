@@ -38,7 +38,7 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
     // dump param list
     for(Expression *exp: param_list){
         if(!exp){
-            log::error << "FuncCallExp: a param expression is NULL!";
+            mylog::error << "FuncCallExp: a param expression is NULL!";
             return tuples;
         }
 
@@ -69,7 +69,7 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
                 rv_name = NameUtil::getCharReturnVarName();
                 break;
             default:
-                log::error << "FuncCallExp: Invalid return type: " << func_entry->return_type;
+                mylog::error << "FuncCallExp: Invalid return type: " << func_entry->return_type;
                 return tuples;
         }
         *ret_ord = new Operand(tab.lookUp(func_name, rv_name));

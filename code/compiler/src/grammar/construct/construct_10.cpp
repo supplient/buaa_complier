@@ -64,7 +64,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         #if HW
         if(input_state)
-            log::hw << "input statement";
+            mylog::hw << "input statement";
         #endif//HW
     }
     // output_statement
@@ -122,7 +122,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         #if HW
         if(output_state)
-            log::hw << "output statement";
+            mylog::hw << "output statement";
         #endif//HW
     }
     // return_statement
@@ -170,7 +170,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         #if HW
         if(return_state)
-            log::hw << "return_state";
+            mylog::hw << "return_state";
         #endif// HW
     }
     // assign_statement || func_call_statement
@@ -202,7 +202,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
             #if HW
             if(call_state)
-                log::hw << "func_call_statement";
+                mylog::hw << "func_call_statement";
             #endif//HW
         }
         // assign_statement
@@ -266,7 +266,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
             #if HW
             if(assign_state)
-                log::hw << "assign_statement";
+                mylog::hw << "assign_statement";
             #endif// HW
         }
     }
@@ -301,7 +301,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
 
         #if HW
         if(braced_state)
-            log::hw << "braced_state";
+            mylog::hw << "braced_state";
         #endif//HW
     }
     // empty_statement
@@ -309,7 +309,7 @@ Statement* GrammarAnalyzer::constructStatement(const SymSet &delimiter){
         lex.nextSymbol();
         state = static_cast<Statement*>(new EmptyStatement());
         #if HW
-        log::hw << "empty_state";
+        mylog::hw << "empty_state";
         #endif//HW
     }
     // if_statement
@@ -370,7 +370,7 @@ StatementList* GrammarAnalyzer::constructStatementList(const SymSet &suffix, con
 
     #if HW
     if(statement_list)
-        log::hw << "statement list";
+        mylog::hw << "statement list";
     #endif//HW
 
     return statement_list;
@@ -408,7 +408,7 @@ CompoundStatement* GrammarAnalyzer::constructCompoundStatement(const SymSet &suf
 
     #if HW
     if(com_stat != NULL)
-        log::hw << "compound statement";
+        mylog::hw << "compound statement";
     #endif//HW
 
     return com_stat;

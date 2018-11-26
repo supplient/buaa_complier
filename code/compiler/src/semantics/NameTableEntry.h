@@ -75,7 +75,7 @@ public:
                     s += " " + string(1, char_value);
                     break;
                 default:
-                    log::error << "const entry: invalid type [" << type << "]";
+                    mylog::error << "const entry: invalid type [" << type << "]";
                     exit(-1);
             }
         }

@@ -51,7 +51,7 @@ Condition* GrammarAnalyzer::constructCondition(const SymSet &delimiter){
 
     #if HW
     if(cond)
-        log::hw << "condition";
+        mylog::hw << "condition";
     #endif// HW
 
     return cond;
@@ -118,7 +118,7 @@ IfStatement* GrammarAnalyzer::constructIfStatement(const SymSet &delimiter){
 
     #if HW
     if(if_state)
-        log::hw << "if statement";
+        mylog::hw << "if statement";
     #endif// HW
 
     return if_state;
@@ -185,7 +185,7 @@ WhileStatement* GrammarAnalyzer::constructWhileStatement(const SymSet &delimiter
 
     #if HW
     if(while_state)
-        log::hw << "while statement";
+        mylog::hw << "while statement";
     #endif// HW
 
     return while_state;
@@ -301,7 +301,7 @@ SwitchStatement* GrammarAnalyzer::constructSwitchStatement(const SymSet &delimit
 
     #if HW
     if(switch_state)
-        log::hw << "switch_statement";
+        mylog::hw << "switch_statement";
     #endif// HW
 
     return switch_state;
@@ -369,7 +369,7 @@ SwitchCase* GrammarAnalyzer::constructSwitchCase(const SymSet &delimiter){
 
     #if HW
     if(switch_case)
-        log::hw << "switch_case";
+        mylog::hw << "switch_case";
     #endif//HW
 
     return switch_case;
@@ -398,7 +398,7 @@ SwitchCaseList* GrammarAnalyzer::constructSwitchCaseList(const SymSet &delimiter
 
     #if HW
     if(case_list)
-        log::hw << "switch_case_list";
+        mylog::hw << "switch_case_list";
     #endif// HW
 
     return case_list;

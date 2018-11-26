@@ -43,7 +43,7 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
 
         #if HW
         if(const_factor)
-            log::hw << "const_factor";
+            mylog::hw << "const_factor";
         #endif// HW
     }
     // exp_factor
@@ -74,7 +74,7 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
             factor = static_cast<Factor*>(exp_factor);
         
         #if HW
-        log::hw << "exp_factor";
+        mylog::hw << "exp_factor";
         #endif// HW
     }
     // var_factor || func_factor
@@ -95,7 +95,7 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
                 factor = static_cast<Factor*>(func_factor);
             
             #if HW
-            log::hw << "func_factor";
+            mylog::hw << "func_factor";
             #endif//HW
         }
         // var_factor
@@ -136,7 +136,7 @@ Factor* GrammarAnalyzer::constructFactor(const SymSet &delimiter){
                 factor = static_cast<Factor*>(var_factor);
 
             #if HW
-            log::hw << "var_factor";
+            mylog::hw << "var_factor";
             #endif// HW
         }
     }
@@ -190,7 +190,7 @@ Item* GrammarAnalyzer::constructItem(const SymSet &delimiter){
 
 #if HW
     if(item)
-        log::hw << "item";
+        mylog::hw << "item";
 #endif// HW
 
     return item;
@@ -238,7 +238,7 @@ Expression* GrammarAnalyzer::constructExpression(const SymSet &delimter){
 
 #if HW
     if(exp)
-        log::hw << "expression";
+        mylog::hw << "expression";
 #endif// HW
 
     return exp;

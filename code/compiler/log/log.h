@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace log{
+namespace mylog{
 
     class Log{
         public:

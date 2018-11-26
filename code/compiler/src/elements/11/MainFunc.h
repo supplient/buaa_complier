@@ -15,7 +15,7 @@ class MainFunc : public Element
         virtual Tuples dump(NameTable &tab){
             Tuples tuples;
             if(!compound_statement){
-                log::error << "MainFunc: compound_statement is NULL.";
+                mylog::error << "MainFunc: compound_statement is NULL.";
                 return tuples;
             }
 

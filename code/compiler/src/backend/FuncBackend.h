@@ -29,6 +29,8 @@ private:
 
     back::size ra_offset;
     back::size stack_size;
+
+    back::REG loadVar(VarEntry *entry, vector<InstCmd*> *inst_cmds);
 };
 
 #endif//FUNC_BACKEND_H

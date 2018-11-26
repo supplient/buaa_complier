@@ -17,11 +17,11 @@ public:
 
         // check validness
         if(factor_list.size() < 1){
-            log::error << "Item should have at least one factor.";
+            mylog::error << "Item should have at least one factor.";
             return tuples;
         }
         if(factor_list.size() != op_list.size()+1){
-            log::error << "Item's factor and op num are strange!";
+            mylog::error << "Item's factor and op num are strange!";
             return tuples;
         }
 
@@ -65,7 +65,7 @@ public:
                     tuple->op = sem::DIV;
                     break;
                 default:
-                    log::error << "Invalid op for item: " << to_string(op_list[0]);
+                    mylog::error << "Invalid op for item: " << to_string(op_list[0]);
             }
             tuple->left = left_ord;
 

@@ -21,11 +21,11 @@ public:
 
         // check validness
         if(item_list.size() < 1){
-            log::error << "Expression should have at least one item.";
+            mylog::error << "Expression should have at least one item.";
             return tuples;
         }
         if(item_list.size() != op_list.size()+1){
-            log::error << "Expression's item and op num are strange!";
+            mylog::error << "Expression's item and op num are strange!";
             return tuples;
         }
 
@@ -83,7 +83,7 @@ public:
                     tuple->op = sem::SUB;
                     break;
                 default:
-                    log::error << "Invalid op for expression: " << to_string(op_list[0]);
+                    mylog::error << "Invalid op for expression: " << to_string(op_list[0]);
             }
             tuple->left = left_ord;
 

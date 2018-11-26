@@ -14,7 +14,7 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
     do{
         // Int const define
         if(*lex == sym::INT){
-            log::debug << "<int_const_define> once.";
+            mylog::debug << "<int_const_define> once.";
 
             loop_for_error_skip = false;
             IntConstDefine *int_const_define = new IntConstDefine();
@@ -69,7 +69,7 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
         }
         // Char const define
         else if(*lex == sym::CHAR){
-            log::debug << "<char_const_define> once.";
+            mylog::debug << "<char_const_define> once.";
 
             loop_for_error_skip = false;
             CharConstDefine *char_const_define = new CharConstDefine();
@@ -150,7 +150,7 @@ ConstDefine* GrammarAnalyzer::constructConstDefine(const SymSet &delimiter){
 
     #if HW
     if(const_define != NULL)
-        log::hw << "const define";
+        mylog::hw << "const define";
     #endif//HW
 
     return const_define;
@@ -167,7 +167,7 @@ ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
 
     ConstDecl *const_decl = new ConstDecl();
     do{
-        log::debug << "<const_decl> once.";
+        mylog::debug << "<const_decl> once.";
 
         if(*lex != sym::CONST){
             errorRepo(ehd + "should start with const.");
@@ -207,7 +207,7 @@ ConstDecl* GrammarAnalyzer::constructConstDecl(const SymSet &delimiter){
 
     #if HW
     if(const_decl != NULL)
-        log::hw << "const decl";
+        mylog::hw << "const decl";
     #endif//HW
 
     return const_decl;
@@ -238,7 +238,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
     idel.erase(sym::CHAR);
 
     do{
-        log::debug << "<var_define> once.";
+        mylog::debug << "<var_define> once.";
         bool fail_flag = false;
         string ident;
         int dim=0;
@@ -257,7 +257,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
 
         if(*lex == sym::LEFT_SQUARE){
             // array
-            log::debug << "array";
+            mylog::debug << "array";
             lex.nextSymbol();
             if(*lex != sym::UNSIGNED_INTEGER){
                 errorRepo(ehd + "array's dim must be an unsigned int.");
@@ -281,7 +281,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
         }
 
         if(!fail_flag){
-            log::debug << "var: " + ident + " with dim[" + std::to_string(dim) + "]";
+            mylog::debug << "var: " + ident + " with dim[" + std::to_string(dim) + "]";
             var_define->ident_list.push_back(ident);
             var_define->dim_list.push_back(dim);
         }
@@ -300,7 +300,7 @@ VarDefine* GrammarAnalyzer::constructVarDefine(const SymSet &delimiter){
 
     #if HW
     if(var_define != NULL)
-        log::hw << "var define";
+        mylog::hw << "var define";
     #endif//HW
 
     return var_define;
@@ -330,7 +330,7 @@ VarDecl* GrammarAnalyzer::constructVarDecl(bool overlook, const SymSet &delimite
         }
 
         // is var_decl
-        log::debug << "<var_decl> once.";
+        mylog::debug << "<var_decl> once.";
 
         VarDefine *var_define = constructVarDefine(idel);
         if(var_define != NULL){
@@ -359,7 +359,7 @@ VarDecl* GrammarAnalyzer::constructVarDecl(bool overlook, const SymSet &delimite
 
     #if HW
     if(var_decl != NULL)
-        log::hw << "var decl";
+        mylog::hw << "var decl";
     #endif//HW
 
     return var_decl;

@@ -1,6 +1,10 @@
 #include "FuncDefine.h"
+
+#include <algorithm>
+
 #include "Param.h"
 #include "CompoundStatement.h"
+
 
 Tuples FuncDefine::dump(NameTable &tab){
     Tuples tuples;
@@ -32,7 +36,7 @@ Tuples FuncDefine::dump(NameTable &tab){
     Tuples state_tuples = compound_state->dump(tab, func_name);
     tuples.insert(tuples.end(), state_tuples.begin(), state_tuples.end());
 
-    // TODO 
+    // TODO
     // check when this function need return value, if user give a return statement with return value.
 
     // do return implictly if the last tuple is not RET

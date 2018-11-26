@@ -23,7 +23,7 @@ Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
         }
         // select check
         if(!select){
-            log::error << "VarFactor has a NULL select when its is_array is true.";
+            mylog::error << "VarFactor has a NULL select when its is_array is true.";
             return tuples;
         }
 
@@ -60,7 +60,7 @@ Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
 Tuples FuncFactor::dump(NameTable &tab, const string &func_name,
             TempVarPool &tvp, Operand **ret_ord){
     if(!call_exp){
-        log::error << "FuncFactor: call_exp is NULL.";
+        mylog::error << "FuncFactor: call_exp is NULL.";
         Tuples tuples;
         return tuples;
     }
@@ -72,7 +72,7 @@ Tuples ExpFactor::dump(NameTable &tab, const string &func_name,
     Tuples tuples;
 
     if(!exp){
-        log::error << "ExpFactor has a NULL exp.";
+        mylog::error << "ExpFactor has a NULL exp.";
         return tuples;
     }
     tuples = exp->dump(tab, func_name, tvp, ret_ord);

@@ -10,12 +10,12 @@ public:
         temp_pool.reset();
     }
 
-    back::REG regist(NameTableEntry *in_entry, NameTableEntry **out_entry){
+    back::REG regist(VarEntry *in_entry, VarEntry **out_entry){
         // TODO now is just TempRegPool 's wrapper
         return temp_pool.regist(in_entry, out_entry);
     }
 
-    back::REG lookUpReg(NameTableEntry *entry){
+    back::REG lookUpReg(VarEntry *entry){
         return temp_pool.lookUpReg(entry);
     }
 

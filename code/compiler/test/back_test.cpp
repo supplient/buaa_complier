@@ -5,6 +5,7 @@
 #include "GrammarAnalyzer.h"
 #include "log.h"
 #include "ConstVarRemover.h"
+#include "Backend.h"
 
 using namespace std;
 
@@ -23,7 +24,7 @@ void backTest(string filename){
         exit(-1);
     }
     file.close();
-    
+
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
@@ -44,6 +45,11 @@ void backTest(string filename){
     }
     cout << "---------------------------" << endl;
     cout << "Dump done." << endl;
+
+    Backend backend;
+    vector<DataCmd*> data_cmds;
+    vector<InstCmd*> inst_cmds;
+    backend.trans(tab, func_tuples, &data_cmds, &inst_cmds);
 
     // Release memory
     delete program;

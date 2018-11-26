@@ -22,7 +22,7 @@ public:
         ng = back::t0;
     }
 
-    back::REG regist(NameTableEntry *in_entry, NameTableEntry **out_entry){
+    back::REG regist(VarEntry *in_entry, VarEntry **out_entry){
         // check input
         if(!out_entry)
             throw string("TempRegPool: must assign a out_entry when registering a temp reg.");
@@ -56,7 +56,7 @@ public:
         return res;
     }
 
-    back::REG lookUpReg(NameTableEntry *entry){
+    back::REG lookUpReg(VarEntry *entry){
         if(!entry)
             return back::NO_REG;
 
@@ -70,21 +70,21 @@ public:
 
 private:
     back::REG ng;
-    vector<NameTableEntry*> reg_list;
+    vector<VarEntry*> reg_list;
 
     back::REG nowReg(){
         return ng;
     }
 
-    NameTableEntry* nowRegEntry(){
+    VarEntry* nowRegEntry(){
         return reg_list[ng-back::t0];
     }
 
-    void setNowRegEntry(NameTableEntry *entry){
+    void setNowRegEntry(VarEntry *entry){
         reg_list[ng-back::t0] = entry;
     }
 
-    NameTableEntry* nextRegEntry(){
+    VarEntry* nextRegEntry(){
         ng = static_cast<back::REG>((int)ng + 1);
         if(ng>=back::TEMP_REG_UP) // loop
             ng = back::t0;

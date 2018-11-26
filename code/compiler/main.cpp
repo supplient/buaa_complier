@@ -25,7 +25,7 @@ int main()
         //cout << "Hello world!" << endl;
     }
     catch(string s){
-        log::fatal << s;
+        mylog::fatal << s;
     }
     return 0;
 }

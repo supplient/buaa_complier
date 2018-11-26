@@ -6,7 +6,7 @@ Tuples Condition::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
     
     // check at least one exp
     if(!left_exp){
-        log::error << "Condition: left_exp is NULL!";
+        mylog::error << "Condition: left_exp is NULL!";
         return tuples;
     }
 
@@ -26,7 +26,7 @@ Tuples Condition::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
     
     // check right_exp
     if(!right_exp){
-        log::error << "Condition: right_exp is NULL when has_comp is true";
+        mylog::error << "Condition: right_exp is NULL when has_comp is true";
         return tuples;
     }
 
@@ -48,7 +48,7 @@ Tuples Condition::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
         case sym::NOTEQUAL: comp_tuple->op = sem::NOTEQUAL; break;
         case sym::EQUAL: comp_tuple->op = sem::EQUAL; break;
         default:
-            log::error << "Condition: invalid operator: " << op;
+            mylog::error << "Condition: invalid operator: " << op;
             return tuples;
     }
     comp_tuple->left = left_ord;

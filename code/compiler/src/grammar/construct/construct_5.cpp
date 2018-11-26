@@ -57,7 +57,7 @@ Param* GrammarAnalyzer::constructParam(const SymSet &delimiter){
 
     #if HW
     if(param)
-        log::hw << "param";
+        mylog::hw << "param";
     #endif//HW
 
     return param;
@@ -184,7 +184,7 @@ FuncDefine* GrammarAnalyzer::constructFuncDefine(const SymSet &delimiter){
 
     #if HW
     if(func_def)
-        log::hw << "function_define";
+        mylog::hw << "function_define";
     #endif//HW
 
     return func_def;

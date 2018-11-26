@@ -33,6 +33,41 @@ Stack----
      ↓    
     Low
 
+Load logic----
+
+    * since we can only calculate values in reg, 
+        it's necessary to load var from memory to reg 
+        once the var is needed.
+
+    * There are two kinds of vars:
+        1. global var
+            Load with label.
+        2. local var (include temp var, param var)
+            Load with offset between $sp.
+            offset is saved in local var offset table(lvo_tab).
+
+    * When we need a var,
+        1. Check reg_pool, whether has registed.
+            If has registed, nothing need to be done.
+        2. Ask for a reg.
+        3. If asked reg is taken from another var,
+            write back the var's value to its address.
+            write back is similiar with the load code.
+        4. Load var's value into the registed reg. 
+            [call the reg `$T`] [call the var's name `label`]
+            a. If is global var, just load with the label.
+                * char
+                    lb  $T, label
+                * int
+                    lw  $T, label
+            b. If is local var, load with the offset between $sp
+            [call the offset `offset`]
+                * char
+                    lb  $T, offset($sp)
+                * int
+                    lw  $T, offset($sp)
+
+
 
 DataCmd----
 
@@ -88,12 +123,26 @@ InstCmd----
         add/sub/mul/div res, left, right
 
     WARRAY
+        * res is global var
         sll $T, left, 2
         sw  right, res($T)
 
+        * res is local var
+        sll $T, left, 2
+        add $T, $T, offset
+        add $T, $T, $sp
+        sw  right, 0($T)
+
     RARRAY
+        * left is global var
         sll $T, right, 2
         lw  res, left($T)
+
+        * left is local var
+        sll $T, right, 2
+        add $T, $T, offset
+        add $T, $T, $sp
+        lw  res, 0($T)
 
     FUNC
         <stack_size>: local vars & GPR saved area.

@@ -40,7 +40,7 @@ Integer* GrammarAnalyzer::constructInteger(const SymSet &delimiter){
 
     #if HW
     if(integer != NULL)
-        log::hw << "integer";
+        mylog::hw << "integer";
     #endif//HW
 
     return integer;

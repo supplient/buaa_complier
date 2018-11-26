@@ -80,7 +80,7 @@ FuncCallExp* GrammarAnalyzer::constructFuncCallExp(const SymSet &delimiter){
 
     #if HW
     if(call_exp)
-        log::hw << "func_call_expression";
+        mylog::hw << "func_call_expression";
     #endif//HW
 
     return call_exp;

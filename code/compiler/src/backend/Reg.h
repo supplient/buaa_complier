@@ -14,7 +14,8 @@ namespace back
         t6,
         t7,
         TEMP_REG_UP,
-        NO_REG
+        sp,
+        NO_REG,
     };
 } // back
 

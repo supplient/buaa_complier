@@ -11,11 +11,11 @@ Tuples IfStatement::dump_int(NameTable &tab, const string &func_name, TempVarPoo
 
     // check cond & state
     if(!cond){
-        log::error << "IfStatement: cond is NULL.";
+        mylog::error << "IfStatement: cond is NULL.";
         return tuples;
     }
     if(!state){
-        log::error << "IfStatement: state is NULL.";
+        mylog::error << "IfStatement: state is NULL.";
         return tuples;
     }
 
@@ -53,11 +53,11 @@ Tuples WhileStatement::dump_int(NameTable &tab, const string &func_name, TempVar
 
     // check cond & state
     if(!cond){
-        log::error << "WhileStatement: cond is NULL.";
+        mylog::error << "WhileStatement: cond is NULL.";
         return tuples;
     }
     if(!state){
-        log::error << "WhileStatement: state is NULL.";
+        mylog::error << "WhileStatement: state is NULL.";
         return tuples;
     }
 
@@ -112,11 +112,11 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
 
     // check exp & case_list
     if(!exp){
-        log::error << "SwtichStatement: exp is NULL.";
+        mylog::error << "SwtichStatement: exp is NULL.";
         return tuples;
     }
     if(!case_list){
-        log::error << "SwtichStatement: case_list is NULL.";
+        mylog::error << "SwtichStatement: case_list is NULL.";
         return tuples;
     }
 
@@ -209,7 +209,7 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
 
 Tuples FuncCallStatement::dump_int(NameTable &tab, const string &func_name, TempVarPool &tvp){
     if(!call_exp){
-        log::error << "FunCallStatement: call_exp is NULL";
+        mylog::error << "FunCallStatement: call_exp is NULL";
         Tuples tuples;
         return tuples;
     }
@@ -244,7 +244,7 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
 
     // check right value
     if(!exp){
-        log::error << "AssignMent: exp is NULL!";
+        mylog::error << "AssignMent: exp is NULL!";
         exit(-1);
     }
 
@@ -380,7 +380,7 @@ Tuples ReturnStatement::dump_int(NameTable &tab, const string &func_name, TempVa
                 rv_name = NameUtil::getCharReturnVarName();
                 break;
             default:
-                log::error << "Invalid type for return value: " << func_entry->return_type;
+                mylog::error << "Invalid type for return value: " << func_entry->return_type;
                 return tuples;
         }
         Tuple *assign_tuple = new Tuple();
@@ -406,7 +406,7 @@ Tuples BracedStatement::dump(NameTable &tab, const string &func_name){
         tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
     }
     else
-        log::error << "NULL state_list in BracedStatement";
+        mylog::error << "NULL state_list in BracedStatement";
 
     return tuples;
 }

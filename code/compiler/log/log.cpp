@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace log{
+namespace mylog{
     Debug debug("log/debug.log");
     Debug info("log/info.log", &debug);
     Debug warning("log/warning.log", &info);
