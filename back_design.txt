@@ -121,7 +121,7 @@ InstCmd----
         nop
 
     LABEL<Not function>
-        left:
+        res:
 
     ASSIGN
         move res, left

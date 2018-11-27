@@ -3,7 +3,7 @@
 EMPTY
 
 LABEL
-    left: string. label name.
+    res: string. label name.
     effect: Do nothing. Only for jump.
 
 

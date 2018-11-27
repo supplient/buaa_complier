@@ -72,6 +72,7 @@ string InstCmd::toString(){
         case SNE:
         case SEQ:
         case SLL:
+        case BEQ:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             s += rts(left_reg) + ", ";
@@ -82,6 +83,12 @@ string InstCmd::toString(){
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             s += rts(left_reg) + ", ";
+            break;
+
+        case BEQZ:
+            s += OP_NAME[op] + " ";
+            s += rts(res_reg) + ", ";
+            s += right_label;
             break;
 
         case SB:

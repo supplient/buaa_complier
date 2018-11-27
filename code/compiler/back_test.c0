@@ -2,18 +2,19 @@ const char c='a';
 int b;
 int k[2];
 
-int func(int ta){
-    return(ta+2);
+void func(int a){
+    if(a<2)
+        printf("small");
+    if(a>2)
+        printf("large");
+    if(a==2)
+        printf("equal");
 }
 
 void main(){
     int a;
-    int y;
-    y = 2;
-    a = func(y);
-    b = a;
-    printf("Look!");
-    printf(2);
-    printf("Yes!It is b: ", 'b');
-    printf("Jokex, b: ", b);
+    a = 2;
+    func(a);
+    func(1);
+    func(3);
 }

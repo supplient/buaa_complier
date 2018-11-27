@@ -192,6 +192,13 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     back::REG right_reg;
     back::REG sel_reg;
     switch(tuple->op){
+        case LABEL:
+            inst_cmds->push_back(
+                new InstCmd(tuple->res->str_value)
+            );
+            break;
+        // LABEL
+
         case ASSIGN:
             res_reg = registVar(tuple->res->entry, inst_cmds);
 
@@ -217,28 +224,17 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
             break;
+        // ASSIGN
 
         case ADD:
         case SUB:
         case MUL:
         case DIV:
-        case LESS:
-        case LESSOREQUAL:
-        case MORE:
-        case MOREOREQUAL:
-        case NOTEQUAL:
-        case EQUAL:
             switch(tuple->op){
                 case ADD: inst_op = InstCmd::ADD; break;
                 case SUB: inst_op = InstCmd::SUB; break;
                 case MUL: inst_op = InstCmd::MUL; break;
                 case DIV: inst_op = InstCmd::DIV; break;
-                case LESS: inst_op = InstCmd::SLT; break;
-                case LESSOREQUAL: inst_op = InstCmd::SLE; break;
-                case MORE: inst_op = InstCmd::SGT; break;
-                case MOREOREQUAL:  inst_op = InstCmd::SGE; break;
-                case NOTEQUAL:  inst_op = InstCmd::SNE; break;
-                case EQUAL: inst_op = InstCmd::SEQ; break;
                 default: throw string("FuncBackend: something wrong.");
             }
             left_reg = registAndLoadVar(tuple->left->entry, inst_cmds);
@@ -261,6 +257,52 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
+            break;
+
+        case LESS:
+        case LESSOREQUAL:
+        case MORE:
+        case MOREOREQUAL:
+        case NOTEQUAL:
+        case EQUAL:
+            switch(tuple->op){
+                case LESS: inst_op = InstCmd::SLT; break;
+                case LESSOREQUAL: inst_op = InstCmd::SLE; break;
+                case MORE: inst_op = InstCmd::SGT; break;
+                case MOREOREQUAL:  inst_op = InstCmd::SGE; break;
+                case NOTEQUAL:  inst_op = InstCmd::SNE; break;
+                case EQUAL: inst_op = InstCmd::SEQ; break;
+                default: throw string("FuncBackend: something wrong.");
+            }
+            // load right
+            if(tuple->right->type == Operand::ENTRY){
+                var_entry = dynamic_cast<const VarEntry*>(tuple->right->entry);
+                right_reg = registAndLoadVar(var_entry, inst_cmds);
+            }
+            else if(tuple->right->type == Operand::INT_CONST){
+                right_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->int_const)
+                );
+            }
+            else if(tuple->right->type == Operand::CHAR_CONST){
+                right_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->char_const)
+                );
+            }
+            else
+                throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
+            // load left
+            left_reg = registAndLoadVar(tuple->left->entry, inst_cmds);
+            // regist res
+            res_reg = registVar(tuple->res->entry, inst_cmds);
+            // op
+            inst_cmds->push_back(
+                new InstCmd(inst_op, res_reg, left_reg, right_reg)
+            );
             break;
 
         case WARRAY:
@@ -579,6 +621,87 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             break;
         // OUTPUT
+
+        case BEZ:
+            // load left
+            if(tuple->left->type == Operand::ENTRY){
+                var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
+                left_reg = registAndLoadVar(var_entry, inst_cmds);
+            }
+            else if(tuple->left->type == Operand::INT_CONST){
+                left_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, left_reg, back::zero, tuple->left->int_const)
+                );
+            }
+            else if(tuple->left->type == Operand::CHAR_CONST){
+                left_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, left_reg, back::zero, tuple->left->char_const)
+                );
+            }
+            // beqz
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::BEQZ, left_reg, tuple->res->str_value)
+            );
+            break;
+        // BEZ
+
+        case BEQ:
+            // ask for temp reg
+            if(tuple->left->type != Operand::ENTRY)
+                left_reg = askForTempReg(inst_cmds);
+            if(tuple->right->type != Operand::ENTRY)
+                right_reg = askForTempReg(inst_cmds);
+            // load left
+            if(tuple->left->type == Operand::ENTRY){
+                var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
+                left_reg = registAndLoadVar(var_entry, inst_cmds);
+            }
+            else if(tuple->left->type == Operand::INT_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, left_reg, back::zero, tuple->left->int_const)
+                );
+            }
+            else if(tuple->left->type == Operand::CHAR_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, left_reg, back::zero, tuple->left->char_const)
+                );
+            }
+            // load right
+            if(tuple->right->type == Operand::ENTRY){
+                var_entry = dynamic_cast<const VarEntry*>(tuple->right->entry);
+                right_reg = registAndLoadVar(var_entry, inst_cmds);
+            }
+            else if(tuple->right->type == Operand::INT_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->int_const)
+                );
+            }
+            else if(tuple->right->type == Operand::CHAR_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->char_const)
+                );
+            }
+            // beq
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::BEQ, left_reg, right_reg, tuple->right->str_value)
+            );
+            break;
+        // BEQ
+
+        case JMP:
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::J, tuple->res->str_value)
+            );
+            break;
+        // JMP
 
         default:
             throw string("FuncBackend: Not implemented tuple OP: " + to_string(tuple->op));

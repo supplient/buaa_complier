@@ -18,7 +18,7 @@ TODO: char's cut when assign
   O CALL
   O RET
   O INPUT
-    OUTPUT
+  O OUTPUT
   O LESS
   O LESSOREQUAL
   O MORE
