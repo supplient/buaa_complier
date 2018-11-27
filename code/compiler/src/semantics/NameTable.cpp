@@ -38,7 +38,6 @@ FuncEntry* NameTable::insertFunc(string name, sym::SYMBOL return_type, const vec
 
 void NameTable::removeConstVar(){
     for(auto pair: func_map){
-        cerr << pair.first << endl;
         pair.second->removeConstVar();
     }
 
