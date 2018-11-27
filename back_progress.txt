@@ -12,8 +12,8 @@ Note: These are basic functions' progress.
     WARRAY
     RARRAY
   O FUNC
-    PARAM
-    CALL
+  O PARAM
+  O CALL
   O RET
     INPUT
     OUTPUT

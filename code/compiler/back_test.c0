@@ -1,8 +1,16 @@
 const char c='a';
 int b;
+
+void func(int ta){
+    b = b + ta;
+}
+
 void main(){
     int a;
-    b = 2*2;
-    a = b/2;
-    b = a + c;
+    a = 2;
+    b = a;
+    func(6);
+    b = b + a;
+    func(b);
+    b = b/2;
 }

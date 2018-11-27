@@ -30,7 +30,11 @@ private:
     back::size ra_offset;
     back::size stack_size;
 
+    int param_count = 0;
+
     void writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds);
+
+    back::REG askForTempReg(vector<InstCmd*> *inst_cmds);
 
     back::REG registAndLoadVar(const NameTableEntry *entry, vector<InstCmd*> *inst_cmds){
         return registAndLoadVar(dynamic_cast<const VarEntry*>(entry), inst_cmds);
@@ -41,6 +45,8 @@ private:
         return registVar(dynamic_cast<const VarEntry*>(entry), inst_cmds);
     }
     back::REG registVar(const VarEntry *entry, vector<InstCmd*> *inst_cmds);
+
+    void resetTempReg(vector<InstCmd*> *inst_cmds);
 
     void transTuple(Tuple *tuple, map<string, string> str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);

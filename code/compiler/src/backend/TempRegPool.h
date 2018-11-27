@@ -22,6 +22,31 @@ public:
         ng = back::t0;
     }
 
+    back::REG askForTempReg(const VarEntry **out_entry){
+        // check input
+        if(!out_entry)
+            throw string("TempRegPool: must assign a out_entry when registering a temp reg.");
+        back::REG res;
+
+        if(!nowRegEntry()){
+            // nowReg is free
+            // no need to free now reg
+            *out_entry = NULL;
+        }
+        else{
+            // must be no reg is free.
+            // free now reg
+            *out_entry = nowRegEntry();
+        }
+
+        // Note: No registing! Just skip.
+        setNowRegEntry(NULL);
+        res = nowReg();
+        nextRegEntry();
+
+        return res;
+    }
+
     back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
         // check input
         if(!out_entry)

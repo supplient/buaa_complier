@@ -66,6 +66,10 @@ Load logic----
                     lb  $T, offset($sp)
                 * int
                     lw  $T, offset($sp)
+    * When transforming, Backend may need a temp register.
+        It is allowed, but Backend can only have one register and can only used in one tuple's transforming.
+        The register will not be registed for any variable.
+        If any var need new reg, the temp register is allowed to be given without any noticing.
 
 
 Program wrapper----
@@ -167,6 +171,7 @@ InstCmd----
     CALL
         jal res
         add $sp, $sp, 4*<param_count>
+        # reset <param_count>
 
     RET
         <stack_size>: local vars & GPR saved area.

@@ -86,10 +86,19 @@ void FuncBackend::writeBackVar(const VarEntry *entry, back::REG reg, vector<Inst
     else{
         write_cmd->left_reg = back::sp;
         write_cmd->right_type = InstCmd::IMME_TYPE;
-        write_cmd->right_imme = lvo_tab[NameUtil::genEntryName(entry)];
+        write_cmd->right_imme = lvo_tab[NameUtil::genEntryName(entry)] + 4*param_count;
     }
 
     inst_cmds->push_back(write_cmd);
+}
+
+back::REG FuncBackend::askForTempReg(vector<InstCmd*> *inst_cmds){
+    const VarEntry *out_entry = NULL;
+    back::REG res = reg_pool.askForTempReg(&out_entry);
+    if(out_entry){
+        writeBackVar(out_entry, res, inst_cmds);
+    }
+    return res;
 }
 
 back::REG FuncBackend::registVar(const VarEntry *entry, vector<InstCmd*>* inst_cmds){
@@ -144,7 +153,7 @@ back::REG FuncBackend::registAndLoadVar(const VarEntry *entry, vector<InstCmd*> 
     else{
         read_cmd->left_reg = back::sp;
         read_cmd->right_type = InstCmd::IMME_TYPE;
-        read_cmd->right_imme = lvo_tab[NameUtil::genEntryName(entry)];
+        read_cmd->right_imme = lvo_tab[NameUtil::genEntryName(entry)] + 4*param_count;
     }
 
     inst_cmds->push_back(read_cmd);
@@ -152,9 +161,18 @@ back::REG FuncBackend::registAndLoadVar(const VarEntry *entry, vector<InstCmd*> 
     return res;
 }
 
+void FuncBackend::resetTempReg(vector<InstCmd*> *inst_cmds){
+    map<back::REG, const VarEntry*> reg_entry_map = reg_pool.getAllRegistedTempReg();
+    for(auto pair: reg_entry_map){
+        writeBackVar(pair.second, pair.first, inst_cmds);
+    }
+    reg_pool.resetTempReg();
+}
+
 void FuncBackend::trans(map<string, string> str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
 
+    param_count = 0;
     for(Tuple *tuple: func_tuple->tuples){
         transTuple(tuple, str_tab, data_cmds, inst_cmds);
     }
@@ -192,6 +210,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->left->char_const)
                 );
             }
+            else
+                throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
             break;
 
         case ADD:
@@ -217,7 +237,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 case EQUAL: inst_op = InstCmd::SEQ; break;
                 default: throw string("FuncBackend: something wrong.");
             }
-            // add
             left_reg = registAndLoadVar(tuple->left->entry, inst_cmds);
             res_reg = registVar(tuple->res->entry, inst_cmds);
             if(tuple->right->type == Operand::ENTRY){
@@ -236,6 +255,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(inst_op, res_reg, left_reg, tuple->right->char_const)
                 );
             }
+            else
+                throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
             break;
 
         case FUNC:
@@ -253,6 +274,60 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             // TODO
             break;
 
+        case PARAM:
+            // adujst $sp
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::ADD, back::sp, back::sp, -4)
+            );
+            // push param
+            if(tuple->res->type == Operand::ENTRY){
+                res_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
+                // sw
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                );
+            }
+            else if(tuple->res->type == Operand::INT_CONST){
+                res_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->int_const)
+                );
+                // sw
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                );
+            }
+            else if(tuple->res->type == Operand::CHAR_CONST){
+                res_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->char_const)
+                );
+                // sw
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                );
+            }
+            // add param count
+            param_count++;
+            break;
+
+        case CALL:
+            // reset temp regs
+            resetTempReg(inst_cmds);
+            // jump and link to target function
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::JAL, tuple->res->entry->name)
+            );
+            // recover $sp
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*param_count)
+            );
+            // reset param count
+            param_count = 0;
+            break;
+
         case RET:
             // save all global vars
             reg_entry_map = reg_pool.getAllRegistedVar();
@@ -261,7 +336,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 const VarEntry *entry = pair.second;
                 if(!isGlobalVar(entry))
                     continue;
-         
+
                 writeBackVar(entry, reg, inst_cmds);
             }
             // load $s?
