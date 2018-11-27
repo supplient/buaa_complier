@@ -76,6 +76,19 @@ namespace mylog{
             }
     };
 
+    class Assemble: public Log{
+        public:
+            Assemble(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~Assemble(){}
+
+            template<class T>
+            Assemble& operator<<(const T &s){
+                cout << s;
+                file << s;
+                return dynamic_cast<Assemble&>(Log::operator<<(s));
+            }
+    };
+
     extern Fatal fatal;
     extern Error error;
     extern Debug warning;
@@ -83,6 +96,7 @@ namespace mylog{
     extern Debug debug;
 
     extern Homework hw;
+    extern Assemble ass;
 }
 
 #endif//LOG_H
