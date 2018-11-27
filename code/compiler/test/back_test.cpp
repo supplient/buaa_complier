@@ -51,6 +51,18 @@ void backTest(string filename){
     vector<InstCmd*> inst_cmds;
     backend.trans(tab, func_tuples, &data_cmds, &inst_cmds);
 
+    cout << ".data" << endl;
+    for(DataCmd *cmd: data_cmds){
+        cout << cmd->toString() << endl;
+    }
+
+    cout << endl;
+
+    cout << ".text" << endl;
+    for(InstCmd *cmd: inst_cmds){
+        cout << cmd->toString() << endl;
+    }
+
     // Release memory
     delete program;
     for(auto func_tuple: func_tuples)

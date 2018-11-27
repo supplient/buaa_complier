@@ -1,7 +1,8 @@
-const int b=2;
 const char c='a';
+int b;
 void main(){
     int a;
+    b = 2;
     a = b;
     a = a + c;
 }

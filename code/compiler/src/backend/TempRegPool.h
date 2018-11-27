@@ -22,7 +22,7 @@ public:
         ng = back::t0;
     }
 
-    back::REG regist(VarEntry *in_entry, VarEntry **out_entry){
+    back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
         // check input
         if(!out_entry)
             throw string("TempRegPool: must assign a out_entry when registering a temp reg.");
@@ -56,7 +56,19 @@ public:
         return res;
     }
 
-    back::REG lookUpReg(VarEntry *entry){
+    back::REG unregist(const VarEntry *entry){
+        if(!entry)
+            throw string("TempRegPool.unregist: Received a NULL entry.");
+
+        back::REG res = lookUpReg(entry);
+        if(res == back::NO_REG)
+            return res;
+
+        reg_list[res-back::t0] = NULL;
+        return res;
+    }
+
+    back::REG lookUpReg(const VarEntry *entry){
         if(!entry)
             return back::NO_REG;
 
@@ -68,23 +80,33 @@ public:
         return back::NO_REG;
     }
 
+    map<back::REG, const VarEntry*> getAllRegistedVar(){
+        map<back::REG, const VarEntry*> res;
+        for(unsigned int i=0; i<reg_list.size(); i++){
+            if(reg_list[i] == NULL)
+                continue;
+            res[static_cast<back::REG>(i+back::t0)] = reg_list[i];
+        }
+        return res;
+    }
+
 private:
     back::REG ng;
-    vector<VarEntry*> reg_list;
+    vector<const VarEntry*> reg_list;
 
     back::REG nowReg(){
         return ng;
     }
 
-    VarEntry* nowRegEntry(){
+    const VarEntry* nowRegEntry(){
         return reg_list[ng-back::t0];
     }
 
-    void setNowRegEntry(VarEntry *entry){
+    void setNowRegEntry(const VarEntry *entry){
         reg_list[ng-back::t0] = entry;
     }
 
-    VarEntry* nextRegEntry(){
+    const VarEntry* nextRegEntry(){
         ng = static_cast<back::REG>((int)ng + 1);
         if(ng>=back::TEMP_REG_UP) // loop
             ng = back::t0;

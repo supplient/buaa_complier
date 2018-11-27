@@ -11,12 +11,12 @@ class DataCmd
 {
 public:
     enum OP{
-        ALIGN, // to align to word
         ASCIIZ, // for string
-        BYTE, // for char
         WORD, // for int
         SPACE, // for array
     };
+
+    string toString();
 
     string label;
     OP op;
@@ -28,7 +28,7 @@ class InstCmd
 {
 public:
     enum OP{
-        NOP,
+        NONE,
 
         LA,
         LI,
@@ -61,8 +61,10 @@ public:
         SEQ,
 
         BEQZ,
-        BEQ
+        BEQ,
     };
+    static const int MAX_OP_NUM = 100;
+    static string OP_NAME[MAX_OP_NUM];
 
     enum RIGHT_TYPE{
         REG_TYPE,
@@ -71,6 +73,60 @@ public:
     };
 
     InstCmd(){has_label = false;}
+
+    InstCmd(string label){
+        has_label = true;
+        this->label = label;
+        this->op = NONE;
+    }
+
+    InstCmd(OP op, back::REG res){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
+    }
+
+    InstCmd(OP op, back::REG res, back::REG left){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
+        left_reg = left;
+    }
+
+    InstCmd(OP op, back::REG res, back::REG left, back::REG right){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
+        left_reg = left;
+        right_type = REG_TYPE;
+        right_reg = right;
+    }
+
+    InstCmd(OP op, back::REG res, back::REG left, int right){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
+        left_reg = left;
+        right_type = IMME_TYPE;
+        right_imme = right;
+    }
+
+    // reg to string
+    string rts(back::REG reg){
+        return back::REG_NAME[reg];
+    }
+    string rightToString(){
+        switch(right_type){
+            case REG_TYPE:
+                return rts(right_reg);
+            case IMME_TYPE:
+                return to_string(right_imme);
+            case LABEL_TYPE:
+                return right_label;
+        }
+        return string();
+    }
+    string toString();
 
     bool has_label;
     string label;

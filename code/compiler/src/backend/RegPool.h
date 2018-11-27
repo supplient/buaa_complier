@@ -10,13 +10,21 @@ public:
         temp_pool.reset();
     }
 
-    back::REG regist(VarEntry *in_entry, VarEntry **out_entry){
+    back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
         // TODO now is just TempRegPool 's wrapper
         return temp_pool.regist(in_entry, out_entry);
     }
 
-    back::REG lookUpReg(VarEntry *entry){
+    back::REG lookUpReg(const VarEntry *entry){
         return temp_pool.lookUpReg(entry);
+    }
+
+    back::REG unregist(const VarEntry *entry){
+        return temp_pool.unregist(entry);
+    }
+
+    map<back::REG, const VarEntry*> getAllRegistedVar(){
+        return temp_pool.getAllRegistedVar();
     }
 
 private:
