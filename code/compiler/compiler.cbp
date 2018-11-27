@@ -58,10 +58,15 @@
 		<Unit filename="src/NameUtil.h" />
 		<Unit filename="src/backend/Backend.cpp" />
 		<Unit filename="src/backend/Backend.h" />
+		<Unit filename="src/backend/Command.cpp" />
 		<Unit filename="src/backend/Command.h" />
+		<Unit filename="src/backend/ConstVarRemover.h" />
+		<Unit filename="src/backend/FuncBackend.cpp" />
 		<Unit filename="src/backend/FuncBackend.h" />
+		<Unit filename="src/backend/Reg.cpp" />
 		<Unit filename="src/backend/Reg.h" />
 		<Unit filename="src/backend/RegPool.h" />
+		<Unit filename="src/backend/SizeUtil.h" />
 		<Unit filename="src/backend/TempRegPool.h" />
 		<Unit filename="src/config.h" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />

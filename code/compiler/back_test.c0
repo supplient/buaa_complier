@@ -2,7 +2,7 @@ const char c='a';
 int b;
 void main(){
     int a;
-    b = 2;
-    a = b;
-    a = a + c;
+    b = 2*2;
+    a = b/2;
+    b = a + c;
 }

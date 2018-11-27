@@ -1,0 +1,28 @@
+Note: These are basic functions' progress.
+    Actually, a lot of work has not been start.
+
+    EMPTY
+    LABEL
+  O ASSIGN
+    NEG
+  O ADD
+  O SUB
+  O MUL
+  O DIV
+    WARRAY
+    RARRAY
+  O FUNC
+    PARAM
+    CALL
+  O RET
+    INPUT
+    OUTPUT
+  O LESS
+  O LESSOREQUAL
+  O MORE
+  O MOREOREQUAL
+  O NOTEQUAL
+  O EQUAL
+    BEZ
+    BEQ
+    JMP

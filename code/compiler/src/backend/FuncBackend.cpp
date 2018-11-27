@@ -165,6 +165,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     using namespace sem;
 
     map<back::REG, const VarEntry*> reg_entry_map;
+    InstCmd::OP inst_op;
     back::REG res_reg;
     back::REG left_reg;
     back::REG right_reg;
@@ -194,23 +195,45 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             break;
 
         case ADD:
+        case SUB:
+        case MUL:
+        case DIV:
+        case LESS:
+        case LESSOREQUAL:
+        case MORE:
+        case MOREOREQUAL:
+        case NOTEQUAL:
+        case EQUAL:
+            switch(tuple->op){
+                case ADD: inst_op = InstCmd::ADD; break;
+                case SUB: inst_op = InstCmd::SUB; break;
+                case MUL: inst_op = InstCmd::MUL; break;
+                case DIV: inst_op = InstCmd::DIV; break;
+                case LESS: inst_op = InstCmd::SLT; break;
+                case LESSOREQUAL: inst_op = InstCmd::SLE; break;
+                case MORE: inst_op = InstCmd::SGT; break;
+                case MOREOREQUAL:  inst_op = InstCmd::SGE; break;
+                case NOTEQUAL:  inst_op = InstCmd::SNE; break;
+                case EQUAL: inst_op = InstCmd::SEQ; break;
+                default: throw string("FuncBackend: something wrong.");
+            }
             // add
             left_reg = registAndLoadVar(tuple->left->entry, inst_cmds);
             res_reg = registVar(tuple->res->entry, inst_cmds);
             if(tuple->right->type == Operand::ENTRY){
                 right_reg = registAndLoadVar(tuple->right->entry, inst_cmds);
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::ADD, res_reg, left_reg, right_reg)
+                    new InstCmd(inst_op, res_reg, left_reg, right_reg)
                 );
             }
             else if(tuple->right->type == Operand::INT_CONST){
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::ADD, res_reg, left_reg, tuple->right->int_const)
+                    new InstCmd(inst_op, res_reg, left_reg, tuple->right->int_const)
                 );
             }
             else if(tuple->right->type == Operand::CHAR_CONST){
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::ADD, res_reg, left_reg, tuple->right->char_const)
+                    new InstCmd(inst_op, res_reg, left_reg, tuple->right->char_const)
                 );
             }
             break;

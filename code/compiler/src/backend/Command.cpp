@@ -61,6 +61,15 @@ string InstCmd::toString(){
             break;
 
         case ADD:
+        case SUB:
+        case MUL:
+        case DIV:
+        case SLT:
+        case SLE:
+        case SGT:
+        case SGE:
+        case SNE:
+        case SEQ:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             s += rts(left_reg) + ", ";
