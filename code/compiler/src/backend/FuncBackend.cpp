@@ -447,6 +447,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, -4)
             );
+            // add param count
+            param_count++;
             // push param
             if(tuple->res->type == Operand::ENTRY){
                 res_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
@@ -479,8 +481,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
-            // add param count
-            param_count++;
             break;
 
         case CALL:
