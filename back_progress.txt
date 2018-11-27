@@ -12,7 +12,7 @@ TODO: return value
   O MUL
   O DIV
   O WARRAY
-    RARRAY
+  O RARRAY
   O FUNC
   O PARAM
   O CALL

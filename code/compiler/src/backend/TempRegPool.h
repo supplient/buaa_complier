@@ -47,6 +47,10 @@ public:
         return res;
     }
 
+    bool hasTargetMemory(back::REG reg){
+        return reg_list[reg - back::t0] != NULL;
+    }
+
     back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
         // check input
         if(!out_entry)
