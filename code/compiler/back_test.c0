@@ -8,6 +8,12 @@ int func(int ta){
 
 void main(){
     int a;
-    a = func(4);
+    int y;
+    y = 2;
+    a = func(y);
     b = a;
+    printf("Look!");
+    printf(2);
+    printf("Yes!It is b: ", 'b');
+    printf("Jokex, b: ", b);
 }

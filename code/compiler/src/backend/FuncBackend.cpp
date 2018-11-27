@@ -185,6 +185,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     map<back::REG, const VarEntry*> reg_entry_map;
     const VarEntry *var_entry;
     InstCmd::OP inst_op;
+    int sys_num;
+    string str_label;
     back::REG res_reg;
     back::REG left_reg;
     back::REG right_reg;
@@ -480,6 +482,103 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 new InstCmd(InstCmd::JR, back::ra)
             );
             break;
+        // RET
+        
+        case INPUT:
+            // get var entry
+            if(tuple->res->type != Operand::ENTRY)
+                throw string("FuncBackend: When process input tuple, res is a non-entry ord.");
+            var_entry = dynamic_cast<const VarEntry*>(tuple->res->entry);
+            if(!var_entry)
+                throw string("FuncBackend: When process input tuple, res is a non-var entry.");
+            // check type
+            if(var_entry->type == sym::INT)
+                sys_num = 5;
+            else if(var_entry->type == sym::CHAR)
+                sys_num = 12;
+            else
+                throw string("FuncBackend: When process input tuple, res's value type is invalid: " + to_string(var_entry->type));
+            // set $v0
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::ADD, back::v0, back::zero, sys_num)
+            );
+            // syscall
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::SYSCALL)
+            );
+            // regist res
+            res_reg = registVar(tuple->res->entry, inst_cmds);
+            // save res
+            inst_cmds->push_back(
+                new InstCmd(InstCmd::MOVE, res_reg, back::v0)
+            );
+            break;
+        // INPUT
+
+        case OUTPUT:
+            if(tuple->left){
+                // output string
+                // search/create string label
+                if(str_tab.find(tuple->left->str_value) != str_tab.end())
+                    str_label = str_tab[tuple->left->str_value];
+                else{
+                    str_label = NameUtil::genUniStringLabel();
+                    str_tab[tuple->left->str_value] = str_label;
+                }
+                data_cmds->push_back(
+                    new DataCmd(DataCmd::ASCIIZ, str_label, tuple->left->str_value)
+                );
+                // set $a0
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::LA, back::a0, str_label)
+                );
+                // set $v0
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, back::v0, back::zero, 4)
+                );
+                // syscall
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SYSCALL)
+                );
+            }
+            if(tuple->right){
+                // output expression
+                // set $a0
+                if(tuple->right->type == Operand::ENTRY){
+                    var_entry = dynamic_cast<const VarEntry*>(tuple->right->entry);
+                    // check type
+                    sys_num = var_entry->type==sym::INT ? 1 : 11;
+                    right_reg = registAndLoadVar(var_entry, inst_cmds);
+                    // move
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::MOVE, back::a0, right_reg)
+                    );
+                }
+                else if(tuple->right->type == Operand::INT_CONST){
+                    sys_num = 1;
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, back::a0, back::zero, tuple->right->int_const)
+                    );
+                }
+                else if(tuple->right->type == Operand::CHAR_CONST){
+                    sys_num = 11;
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, back::a0, back::zero, tuple->right->char_const)
+                    );
+                }
+                // set $v0
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, back::v0, back::zero, sys_num)
+                );
+                // syscall
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SYSCALL)
+                );
+            }
+            break;
+        // OUTPUT
 
         default:
             throw string("FuncBackend: Not implemented tuple OP: " + to_string(tuple->op));

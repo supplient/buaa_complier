@@ -57,6 +57,7 @@ string InstCmd::toString(){
             break;
 
         case NOP:
+        case SYSCALL:
             s += OP_NAME[op];
             break;
 
@@ -83,8 +84,11 @@ string InstCmd::toString(){
             s += rts(left_reg) + ", ";
             break;
 
+        case SB:
+        case LB:
         case SW:
         case LW:
+        case LA:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             switch(right_type){

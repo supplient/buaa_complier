@@ -16,8 +16,15 @@ public:
 
     static string genUniBranchLabel(){
         static int branch_label_count = 0;
-        string res = "~" + to_string(branch_label_count) + "~";
+        string res = "$bra_" + to_string(branch_label_count);
         branch_label_count++;
+        return res;
+    }
+
+    static string genUniStringLabel(){
+        static int str_label_count = 0;
+        string res = "$str_" + to_string(str_label_count);
+        str_label_count++;
         return res;
     }
 

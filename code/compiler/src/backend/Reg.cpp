@@ -4,6 +4,7 @@ namespace back{
     std::string REG_NAME[MAX_REG_NUM] = {
         "$zero",
         "$v0",
+        "$a0",
         "$t0",
         "$t1",
         "$t2",

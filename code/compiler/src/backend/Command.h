@@ -15,6 +15,13 @@ public:
         WORD, // for int
         SPACE, // for array
     };
+    DataCmd(){}
+
+    DataCmd(OP op, const string &label, const string &str_value){
+        this->op = op;
+        this->label = label;
+        this->str_value = str_value;
+    }
 
     string toString();
 
@@ -101,6 +108,15 @@ public:
         has_label = false;
         this->op = op;
         res_reg = back::NO_REG;
+        left_reg = back::NO_REG;
+        right_type = LABEL_TYPE;
+        right_label = right;
+    }
+
+    InstCmd(OP op, back::REG res, string right){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
         left_reg = back::NO_REG;
         right_type = LABEL_TYPE;
         right_label = right;

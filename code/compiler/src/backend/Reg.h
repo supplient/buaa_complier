@@ -8,6 +8,7 @@ namespace back
     enum REG{
         zero = 0,
         v0,
+        a0,
         t0,
         t1,
         t2,

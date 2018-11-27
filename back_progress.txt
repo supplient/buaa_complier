@@ -1,7 +1,7 @@
 Note: These are basic functions' progress.
     Actually, a lot of work has not been start.
 
-TODO: return value
+TODO: char's cut when assign
 
     EMPTY
     LABEL
@@ -17,7 +17,7 @@ TODO: return value
   O PARAM
   O CALL
   O RET
-    INPUT
+  O INPUT
     OUTPUT
   O LESS
   O LESSOREQUAL
