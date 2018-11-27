@@ -18,6 +18,7 @@ string DataCmd::toString(){
 
 string InstCmd::OP_NAME[MAX_OP_NUM]={
     "none",
+    "nop",
     "la",
     "li",
     "move",
@@ -55,6 +56,10 @@ string InstCmd::toString(){
         case NONE:
             break;
 
+        case NOP:
+            s += OP_NAME[op];
+            break;
+
         case ADD:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
@@ -87,6 +92,19 @@ string InstCmd::toString(){
         case JR:
             s += OP_NAME[op] + " ";
             s += rts(res_reg);
+            break;
+
+        case J:
+        case JAL:
+            s += OP_NAME[op] + " ";
+            switch(right_type){
+                case IMME_TYPE:
+                    s += to_string(right_imme); break;
+                case LABEL_TYPE:
+                    s += right_label; break;
+                default:
+                    throw string("InstCmd.toString: right_reg is not allowed for cmd like j.");
+            }
             break;
 
         default:

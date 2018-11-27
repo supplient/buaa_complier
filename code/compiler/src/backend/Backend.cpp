@@ -53,5 +53,19 @@ void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples,
         func_backend->trans(str_tab, data_cmds, inst_cmds);
 
     // program concered trans
-    // TODO
+        // jump to program start label
+    inst_cmds->insert(inst_cmds->begin(),
+        new InstCmd(InstCmd::J, NameUtil::genFuncLabel(sem::GLOBAL_FUNC_NAME))
+    );
+        // mark program start label
+    inst_cmds->push_back(
+        new InstCmd(NameUtil::genFuncLabel(sem::GLOBAL_FUNC_NAME))
+    );
+        // call function
+    inst_cmds->push_back(
+        new InstCmd(InstCmd::JAL, sem::MAIN_FUNC_NAME)
+    );
+    inst_cmds->push_back(
+        new InstCmd(InstCmd::NOP)
+    );
 }

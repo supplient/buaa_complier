@@ -68,6 +68,12 @@ Load logic----
                     lw  $T, offset($sp)
 
 
+Program wrapper----
+j   <GLOBAL_FUNC_LABEL>
+...
+<GLOBAL_FUNC_LABEL>:
+jal  <MAIN_FUNC_LABEL>
+
 
 DataCmd----
 

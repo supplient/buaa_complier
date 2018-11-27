@@ -41,3 +41,6 @@
 
 # Log file
 *.log
+
+# Assemble file
+*.asm

@@ -29,6 +29,7 @@ class InstCmd
 public:
     enum OP{
         NONE,
+        NOP,
 
         LA,
         LI,
@@ -78,12 +79,31 @@ public:
         has_label = true;
         this->label = label;
         this->op = NONE;
+        res_reg = back::NO_REG;
+        left_reg = back::NO_REG;
+    }
+
+    InstCmd(OP op){
+        has_label = false;
+        this->op = op;
+        res_reg = back::NO_REG;
+        left_reg = back::NO_REG;
     }
 
     InstCmd(OP op, back::REG res){
         has_label = false;
         this->op = op;
         res_reg = res;
+        left_reg = back::NO_REG;
+    }
+
+    InstCmd(OP op, string right){
+        has_label = false;
+        this->op = op;
+        res_reg = back::NO_REG;
+        left_reg = back::NO_REG;
+        right_type = LABEL_TYPE;
+        right_label = right;
     }
 
     InstCmd(OP op, back::REG res, back::REG left){

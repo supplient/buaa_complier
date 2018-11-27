@@ -11,7 +11,7 @@
 using namespace std;
 
 namespace sem{
-    const string GLOBAL_FUNC_NAME = "@global";
+    const string GLOBAL_FUNC_NAME = "global";
     const string MAIN_FUNC_NAME = "main";
 }
 
