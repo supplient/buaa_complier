@@ -691,7 +691,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             // beq
             inst_cmds->push_back(
-                new InstCmd(InstCmd::BEQ, left_reg, right_reg, tuple->right->str_value)
+                new InstCmd(InstCmd::BEQ, left_reg, right_reg, tuple->res->str_value)
             );
             break;
         // BEQ
