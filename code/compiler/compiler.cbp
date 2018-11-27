@@ -110,6 +110,7 @@
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
 		<Unit filename="src/semantics/FuncTuple.h" />
+		<Unit filename="src/semantics/NameTable.cpp" />
 		<Unit filename="src/semantics/NameTable.h" />
 		<Unit filename="src/semantics/NameTableEntry.cpp" />
 		<Unit filename="src/semantics/NameTableEntry.h" />

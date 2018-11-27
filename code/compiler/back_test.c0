@@ -1,20 +1,18 @@
-const char c='a';
-int b;
-int k[2];
-
-void func(int a){
-    switch(a){
-        case 1: printf("one.");
-        case 2: printf("two.");
-        case 3: printf("three.");
-        default: printf("out of range.");
+int fab_func(int j)
+{
+    switch(j)
+    {
+        case 0: return(1);
+        case 1: return(1);
+        case 2: return(2);
     }
+
+    return(fab_func(j-1) + fab_func(j-2));
 }
 
 void main(){
-    int a;
-    a = -2;
-    func(1);
-    func(-a);
-    func(3);
+    int j;
+
+    scanf(j);
+    printf(fab_func(j));
 }

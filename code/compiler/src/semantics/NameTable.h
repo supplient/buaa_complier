@@ -7,6 +7,7 @@
 
 #include "NameTableEntry.h"
 #include "NameUtil.h"
+#include "log.h"
 
 using namespace std;
 
@@ -15,12 +16,10 @@ namespace sem{
     const string MAIN_FUNC_NAME = "main";
 }
 
-class FuncNameTable;
-
 class FuncNameTable
 {
 public:
-    FuncNameTable(const string &name):func_name(name){}
+    FuncNameTable(const string &name);
 
     NameTableEntry* lookUp(string name){
         for(NameTableEntry *entry : entries){
@@ -72,7 +71,10 @@ public:
 
     vector<VarEntry*> getUnconstVars(){
         vector<VarEntry*> res;
-        
+
+        if(entries.size() < 1)
+            return res;
+
         for(NameTableEntry* entry: entries){
             VarEntry* var_entry = dynamic_cast<VarEntry*>(entry);
             if(!var_entry || entry->entry_type != sem::VAR_ENTRY)
@@ -87,27 +89,7 @@ public:
         return res;
     }
 
-    void removeConstVar(){
-        auto it = entries.begin();
-        while(it != entries.end()){
-            NameTableEntry* entry = *it;
-            VarEntry* var_entry = dynamic_cast<VarEntry*>(entry);
-            if(!var_entry || entry->entry_type != sem::VAR_ENTRY){
-                it++;
-                continue;
-            }
-            if(!var_entry->is_const){
-                it++;
-                continue;
-            }
-            if(NameUtil::isSpecialVarName(var_entry->name)){
-                it++;
-                continue;
-            }
-
-            entries.erase(it);
-        }
-    }
+    void removeConstVar();
 
     string toString(){
         string s = "";
@@ -208,9 +190,7 @@ public:
         return func_map[func_name]->insertCharConst(name, value);
     }
 
-    FuncEntry* insertFunc(string name, sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple){
-        return func_map[sem::GLOBAL_FUNC_NAME]->insertFunc(name, return_type, param_list, start_tuple);
-    }
+    FuncEntry* insertFunc(string name, sym::SYMBOL return_type, const vector<VarEntry*> param_list, Tuple *start_tuple);
 
     FuncNameTable* getFuncNameTable(string func_name){
         if(func_map.find(func_name) == func_map.end())
@@ -228,10 +208,7 @@ public:
         return res;
     }
 
-    void removeConstVar(){
-        for(auto pair: func_map)
-            pair.second->removeConstVar();
-    }
+    void removeConstVar();
 
     string toString(){
         string s = "";

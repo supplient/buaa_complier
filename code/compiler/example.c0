@@ -63,14 +63,14 @@ void main()
     while(ci>0)
     {
         ci = ci - 1;
-        printf("\n", c[ci]);
+        printf("    ", c[ci]);
     }
 
     printchar('D');
     printchar('o');
     printchar('n');
     printchar('e');
-    printf("\n", '+');
+    printf("    ", '+');
 
     scanf(j);
     printf(fab_func(j));
