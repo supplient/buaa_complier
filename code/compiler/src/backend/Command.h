@@ -131,6 +131,15 @@ public:
         right_imme = right;
     }
 
+    InstCmd(OP op, back::REG res, back::REG left, string right){
+        has_label = false;
+        this->op = op;
+        res_reg = res;
+        left_reg = left;
+        right_type = LABEL_TYPE;
+        right_label = right;
+    }
+
     // reg to string
     string rts(back::REG reg){
         return back::REG_NAME[reg];

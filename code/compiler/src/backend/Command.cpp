@@ -70,6 +70,7 @@ string InstCmd::toString(){
         case SGE:
         case SNE:
         case SEQ:
+        case SLL:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             s += rts(left_reg) + ", ";

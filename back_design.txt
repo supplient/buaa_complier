@@ -67,7 +67,7 @@ Load logic----
                 * int
                     lw  $T, offset($sp)
     * When transforming, Backend may need a temp register.
-        It is allowed, but Backend can only have one register and can only used in one tuple's transforming.
+        It is allowed, but Backend can only have at most two register and can only used in one tuple's transforming.
         The register will not be registed for any variable.
         If any var need new reg, the temp register is allowed to be given without any noticing.
 

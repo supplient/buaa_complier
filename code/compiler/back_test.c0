@@ -1,16 +1,15 @@
 const char c='a';
 int b;
+int k[2];
 
 void func(int ta){
-    b = b + ta;
+    int mc[2];
+    mc[0] = ta;
 }
 
 void main(){
     int a;
-    a = 2;
-    b = a;
+    a = 1;
+    k[a] = 2;
     func(6);
-    b = b + a;
-    func(b);
-    b = b/2;
 }

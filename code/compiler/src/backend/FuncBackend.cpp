@@ -187,6 +187,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     back::REG res_reg;
     back::REG left_reg;
     back::REG right_reg;
+    back::REG sel_reg;
     switch(tuple->op){
         case ASSIGN:
             res_reg = registVar(tuple->res->entry, inst_cmds);
@@ -259,6 +260,71 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
             break;
 
+        case WARRAY:
+            // calculate selector
+            sel_reg = askForTempReg(inst_cmds);
+            if(tuple->left->type == Operand::ENTRY){
+                left_reg = registAndLoadVar(tuple->left->entry, inst_cmds);
+                // sll
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SLL, sel_reg, left_reg, 2)
+                );
+            }
+            else if(tuple->left->type == Operand::INT_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, back::zero, tuple->left->int_const)
+                );
+                // sll
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SLL, sel_reg, sel_reg, 2)
+                );
+            }
+            else
+                throw string("FuncBackend: Invalid tuple->left's type: " + to_string(tuple->left->type));
+            // load right
+            if(tuple->right->type == Operand::ENTRY){
+                right_reg = registAndLoadVar(tuple->right->entry, inst_cmds);
+            }
+            else if(tuple->right->type == Operand::INT_CONST){
+                right_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->int_const)
+                );
+            }
+            else if(tuple->right->type == Operand::CHAR_CONST){
+                right_reg = askForTempReg(inst_cmds);
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->char_const)
+                );
+            }
+            else
+                throw string("FuncBackend: Invalid tuple->left's type: " + to_string(tuple->left->type));
+            // save to array
+            if(isGlobalVar(dynamic_cast<const VarEntry*>(tuple->res->entry))){
+                // sw
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, right_reg, sel_reg, NameUtil::genEntryName(tuple->res->entry))
+                );
+            }
+            else{
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, sel_reg, lvo_tab[NameUtil::genEntryName(tuple->res->entry)] + 4*param_count)
+                );
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, sel_reg, back::sp)
+                );
+                // sw
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, right_reg, sel_reg, 0)
+                );
+            }
+            break;
+
         case FUNC:
             // func label
             inst_cmds->push_back(new InstCmd(tuple->left->entry->name));
@@ -309,6 +375,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
                 );
             }
+            else
+                throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
             // add param count
             param_count++;
             break;
