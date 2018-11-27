@@ -192,6 +192,10 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     back::REG right_reg;
     back::REG sel_reg;
     switch(tuple->op){
+        case EMPTY:
+            break;
+        // EMPTY
+
         case LABEL:
             inst_cmds->push_back(
                 new InstCmd(tuple->res->str_value)
@@ -225,6 +229,29 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
             break;
         // ASSIGN
+
+        case NEG:
+            // regist res
+            res_reg = registVar(tuple->res->entry, inst_cmds);
+            // load left
+            if(tuple->left->type == Operand::ENTRY){
+                var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
+                left_reg = registAndLoadVar(var_entry, inst_cmds);
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::NEG, res_reg, left_reg)
+                );
+            }
+            else if(tuple->left->type == Operand::INT_CONST){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, res_reg, back::zero, -tuple->left->int_const)
+                );
+            }
+            else if(tuple->left->type == Operand::CHAR_CONST){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, res_reg, back::zero, -tuple->left->char_const)
+                );
+            }
+            break;
 
         case ADD:
         case SUB:

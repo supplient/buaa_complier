@@ -13,8 +13,8 @@ void func(int a){
 
 void main(){
     int a;
-    a = 2;
+    a = -2;
     func(1);
-    func(a);
+    func(-a);
     func(3);
 }

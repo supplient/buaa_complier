@@ -80,6 +80,7 @@ string InstCmd::toString(){
             break;
 
         case MOVE:
+        case NEG:
             s += OP_NAME[op] + " ";
             s += rts(res_reg) + ", ";
             s += rts(left_reg) + ", ";
