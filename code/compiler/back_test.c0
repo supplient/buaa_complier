@@ -3,13 +3,15 @@ int b;
 int k[2];
 
 void func(int ta){
-    int mc[2];
-    mc[0] = ta;
+    k[1] = ta;
 }
 
 void main(){
     int a;
     a = 1;
-    k[a] = 2;
-    func(6);
+    func(4);
+    a = k[a];
+    k[1] = k[1] + 1;
+    a = k[1];
+    b = a;
 }

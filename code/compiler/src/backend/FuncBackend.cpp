@@ -183,6 +183,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
     using namespace sem;
 
     map<back::REG, const VarEntry*> reg_entry_map;
+    const VarEntry *var_entry;
     InstCmd::OP inst_op;
     back::REG res_reg;
     back::REG left_reg;
@@ -303,10 +304,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             else
                 throw string("FuncBackend: Invalid tuple->left's type: " + to_string(tuple->left->type));
             // save to array
-            if(isGlobalVar(dynamic_cast<const VarEntry*>(tuple->res->entry))){
-                // sw
+            var_entry = dynamic_cast<const VarEntry*>(tuple->res->entry);
+            inst_op = var_entry->type==sym::INT ? InstCmd::SW : InstCmd::SB;
+            if(isGlobalVar(var_entry)){
+                // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::SW, right_reg, sel_reg, NameUtil::genEntryName(tuple->res->entry))
+                    new InstCmd(inst_op, right_reg, sel_reg, NameUtil::genEntryName(tuple->res->entry))
                 );
             }
             else{
@@ -318,12 +321,67 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, sel_reg, sel_reg, back::sp)
                 );
-                // sw
+                // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::SW, right_reg, sel_reg, 0)
+                    new InstCmd(inst_op, right_reg, sel_reg, 0)
                 );
             }
             break;
+        // WARRAY
+
+        case RARRAY:
+            // calculate selector
+            sel_reg = askForTempReg(inst_cmds);
+            if(tuple->right->type == Operand::ENTRY){
+                right_reg = registAndLoadVar(tuple->right->entry, inst_cmds);
+                // sll
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SLL, sel_reg, right_reg, 2)
+                );
+            }
+            else if(tuple->right->type == Operand::INT_CONST){
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, back::zero, tuple->right->int_const)
+                );
+                // sll
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SLL, sel_reg, sel_reg, 2)
+                );
+            }
+            else
+                throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
+            // regist res
+            if(tuple->res->type == Operand::ENTRY){
+                res_reg = registVar(tuple->res->entry, inst_cmds);
+            }
+            else
+                throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
+            // save to array
+            var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
+            inst_op = var_entry->type==sym::INT ? InstCmd::LW : InstCmd::LB;
+            if(isGlobalVar(var_entry)){
+                // lw/lb
+                inst_cmds->push_back(
+                    new InstCmd(inst_op, res_reg, sel_reg, NameUtil::genEntryName(tuple->left->entry))
+                );
+            }
+            else{
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, sel_reg, lvo_tab[NameUtil::genEntryName(tuple->left->entry)] + 4*param_count)
+                );
+                // add
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, sel_reg, sel_reg, back::sp)
+                );
+                // lw/lb
+                inst_cmds->push_back(
+                    new InstCmd(inst_op, res_reg, sel_reg, 0)
+                );
+            }
+            break;
+        // RARRAY
 
         case FUNC:
             // func label

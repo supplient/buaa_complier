@@ -1,6 +1,8 @@
 Note: These are basic functions' progress.
     Actually, a lot of work has not been start.
 
+TODO: return value
+
     EMPTY
     LABEL
   O ASSIGN
@@ -9,7 +11,7 @@ Note: These are basic functions' progress.
   O SUB
   O MUL
   O DIV
-    WARRAY
+  O WARRAY
     RARRAY
   O FUNC
   O PARAM
