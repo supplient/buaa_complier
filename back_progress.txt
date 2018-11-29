@@ -7,6 +7,7 @@ TODO: NOTE!!! When we regist one reg, a var may be unregisted. While we may have
          var b ---ask--> NO_REG
          var b <--give-- $t0
          now, though we think a's reg is $t0, actually $t0 is b.
+TODO: Modify ADD logic, reduce temp reg's use.
 
   O EMPTY
   O LABEL

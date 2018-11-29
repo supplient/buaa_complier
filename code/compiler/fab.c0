@@ -1,0 +1,18 @@
+int fab_func(int j)
+{
+    switch(j)
+    {
+        case 0: return(1);
+        case 1: return(1);
+        case 2: return(2);
+    }
+
+    return(fab_func(j-1) + fab_func(j-2));
+}
+
+void main(){
+    int j;
+
+    scanf(j);
+    printf(fab_func(j));
+}

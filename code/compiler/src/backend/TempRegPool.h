@@ -1,6 +1,8 @@
 #ifndef TEMP_REG_POOL_H
 #define TEMP_REG_POOL_H
 
+#include <algorithm>
+
 #include "NameTableEntry.h"
 #include "Reg.h"
 
@@ -20,35 +22,42 @@ public:
         for(unsigned int i=0; i<reg_list.size(); i++)
             reg_list[i] = NULL;
         ng = back::t0;
+        clearReserve();
+    }
+
+    bool reserveReg(back::REG reg){
+        if(isReserved(reg)) // it has been reserved
+            return false;
+        reserved_reg.push_back(reg);
+        return true;
+    }
+
+    void clearReserve(){
+        reserved_reg.clear();
+    }
+
+    bool hasTargetMemory(back::REG reg){
+        return reg_list[reg - back::t0] != NULL;
+    }
+
+    bool contain(back::REG reg){
+        if(reg >= back::t0 && reg < back::TEMP_REG_UP)
+            return true;
+        return false;
     }
 
     back::REG askForTempReg(const VarEntry **out_entry){
         // check input
         if(!out_entry)
             throw string("TempRegPool: must assign a out_entry when registering a temp reg.");
-        back::REG res;
 
-        if(!nowRegEntry()){
-            // nowReg is free
-            // no need to free now reg
-            *out_entry = NULL;
-        }
-        else{
-            // must be no reg is free.
-            // free now reg
-            *out_entry = nowRegEntry();
-        }
+        // search for a free reg
+        back::REG res = searchForReg(out_entry);
 
         // Note: No registing! Just skip.
-        setNowRegEntry(NULL);
-        res = nowReg();
-        nextRegEntry();
+        setEntryForReg(res, NULL);
 
         return res;
-    }
-
-    bool hasTargetMemory(back::REG reg){
-        return reg_list[reg - back::t0] != NULL;
     }
 
     back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
@@ -58,29 +67,20 @@ public:
         if(!in_entry)
             throw string("TempRegPool: cannot reg a NULL entry on a temp reg.");
 
-        // check if exists
-        if(lookUpReg(in_entry) != back::NO_REG){
-            *out_entry = NULL;
-            return lookUpReg(in_entry);
-        }
-
         back::REG res;
 
-        if(!nowRegEntry()){
-            // nowReg is free
-            // no need to free now reg
+        // check if exists
+        res = lookUpReg(in_entry);
+        if(res != back::NO_REG){
             *out_entry = NULL;
-        }
-        else{
-            // must be no reg is free.
-            // free now reg
-            *out_entry = nowRegEntry();
+            return res;
         }
 
+        // search for a reg
+        res = searchForReg(out_entry);
+
         // regist new reg
-        setNowRegEntry(in_entry);
-        res = nowReg();
-        nextRegEntry();
+        setEntryForReg(res, in_entry);
 
         return res;
     }
@@ -122,6 +122,15 @@ public:
 private:
     back::REG ng;
     vector<const VarEntry*> reg_list;
+    vector<back::REG> reserved_reg;
+
+    void setEntryForReg(back::REG reg, const VarEntry *entry){
+        reg_list[reg-back::t0] = entry;
+    }
+
+    void setNowRegEntry(const VarEntry *entry){
+        setEntryForReg(ng, entry);
+    }
 
     back::REG nowReg(){
         return ng;
@@ -131,15 +140,42 @@ private:
         return reg_list[ng-back::t0];
     }
 
-    void setNowRegEntry(const VarEntry *entry){
-        reg_list[ng-back::t0] = entry;
-    }
-
     const VarEntry* nextRegEntry(){
         ng = static_cast<back::REG>((int)ng + 1);
         if(ng>=back::TEMP_REG_UP) // loop
             ng = back::t0;
         return reg_list[ng-back::t0];
+    }
+
+    bool isReserved(back::REG reg){
+        auto it = find(reserved_reg.begin(), reserved_reg.end(), reg);
+        return it != reserved_reg.end();
+    }
+
+    back::REG searchForReg(const VarEntry **out_entry){
+        back::REG res;
+        unsigned int try_times = 0;
+
+        do{
+            if(!nowRegEntry()){
+                // nowReg is free
+                // no need to free now reg
+                *out_entry = NULL;
+            }
+            else{
+                // must be no reg is free.
+                // free now reg
+                *out_entry = nowRegEntry();
+            }
+            res = nowReg();
+            try_times++;
+            nextRegEntry();
+        }while(isReserved(res) && try_times<reg_list.size()+1);
+
+        if(try_times == reg_list.size() + 1)
+            throw string("TempRegPool: Cannot find any unreserved reg to use!");
+
+        return res;
     }
 };
 

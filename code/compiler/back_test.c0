@@ -1,18 +1,17 @@
-int fab_func(int j)
-{
-    switch(j)
-    {
-        case 0: return(1);
-        case 1: return(1);
-        case 2: return(2);
-    }
-
-    return(fab_func(j-1) + fab_func(j-2));
-}
+int c[10];
 
 void main(){
-    int j;
+    int i;
 
-    scanf(j);
-    printf(fab_func(j));
+    i=0;
+    while(i<10){
+        c[i] = i;
+        i = i + 1;
+    }
+
+    i=0;
+    while(i<10){
+        printf(c[i]);
+        i = i + 1;
+    }
 }

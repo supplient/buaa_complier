@@ -7,7 +7,7 @@ string DataCmd::toString(){
             s += ".asciiz \"" + str_value + "\"";
             break;
         case WORD:
-            s += ".word";
+            s += ".word 0"; // We don't need to assign any init value.
             break;
         case SPACE:
             s += ".space " + to_string(size);

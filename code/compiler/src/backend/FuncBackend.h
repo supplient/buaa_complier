@@ -33,6 +33,7 @@ private:
     int param_count = 0;
 
     void writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds);
+    void loadVar(const VarEntry *entry, back::REG res, vector<InstCmd*> *inst_cmds);
 
     back::REG askForTempReg(vector<InstCmd*> *inst_cmds);
 
@@ -46,7 +47,15 @@ private:
     }
     back::REG registVar(const VarEntry *entry, vector<InstCmd*> *inst_cmds);
 
-    void resetTempReg(vector<InstCmd*> *inst_cmds);
+    bool reserveReg(back::REG reg){
+        return reg_pool.reserveReg(reg);
+    }
+    void clearRegReserve(){
+        reg_pool.clearReserve();
+    }
+
+    void saveTempReg(vector<InstCmd*> *inst_cmds);
+    void restoreTempReg(vector<InstCmd*> *inst_cmds);
 
     void transTuple(Tuple *tuple, map<string, string> str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);

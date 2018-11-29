@@ -15,6 +15,17 @@ public:
         temp_pool.reset();
     }
 
+    bool reserveReg(back::REG reg){
+        if(temp_pool.contain(reg))
+            return temp_pool.reserveReg(reg);
+        throw string("Reserve for reg: " + to_string(reg) + " is not implemented.");
+        return false;
+    }
+
+    void clearReserve(){
+        temp_pool.clearReserve();
+    }
+
     bool hasTargetMemory(back::REG reg){
         if(reg == back::v0)
             return false;
