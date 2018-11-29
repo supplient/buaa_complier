@@ -56,7 +56,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
-            clearRegReserve();
             break;
         // ASSIGN
 
@@ -81,7 +80,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(InstCmd::ADD, res_reg, back::zero, -tuple->left->char_const)
                 );
             }
-            clearRegReserve();
             break;
 
         case ADD:
@@ -115,7 +113,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
-            clearRegReserve();
             break;
 
         case LESS:
@@ -162,7 +159,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             inst_cmds->push_back(
                 new InstCmd(inst_op, res_reg, left_reg, right_reg)
             );
-            clearRegReserve();
             break;
 
         case WARRAY:
@@ -230,7 +226,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(inst_op, right_reg, sel_reg, 0)
                 );
             }
-            clearRegReserve();
             break;
         // WARRAY
 
@@ -285,13 +280,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                     new InstCmd(inst_op, res_reg, sel_reg, 0)
                 );
             }
-            clearRegReserve();
             break;
         // RARRAY
 
         case FUNC:
             // func label
-            inst_cmds->push_back(new InstCmd(tuple->left->entry->name));
+            inst_cmds->push_back(new InstCmd(tuple->left->str_value));
             // adjust $sp
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, -stack_size)
@@ -350,7 +344,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             saveTempReg(inst_cmds);
             // jump and link to target function
             inst_cmds->push_back(
-                new InstCmd(InstCmd::JAL, tuple->res->entry->name)
+                new InstCmd(InstCmd::JAL, tuple->res->str_value)
             );
             // recover $sp
             inst_cmds->push_back(
@@ -389,7 +383,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             );
             break;
         // RET
-        
+
         case INPUT:
             // get var entry
             if(tuple->res->type != Operand::ENTRY)
@@ -556,7 +550,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             inst_cmds->push_back(
                 new InstCmd(InstCmd::BEQ, left_reg, right_reg, tuple->res->str_value)
             );
-            clearRegReserve();
             break;
         // BEQ
 
@@ -570,4 +563,5 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
         default:
             throw string("FuncBackend: Not implemented tuple OP: " + to_string(tuple->op));
     }
+    clearTempRegReserve();
 }

@@ -1,4 +1,11 @@
 #include "Operand.h"
+#include "NameTableEntry.h"
+
+Operand::Operand(NameTableEntry *entry): type(ENTRY), entry(dynamic_cast<const VarEntry*>(entry)), int_const(0), char_const(0), str_value("")
+{
+    if(this->entry == NULL)
+        throw string("Operand cannot receive non-var entry as a entry value.");
+}
 
 string Operand::toString(){
     string s = "";

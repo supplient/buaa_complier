@@ -36,7 +36,7 @@ RARRAY
     effect: res = left[right]
 
 FUNC
-    res: entry. func entry.
+    res: string. func name
     effect: mark the function's start label.
         move stack pointer & save used GPR.
 
@@ -45,7 +45,7 @@ PARAM
     effect: when next CALL tuple, this value wiil be a passed param.
 
 CALL
-    res: func. func to be called.
+    res: string. func's name
     effect: alloc called func's stack.
             push all cached params into stack.
             save the call tuple.

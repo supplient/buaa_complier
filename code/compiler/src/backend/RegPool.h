@@ -22,7 +22,7 @@ public:
         return false;
     }
 
-    void clearReserve(){
+    void clearTempRegReserve(){
         temp_pool.clearReserve();
     }
 

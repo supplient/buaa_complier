@@ -6,6 +6,7 @@
 #include "NameUtil.h"
 
 class NameTableEntry;
+class VarEntry;
 class Tuple;
 
 using namespace std;
@@ -21,7 +22,9 @@ public:
         // TODO
     };
 
-    Operand(NameTableEntry *entry): type(ENTRY), entry(entry), int_const(0), char_const(0), str_value("")
+    Operand(NameTableEntry *entry);
+
+    Operand(VarEntry *entry): type(ENTRY), entry(entry), int_const(0), char_const(0), str_value("")
     {}
     Operand(int int_value): type(INT_CONST), entry(NULL), int_const(int_value), char_const(0), str_value("")
     {}
@@ -34,7 +37,7 @@ public:
 
     const TYPE type;
 
-    const NameTableEntry *entry;
+    const VarEntry *entry;
     const int int_const;
     const char char_const;
     const string str_value;

@@ -37,21 +37,14 @@ private:
 
     back::REG askForTempReg(vector<InstCmd*> *inst_cmds);
 
-    back::REG registAndLoadVar(const NameTableEntry *entry, vector<InstCmd*> *inst_cmds){
-        return registAndLoadVar(dynamic_cast<const VarEntry*>(entry), inst_cmds);
-    }
     back::REG registAndLoadVar(const VarEntry *entry, vector<InstCmd*> *inst_cmds);
-
-    back::REG registVar(const NameTableEntry *entry, vector<InstCmd*> *inst_cmds){
-        return registVar(dynamic_cast<const VarEntry*>(entry), inst_cmds);
-    }
     back::REG registVar(const VarEntry *entry, vector<InstCmd*> *inst_cmds);
 
     bool reserveReg(back::REG reg){
         return reg_pool.reserveReg(reg);
     }
-    void clearRegReserve(){
-        reg_pool.clearReserve();
+    void clearTempRegReserve(){
+        reg_pool.clearTempRegReserve();
     }
 
     void saveTempReg(vector<InstCmd*> *inst_cmds);
