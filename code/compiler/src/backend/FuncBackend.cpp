@@ -51,8 +51,12 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     stack_size = offset;
 
     // param
+    // Note: since stack is built in the reversed order,
+    //      the param is saved reversedly in memory.
     vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
-    for(VarEntry *pv: param_list){
+    vector<VarEntry*> reversed_param_list = param_list;
+    reverse(reversed_param_list.begin(), reversed_param_list.end());
+    for(VarEntry *pv: reversed_param_list){
         if(!pv)
             throw string("FuncBackend: NULL param!");
 
