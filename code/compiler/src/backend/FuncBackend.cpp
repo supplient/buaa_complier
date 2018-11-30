@@ -14,17 +14,18 @@ bool isGlobalVar(const VarEntry *entry){
 FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     :func_tuple(func_tuple)
 {
+    // Construct stack
     back::size offset = 0;
 
-    // global regs
-    // TODO
+    //  global regs
+    //  TODO
 
-    // $ra
+    //  $ra
     ra_offset = offset;
     offset += SizeUtil::regSize();
 
-    // temp var & local var
-    // we treat temp var as local var
+    //  temp var & local var
+    //  we treat temp var as local var
     FuncNameTable *func_tab = tab.getFuncNameTable(func_tuple->func_entry->name);
     vector<VarEntry*> lv_list = func_tab->getUnconstVars();
     for(VarEntry *lv: lv_list){
@@ -47,11 +48,11 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
         }
     }
 
-    // Save stack size
+    //  save stack size
     stack_size = offset;
 
-    // param
-    // Note: since stack is built in the reversed order,
+    //  param
+    //  Note: since stack is built in the reversed order,
     //      the param is saved reversedly in memory.
     vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
     vector<VarEntry*> reversed_param_list = param_list;
@@ -194,7 +195,35 @@ void FuncBackend::restoreTempReg(vector<InstCmd*> *inst_cmds){
     }
 }
 
-void FuncBackend::trans(map<string, string> str_tab,
+void FuncBackend::saveParamReg(vector<InstCmd*> *inst_cmds){
+    throw string("saveParamReg NOT implemented.");
+
+    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
+    for(VarEntry *entry: param_list){
+        back::REG reg = reg_pool.lookUpReg(entry);
+        if(reg == back::NO_REG || !ParamRegPool::contain(reg))
+            continue; // if the param is not in reg or is using a non-param reg, we do not save at this step
+        writeBackVar(entry, reg, inst_cmds);
+    }
+}
+
+void FuncBackend::restoreParamReg(vector<InstCmd*> *inst_cmds){
+    throw string("restoreParamReg NOT implemented.");
+    
+    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
+
+    int param_reg_num = back::PARAM_REG_UP - back::a0;
+    if(param_reg_num < param_list.size())
+        param_reg_num = param_list.size();
+
+    for(int i=0; i<param_reg_num; i++){
+        back::REG reg = registAndLoadVar(param_list[i], inst_cmds);
+        if(!ParamRegPool::contain(reg))
+            throw string("FuncBackend.restoreParamReg: param [" + param_list[i]->name + "] does not get param reg when restore.");
+    }
+}
+
+void FuncBackend::trans(map<string, string> &str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
 
     param_count = 0;

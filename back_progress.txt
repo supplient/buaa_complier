@@ -2,12 +2,9 @@ Note: These are basic functions' progress.
     Actually, a lot of work has not been start.
 
 TODO: char's cut when assign
-TODO: NOTE!!! When we regist one reg, a var may be unregisted. While we may have asked for this var's reg, so that reg will be strange!
-    e.g. var a ---ask--> $t0(have been registed)
-         var b ---ask--> NO_REG
-         var b <--give-- $t0
-         now, though we think a's reg is $t0, actually $t0 is b.
 TODO: Modify ADD logic, reduce temp reg's use.
+TODO: Add param_reg and global_reg
+TODO: Add tuple log output
 
   O EMPTY
   O LABEL

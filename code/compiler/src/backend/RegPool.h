@@ -2,6 +2,7 @@
 #define REG_POOL_H
 
 #include "TempRegPool.h"
+#include "ParamRegPool.h"
 
 class RegPool
 {
@@ -13,6 +14,10 @@ public:
 
     void resetTempReg(){
         temp_pool.reset();
+    }
+
+    void resetParamReg(){
+        param_pool.reset();
     }
 
     bool reserveReg(back::REG reg){
@@ -42,16 +47,22 @@ public:
             return lookUpReg(in_entry);
         }
 
-        // TODO now is just TempRegPool 's wrapper
+        back::REG res;
+
+        /*
+        if(in_entry->is_param){
+            // is param, try to use param reg
+            res = param_pool.regist(in_entry);
+            if(res != back::NO_REG){
+                // if param reg has free
+                *out_entry = NULL;
+                return res;
+            }
+            // if no param reg is free, regist a temp reg
+        }
+        */
+
         return temp_pool.regist(in_entry, out_entry);
-    }
-
-    back::REG lookUpReg(const VarEntry *entry){
-        auto it = speical_var_reg_pool.find(entry->name);
-        if(it != speical_var_reg_pool.end())
-            return it->second;
-
-        return temp_pool.lookUpReg(entry);
     }
 
     back::REG unregist(const VarEntry *entry){
@@ -59,11 +70,54 @@ public:
         if(it != speical_var_reg_pool.end())
             throw string("RegPool: cannot unregist speical var: " + entry->name);
 
+        /*
+        if(param_pool.lookUpReg(entry) != back::NO_REG)
+            throw string("RegPool: cannot unregist a single param reg. Can only reset all param regs.");
+        */
+
         return temp_pool.unregist(entry);
     }
 
+    back::REG lookUpReg(const VarEntry *entry){
+        // search special_var_reg_pool
+        auto it = speical_var_reg_pool.find(entry->name);
+        if(it != speical_var_reg_pool.end())
+            return it->second;
+
+        back::REG res;
+        
+        /*
+        // search param pool
+        res = param_pool.lookUpReg(entry);
+        if(res != back::NO_REG)
+            return res;
+        */
+
+        // search temp pool
+        res = temp_pool.lookUpReg(entry);
+        if(res != back::NO_REG)
+            return res;
+
+        // not found
+        return back::NO_REG;
+    }
+
     map<back::REG, const VarEntry*> getAllRegistedVar(){
-        return temp_pool.getAllRegistedVar();
+        map<back::REG, const VarEntry*> res;
+
+        /*
+        auto param_res = param_pool.getAllRegistedVar();
+        res.insert(param_res.begin(), param_res.end());
+        */
+
+        auto temp_res = temp_pool.getAllRegistedVar();
+        res.insert(temp_res.begin(), temp_res.end());
+        
+        return res;
+    }
+
+    map<back::REG, const VarEntry*> getAllRegistedParamReg(){
+        return param_pool.getAllRegistedVar();
     }
 
     map<back::REG, const VarEntry*> getAllRegistedTempReg(){
@@ -73,6 +127,7 @@ public:
 private:
     map<string, back::REG> speical_var_reg_pool;
     TempRegPool temp_pool;
+    ParamRegPool param_pool;
 };
 
 #endif//REG_POOL_H
