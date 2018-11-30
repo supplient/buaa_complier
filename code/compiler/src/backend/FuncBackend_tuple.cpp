@@ -350,8 +350,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*param_count)
             );
-            // reset param count
-            param_count = 0;
+            // reduce param count
+            param_count -= tuple->left->int_const;
             // restore temp regs
             restoreTempReg(inst_cmds);
             break;

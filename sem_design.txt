@@ -45,6 +45,7 @@ PARAM
     effect: when next CALL tuple, this value wiil be a passed param.
 
 CALL
+    left: int const. func's param number
     res: string. func's name
     effect: alloc called func's stack.
             push all cached params into stack.

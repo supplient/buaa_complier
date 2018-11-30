@@ -56,6 +56,7 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
     Tuple *call_tuple = new Tuple();
     call_tuple->op = sem::CALL;
     call_tuple->res = new Operand(func_entry->name);
+    call_tuple->left = new Operand((int)func_entry->param_list.size());
     tuples.push_back(call_tuple);
 
     // dump return operand
