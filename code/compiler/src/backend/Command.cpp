@@ -27,6 +27,7 @@ string InstCmd::OP_NAME[MAX_OP_NUM]={
     "sub",
     "mul",
     "div",
+    "and",
     "sll",
     "sb",
     "lb",
@@ -65,6 +66,9 @@ string InstCmd::toString(){
         case SUB:
         case MUL:
         case DIV:
+
+        case AND:
+
         case SLT:
         case SLE:
         case SGT:

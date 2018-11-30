@@ -52,6 +52,9 @@ public:
     static string genGlobalVarLabel(string var_name){
         return var_name;
     }
+
+    static string intString;
+    static string charString;
 };
 
 #endif//NAME_UTIL_H

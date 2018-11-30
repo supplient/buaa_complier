@@ -1,40 +1,15 @@
-int func(int a0, int a1, int a2, int a3, int a4, int a5, int b0, int b1, int b2, int b3, int b4, int b5){
-    printf("   ", a0);
-    printf("   ", a1);
-    printf("   ", a2);
-    printf("   ", a3);
-    printf("   ", a4);
-    printf("   ", a5);
-    printf("-------");
-    printf("   ", b0);
-    printf("   ", b1);
-    printf("   ", b2);
-    printf("   ", b3);
-    printf("   ", b4);
-    printf("   ", b5);
-
-    return(a2);
+char func(int a){
+    return(a);
 }
 
 void main(){
-    int a0, a1, a2, a3, a4, a5;
-    int b0, b1, b2, b3, b4, b5;
+    char a;
+    int b;
 
-    a0 = 0;
-    a1 = a0 + 1;
-    a2 = a1 + 1;
-    a3 = a2 + 1;
-    a4 = a3 + 1;
-    a5 = a4 + 1;
-
-    b0 = a5 + a5;
-    b1 = b0 + a4;
-    b2 = b1 + a3;
-    b3 = b2 + a2;
-    b4 = b3 + a1;
-    b5 = b4 + a0;
-
-    func( a0,  a1,  
-        func(a0, a1, a2, a3, a4, a5, b0, b1, b2, b3, b4, b5)
-        ,  a3,  a4,  a5,  b0,  b1,  b2,  b3,  b4,  b5);
+    a = 255;
+    b = a;
+    printf(b);
+    b = a + 6;
+    b = func(b);
+    printf("   ", b);
 }

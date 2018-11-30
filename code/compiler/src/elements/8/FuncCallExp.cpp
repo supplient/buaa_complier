@@ -1,4 +1,5 @@
 #include "FuncCallExp.h"
+
 #include "Expression.h"
 
 Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
@@ -49,6 +50,13 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
         Tuple *param_tuple = new Tuple();
         param_tuple->op = sem::PARAM;
         param_tuple->res = param_ord;
+        if(param_ord->type == Operand::ENTRY){
+            param_tuple->left = new Operand(param_ord->entry->type==sym::INT ? NameUtil::intString : NameUtil::charString);
+        }
+        else if(param_ord->type == Operand::INT_CONST)
+            param_tuple->left = new Operand(NameUtil::intString);
+        else if(param_ord->type == Operand::CHAR_CONST)
+            param_tuple->left = new Operand(NameUtil::charString);
         tuples.push_back(param_tuple);
     }
 

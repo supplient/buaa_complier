@@ -56,6 +56,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
+            // type conv
+            if(tuple->res->entry->type == sym::CHAR){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
+                );
+            }
             break;
         // ASSIGN
 
@@ -78,6 +84,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             else if(tuple->left->type == Operand::CHAR_CONST){
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, res_reg, back::zero, -tuple->left->char_const)
+                );
+            }
+            // type conv
+            if(tuple->res->entry->type == sym::CHAR){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
                 );
             }
             break;
@@ -113,6 +125,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->right's type: " + to_string(tuple->right->type));
+            // type conv
+            if(tuple->res->entry->type == sym::CHAR){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
+                );
+            }
             break;
 
         case LESS:
@@ -280,6 +298,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     new InstCmd(inst_op, res_reg, sel_reg, 0)
                 );
             }
+            // type conv
+            if(tuple->res->entry->type == sym::CHAR){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
+                );
+            }
             break;
         // RARRAY
 
@@ -305,12 +329,18 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             );
             // add param count
             param_count++;
+            if(tuple->left->str_value == NameUtil::intString)
+                inst_op = InstCmd::SW;
+            else if(tuple->left->str_value == NameUtil::charString)
+                inst_op = InstCmd::SB;
+            else
+                throw string("Invalid PARAM->left: " + tuple->left->str_value);
             // push param
             if(tuple->res->type == Operand::ENTRY){
                 res_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
-                // sw
+                // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                    new InstCmd(inst_op, res_reg, back::sp, 0)
                 );
             }
             else if(tuple->res->type == Operand::INT_CONST){
@@ -319,9 +349,9 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->int_const)
                 );
-                // sw
+                // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                    new InstCmd(inst_op, res_reg, back::sp, 0)
                 );
             }
             else if(tuple->res->type == Operand::CHAR_CONST){
@@ -330,9 +360,9 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->char_const)
                 );
-                // sw
+                // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(InstCmd::SW, res_reg, back::sp, 0)
+                    new InstCmd(inst_op, res_reg, back::sp, 0)
                 );
             }
             else
@@ -412,6 +442,12 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             inst_cmds->push_back(
                 new InstCmd(InstCmd::MOVE, res_reg, back::v0)
             );
+            // type conv
+            if(tuple->res->entry->type == sym::CHAR){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
+                );
+            }
             break;
         // INPUT
 

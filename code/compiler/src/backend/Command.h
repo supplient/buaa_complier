@@ -48,6 +48,8 @@ public:
         MUL,
         DIV,
 
+        AND,
+
         SLL,
 
         SB,
