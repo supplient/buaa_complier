@@ -348,7 +348,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             );
             // recover $sp
             inst_cmds->push_back(
-                new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*param_count)
+                new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*tuple->left->int_const)
             );
             // reduce param count
             param_count -= tuple->left->int_const;
@@ -424,9 +424,9 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 else{
                     str_label = NameUtil::genUniStringLabel();
                     str_tab[tuple->left->str_value] = str_label;
-                data_cmds->push_back(
-                    new DataCmd(DataCmd::ASCIIZ, str_label, tuple->left->str_value)
-                );
+                    data_cmds->push_back(
+                        new DataCmd(DataCmd::ASCIIZ, str_label, tuple->left->str_value)
+                    );
                 }
                 // set $a0
                 inst_cmds->push_back(
