@@ -76,16 +76,16 @@ namespace mylog{
             }
     };
 
-    class Assemble: public Log{
+    class FileNormal: public Log{
         public:
-            Assemble(const string &filename, Log *lower=NULL):Log(filename, lower){}
-            virtual ~Assemble(){}
+            FileNormal(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~FileNormal(){}
 
             template<class T>
-            Assemble& operator<<(const T &s){
+            FileNormal& operator<<(const T &s){
                 cout << s;
                 file << s;
-                return dynamic_cast<Assemble&>(Log::operator<<(s));
+                return dynamic_cast<FileNormal&>(Log::operator<<(s));
             }
     };
 
@@ -96,7 +96,8 @@ namespace mylog{
     extern Debug debug;
 
     extern Homework hw;
-    extern Assemble ass;
+    extern FileNormal ass;
+    extern FileNormal tup;
 }
 
 #endif//LOG_H

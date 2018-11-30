@@ -12,7 +12,8 @@ namespace mylog{
     Fatal fatal("log/fatal.log", &error);
 
     Homework hw("log/hw.log");
-    Assemble ass("../../asm/test.asm");
+    FileNormal ass("../../asm/test.asm");
+    FileNormal tup("../../tuple/tuple.txt");
 
     Log::Log(const string &filename, Log *lower)
         :file(filename), lower(lower){

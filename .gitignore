@@ -44,3 +44,6 @@
 
 # Assemble file
 *.asm
+
+# Tuple file
+tuple/*

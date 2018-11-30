@@ -30,21 +30,21 @@ void backTest(string filename){
 
     ConstVarRemover::work(tab, func_tuples);
 
-    cout << "Start dump name table." << endl;
-    cout << "---------------------------" << endl;
-    cout << tab.toString();
-    cout << "---------------------------" << endl;
-    cout << "Dump done." << endl;
+    mylog::tup << "Start dump name table." << "\n";
+    mylog::tup << "---------------------------" << "\n";
+    mylog::tup << tab.toString();
+    mylog::tup << "---------------------------" << "\n";
+    mylog::tup << "Dump done." << "\n";
 
-    cout << endl;
+    mylog::tup << "\n";
 
-    cout << "Start dump tuples." << endl;
-    cout << "---------------------------" << endl;
+    mylog::tup << "Start dump tuples." << "\n";
+    mylog::tup << "---------------------------" << "\n";
     for(FuncTuple* func_tuple : func_tuples){
-        cout << func_tuple->toString() << endl;
+        mylog::tup << func_tuple->toString() << "\n";
     }
-    cout << "---------------------------" << endl;
-    cout << "Dump done." << endl;
+    mylog::tup << "---------------------------" << "\n";
+    mylog::tup << "Dump done." << "\n";
 
     Backend backend;
     vector<DataCmd*> data_cmds;
