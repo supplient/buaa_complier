@@ -1,13 +1,41 @@
+Param Register Logic---- 
+    * Init param_count with 0
+    * When meet a PARAM:
+        If param_count==0, save this function's params into memory, and unregist them from param_pool.
+        If the param index is larger than the param reg's number, just save the param into memory.
+        Otherwise, we need consider about param registers.
+            if the corresponding param reg is registed, which means there is a nested function call, 
+                for all registed param reg, 
+                    look up the param stack, write back the value into the stack's top element's memory.
+                    unregist the param reg.
+            Then regist for this param register, assign value to this register.
+            Push the stack offset onto the corresponding param stack.
+        Increase param_count.
+    * When meet a CALL:
+        If the param number is X, we check the 0~min(X, param_max_number) param stack.
+        For 0~min(X, param_max_number)th param:
+            If the param register is assigned, which means the param value has been loaded into the register, 
+                just do nothing.
+            If the param register is not assigned, which means the param value is in memory,
+                load value from memory into the register.
+                The memory address is informed by param stack's top element.
+        Do call.
+        For 0~min(X, param_max_number)th param:
+            Unregist the param.
+            Pop from the param stack.
+        Decrease param_count by param number.
+        If param_count==0, load this function's params from memory, and regist them from param_pool.
+        
 
 Stack----
     High
      |    
      |    <caller function's stack>
      |    
-     |    param  x
-     |    param ...
-     |    param  1
      |    param  0
+     |    param  1
+     |    param ...
+     |    param  x
      |    
      |    <$sp when enter function>
      |    

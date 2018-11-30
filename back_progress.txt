@@ -1,10 +1,8 @@
 Note: These are basic functions' progress.
     Actually, a lot of work has not been start.
 
-TODO: char's cut when assign
 TODO: Modify ADD logic, reduce temp reg's use.
 TODO: Add param_reg and global_reg
-TODO: Add tuple log output
 
   O EMPTY
   O LABEL
