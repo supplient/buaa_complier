@@ -37,6 +37,7 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
     }
 
     // dump param list
+    int param_index = 0;
     for(Expression *exp: param_list){
         if(!exp){
             mylog::error << "FuncCallExp: a param expression is NULL!";
@@ -57,7 +58,10 @@ Tuples FuncCallExp::dump(NameTable &tab, const string &func_name,
             param_tuple->left = new Operand(NameUtil::intString);
         else if(param_ord->type == Operand::CHAR_CONST)
             param_tuple->left = new Operand(NameUtil::charString);
+        param_tuple->right = new Operand(param_index);
         tuples.push_back(param_tuple);
+
+        param_index++;
     }
 
     // call function
