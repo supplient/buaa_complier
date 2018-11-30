@@ -12,8 +12,8 @@ public:
     sym::SYMBOL type;
     string ident;
 
-    virtual VarEntry* dump(NameTable &tab, string func_name){
-        VarEntry *entry = tab.insertParam(func_name, ident, type);
+    virtual VarEntry* dump(NameTable &tab, string func_name, unsigned int index){
+        VarEntry *entry = tab.insertParam(func_name, ident, type, index);
         if(entry == NULL)
             errorRepo("multi defination for param: " + ident);
         return entry;

@@ -37,10 +37,10 @@ public:
         return entry;
     }
 
-    VarEntry* insertParam(string name, sym::SYMBOL type){
+    VarEntry* insertParam(string name, sym::SYMBOL type, unsigned int index){
         if(lookUp(name))
             return NULL;
-        VarEntry *entry = new VarEntry(name, this, type, 0, true); // We do not allow array param
+        VarEntry *entry = new VarEntry(name, this, type, 0, true, index); // We do not allow array param
         entries.push_back(static_cast<NameTableEntry*>(entry));
         return entry;
     }
@@ -172,10 +172,10 @@ public:
         return func_map[func_name]->insertVar(name, type, dim);
     }
 
-    VarEntry* insertParam(string func_name, string name, sym::SYMBOL type){
+    VarEntry* insertParam(string func_name, string name, sym::SYMBOL type, unsigned int index){
         if(func_map.find(func_name) == func_map.end())
             func_map[func_name] = new FuncNameTable(func_name);
-        return func_map[func_name]->insertParam(name, type);
+        return func_map[func_name]->insertParam(name, type, index);
     }
 
     VarEntry* insertIntConst(string func_name, string name, int value){

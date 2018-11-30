@@ -15,3 +15,27 @@ string NameTableEntry::getOwnerName()const{
     else
         return "";
 }
+
+string VarEntry::toString(){
+    string s = NameTableEntry::toString();
+    s += " ";
+    s += sym::SYMBOL_NAME[type];
+    s += " [" + to_string(dim) + "]";
+    if(is_const){
+        s += " CONST";
+        switch(type){
+            case sym::INT:
+                s += " " + to_string(int_value);
+                break;
+            case sym::CHAR:
+                s += " " + string(1, char_value);
+                break;
+            default:
+                mylog::error << "const entry: invalid type [" << type << "]";
+                exit(-1);
+        }
+    }
+    if(is_param)
+        s+= " PARAM(" + to_string(param_index) + ")";
+    return s;
+}

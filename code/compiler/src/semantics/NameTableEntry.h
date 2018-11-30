@@ -50,41 +50,20 @@ private:
 class VarEntry: public NameTableEntry
 {
 public:
-    VarEntry(const string &name, FuncNameTable *owner, sym::SYMBOL type, int dim, bool is_param=false, bool is_const=false)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(type), dim(dim), is_const(is_const), int_value(0), char_value(0){
+    VarEntry(const string &name, FuncNameTable *owner, sym::SYMBOL type, int dim, bool is_param=false, int param_index = 0, bool is_const=false)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), param_index(param_index), type(type), dim(dim), is_const(is_const), int_value(0), char_value(0){
     }
-    VarEntry(const string &name, FuncNameTable *owner, int value, bool is_param=false, bool is_const=true)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(sym::INT), dim(0), is_const(is_const), int_value(value), char_value(0){
+    VarEntry(const string &name, FuncNameTable *owner, int value, bool is_param=false, int param_index = 0, bool is_const=true)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), param_index(param_index), type(sym::INT), dim(0), is_const(is_const), int_value(value), char_value(0){
     }
-    VarEntry(const string &name, FuncNameTable *owner, char value, bool is_param=false, bool is_const=true)
-        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), type(sym::CHAR), dim(0), is_const(is_const), int_value(0), char_value(value){
+    VarEntry(const string &name, FuncNameTable *owner, char value, bool is_param=false, int param_index = 0, bool is_const=true)
+        :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), param_index(param_index), type(sym::CHAR), dim(0), is_const(is_const), int_value(0), char_value(value){
     }
 
-    virtual string toString(){
-        string s = NameTableEntry::toString();
-        s += " ";
-        s += sym::SYMBOL_NAME[type];
-        s += " [" + to_string(dim) + "]";
-        if(is_const){
-            s += " CONST";
-            switch(type){
-                case sym::INT:
-                    s += " " + to_string(int_value);
-                    break;
-                case sym::CHAR:
-                    s += " " + string(1, char_value);
-                    break;
-                default:
-                    mylog::error << "const entry: invalid type [" << type << "]";
-                    exit(-1);
-            }
-        }
-        if(is_param)
-            s+= " PARAM";
-        return s;
-    }
+    virtual string toString();
 
     const bool is_param;
+    const unsigned int param_index;
 
     const sym::SYMBOL type;
     const int dim;

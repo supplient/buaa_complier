@@ -12,10 +12,13 @@ Tuples FuncDefine::dump(NameTable &tab){
     // dump param_list
     // Note: dump in the natual order
     vector<VarEntry*> param_entry_list;
+    int param_count = 0;
     for(Param *param: param_list){
-        VarEntry *param_entry = param->dump(tab, func_name);
-        if(param_entry != NULL)
+        VarEntry *param_entry = param->dump(tab, func_name, param_count);
+        if(param_entry != NULL){
             param_entry_list.push_back(param_entry);
+            param_count++;
+        }
     }
 
     // create a tuple as the entrance
