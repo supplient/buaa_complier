@@ -7,7 +7,7 @@
 
 bool isGlobalVar(const VarEntry *entry);
 
-void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
+void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
     using namespace sem;
 
@@ -424,10 +424,10 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> str_tab,
                 else{
                     str_label = NameUtil::genUniStringLabel();
                     str_tab[tuple->left->str_value] = str_label;
-                }
                 data_cmds->push_back(
                     new DataCmd(DataCmd::ASCIIZ, str_label, tuple->left->str_value)
                 );
+                }
                 // set $a0
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::LA, back::a0, str_label)

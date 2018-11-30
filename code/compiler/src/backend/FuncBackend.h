@@ -14,7 +14,7 @@ class FuncBackend
 public:
     FuncBackend(NameTable &tab, const FuncTuple *func_tuple);
 
-    void trans(map<string, string> str_tab,
+    void trans(map<string, string> &str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);
 
     const FuncTuple *func_tuple;
@@ -50,7 +50,8 @@ private:
     void saveTempReg(vector<InstCmd*> *inst_cmds);
     void restoreTempReg(vector<InstCmd*> *inst_cmds);
 
-    void transTuple(Tuple *tuple, map<string, string> str_tab,
+
+    void transTuple(Tuple *tuple, map<string, string> &str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);
 };
 
