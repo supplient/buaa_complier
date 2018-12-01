@@ -14,6 +14,7 @@ void GrammarAnalyzer::errorRepo(string reason, int line, int column){
     // TODO print origin code line.
     cerr << "Grammar Error at line[" << line << "] column[" << column << "]--" << endl;
     cerr << "\t" << reason << endl;
+    error_count++;
 }
 
 void GrammarAnalyzer::fatalRepo(string reason){

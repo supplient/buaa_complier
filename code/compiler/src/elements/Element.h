@@ -31,10 +31,13 @@ class Element{
             // TODO print origin code line.
             cerr << "Semantics Error from line[" << start_line << "] to line[" << end_line << "]--" << endl;
             cerr << "\t" << msg << endl;
+            Element::error_count++;
         }
 
         int start_line;
         int end_line;
+
+        static int error_count;
 };
 
 #endif//ELEMENT_H

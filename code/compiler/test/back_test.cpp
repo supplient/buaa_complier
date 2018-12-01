@@ -19,14 +19,19 @@ void backTest(string filename){
     GrammarAnalyzer gra(lex);
 
     Program* program = gra.constructProgram();
-    if(program == NULL){
-        cerr << "Build program failed." << endl;
+    if(program == NULL || gra.getErrorCount() > 0){
+        cerr << "Grammar analyzer failed." << endl;
         exit(-1);
     }
     file.close();
 
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
+
+    if(Element::error_count > 0){
+        cerr << "Semantics analyzer failed." << endl;
+        exit(-1);
+    }
 
     ConstVarRemover::work(tab, func_tuples);
 

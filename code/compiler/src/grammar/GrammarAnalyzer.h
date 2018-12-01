@@ -49,8 +49,13 @@ class GrammarAnalyzer{
         GrammarAnalyzer(LexAnalyzer &lex):lex(lex){}
 
         Program* constructProgram();
+
+        int getErrorCount(){
+            return error_count;
+        }
     private:
         LexAnalyzer &lex;
+        int error_count = 0;
 
         void errorRepo(string reason);
         void errorRepo(string reason, int line, int column);
