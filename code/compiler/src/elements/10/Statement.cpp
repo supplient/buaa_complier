@@ -157,12 +157,12 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
 
         // jump to exit
         // For the last switch case, JMP is needless.
-        //if(case_count < case_list->case_list.size()-1){
+        if(case_count < case_list->case_list.size()-1){
             Tuple *case_jmp_tuple = new Tuple();
             case_jmp_tuple->op = sem::JMP;
             case_jmp_tuple->res = new Operand(exit_label_name);
             case_tuples.push_back(case_jmp_tuple);
-        //}
+        }
 
         case_ent_name_list.push_back(case_ent_name);
         case_tuples_list.push_back(case_tuples);
