@@ -138,6 +138,7 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
     vector<Operand *> case_ord_list;
 
     // dump cases to get its case condition value and statement.
+    unsigned int case_count = 0;
     for(SwitchCase *swi_case: case_list->case_list){
         if(!swi_case)
             throw string("A NULL switchcase.");
@@ -155,14 +156,19 @@ Tuples SwitchStatement::dump_int(NameTable &tab, const string &func_name, TempVa
         case_tuples.insert(case_tuples.begin(),  case_ent);
 
         // jump to exit
-        Tuple *case_jmp_tuple = new Tuple();
-        case_jmp_tuple->op = sem::JMP;
-        case_jmp_tuple->res = new Operand(exit_label_name);
-        case_tuples.push_back(case_jmp_tuple);
+        // For the last switch case, JMP is needless.
+        //if(case_count < case_list->case_list.size()-1){
+            Tuple *case_jmp_tuple = new Tuple();
+            case_jmp_tuple->op = sem::JMP;
+            case_jmp_tuple->res = new Operand(exit_label_name);
+            case_tuples.push_back(case_jmp_tuple);
+        //}
 
         case_ent_name_list.push_back(case_ent_name);
         case_tuples_list.push_back(case_tuples);
         case_ord_list.push_back(case_ord);
+
+        case_count++;
     }
 
     if(case_ord_list.size() != case_ent_name_list.size()

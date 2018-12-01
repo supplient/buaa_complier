@@ -34,6 +34,13 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     for(VarEntry *lv: lv_list){
         if(gr_count >= back::GLOBAL_REG_UP - back::s0)
             break;
+
+        if(!lv)
+            throw string("FuncBackend: NULL local variable!");
+
+        if(lv->is_param)
+            continue; // param is not processed here.
+
         reg_pool.registForGlobalReg(lv);
         gr_count++;
     }
