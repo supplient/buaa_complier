@@ -369,13 +369,18 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 // regist for the corresponding param reg
                 res_reg = reg_pool.registForParamReg(tuple->right->int_const);
                 // move value into the reg
-                // TODO type conv
                 if(tuple->res->type == Operand::ENTRY){
                     left_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
-                    // sw/sb
+                    // move
                     inst_cmds->push_back(
                         new InstCmd(InstCmd::MOVE, res_reg, left_reg, 0)
                     );
+                    // type conv
+                    if(tuple->res->entry->type == sym::CHAR){
+                        inst_cmds->push_back(
+                            new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
+                        );
+                    }
                 }
                 else if(tuple->res->type == Operand::INT_CONST){
                     // add
