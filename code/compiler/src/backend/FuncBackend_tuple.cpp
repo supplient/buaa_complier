@@ -322,7 +322,15 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 new InstCmd(InstCmd::SW, back::ra, back::sp, ra_offset)
             );
             // save $s?
-            // TODO
+            for(int i=0; i<gr_count; i++){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SW, 
+                                back::s0+i, 
+                                back::sp, 
+                                ra_offset + (1+i) * SizeUtil::regSize()
+                                )
+                );
+            }
             break;
 
         case PARAM:
@@ -508,7 +516,15 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 writeBackVar(entry, reg, inst_cmds);
             }
             // load $s?
-            // TODO
+            for(int i=0; i<gr_count; i++){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::LW, 
+                                back::s0+i, 
+                                back::sp, 
+                                ra_offset + (1+i) * SizeUtil::regSize()
+                                )
+                );
+            }
             // load $ra
             inst_cmds->push_back(
                 new InstCmd(InstCmd::LW, back::ra, back::sp, ra_offset)

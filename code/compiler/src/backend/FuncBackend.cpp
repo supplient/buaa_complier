@@ -15,11 +15,35 @@ bool isGlobalVar(const VarEntry *entry){
 FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     :func_tuple(func_tuple)
 {
+    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
+    FuncNameTable *func_tab = tab.getFuncNameTable(func_tuple->func_entry->name);
+    vector<VarEntry*> lv_list = func_tab->getUnconstVars();
+
+    // Init param reg alloc, caller should promise for this
+    int param_index = 0;
+    for(VarEntry *entry: param_list){
+        if(param_index >= back::PARAM_REG_UP - back::a0)
+            break;
+        reg_pool.registForParamReg(param_index, entry);
+        param_index++;
+    }
+
+
+    // Init global reg alloc
+    gr_count = 0;
+    for(VarEntry *lv: lv_list){
+        if(gr_count >= back::GLOBAL_REG_UP - back::s0)
+            break;
+        reg_pool.registForGlobalReg(lv);
+        gr_count++;
+    }
+
+
     // Construct stack
     back::size offset = 0;
 
     //  global regs
-    //  TODO
+    offset += SizeUtil::regSize() * gr_count;
 
     //  $ra
     ra_offset = offset;
@@ -27,8 +51,6 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
 
     //  temp var & local var
     //  we treat temp var as local var
-    FuncNameTable *func_tab = tab.getFuncNameTable(func_tuple->func_entry->name);
-    vector<VarEntry*> lv_list = func_tab->getUnconstVars();
     for(VarEntry *lv: lv_list){
         if(!lv)
             throw string("FuncBackend: NULL local variable!");
@@ -55,7 +77,6 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     //  param
     //  Note: since stack is built in the reversed order,
     //      the param is saved reversedly in memory.
-    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
     vector<VarEntry*> reversed_param_list = param_list;
     reverse(reversed_param_list.begin(), reversed_param_list.end());
     for(VarEntry *pv: reversed_param_list){
@@ -70,15 +91,6 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     mylog::debug << "Func " + func_tuple->func_entry->name + " 's lvo_tab.";
     for(auto pair: lvo_tab){
         mylog::debug << pair.first + ": " + to_string(pair.second);
-    }
-
-    // Init param reg alloc, caller should promise for this
-    int param_index = 0;
-    for(VarEntry *entry: param_list){
-        if(param_index >= back::PARAM_REG_UP - back::a0)
-            break;
-        reg_pool.registForParamReg(param_index, entry);
-        param_index++;
     }
 }
 

@@ -33,6 +33,7 @@ private:
     back::size stack_size;
 
     int param_count = 0;
+    int gr_count = 0;
 
     void writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds);
     void loadVar(const VarEntry *entry, back::REG res, vector<InstCmd*> *inst_cmds);

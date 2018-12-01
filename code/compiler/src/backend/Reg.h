@@ -21,11 +21,32 @@ namespace back
         t5,
         t6,
         t7,
+        t8,
+        t9,
         TEMP_REG_UP,
+        s0,
+        s1,
+        s2,
+        s3,
+        s4,
+        s5,
+        s6,
+        s7,
+        GLOBAL_REG_UP,
         ra,
         sp,
         NO_REG,
     };
+
+    REG operator++(REG &reg, int n);
+
+    REG operator+(REG reg, int n);
+
+    REG operator+(int n, REG reg);
+
+    REG operator+(REG reg, unsigned int n);
+
+    REG operator+(unsigned int n, REG reg);
 
     const int MAX_REG_NUM = 40;
     extern std::string REG_NAME[MAX_REG_NUM];

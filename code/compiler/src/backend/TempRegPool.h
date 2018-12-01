@@ -42,10 +42,6 @@ public:
         reserved_reg.clear();
     }
 
-    bool hasTargetMemory(back::REG reg){
-        return reg_list[reg - back::t0] != NULL;
-    }
-
     back::REG askForTempReg(const VarEntry **out_entry){
         // check input
         if(!out_entry)

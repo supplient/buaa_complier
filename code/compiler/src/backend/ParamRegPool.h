@@ -53,21 +53,6 @@ public:
         return res;
     }
 
-    void unregist(const VarEntry *entry){
-        for(unsigned int i=0; i<reg_list.size(); i++){
-            if(reg_list[i] == entry){
-                reg_list[i] = NULL;
-                assigned[i] = false;
-                return;
-            }
-        }
-    }
-
-    void unregist(int param_index){
-        reg_list[param_index] = NULL;
-        assigned[param_index] = false;
-    }
-
     back::REG lookUpReg(const VarEntry *entry){
         if(!entry)
             return back::NO_REG;

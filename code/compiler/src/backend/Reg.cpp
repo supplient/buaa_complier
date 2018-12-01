@@ -17,9 +17,42 @@ namespace back{
         "$t5",
         "$t6",
         "$t7",
+        "$t8",
+        "$t9",
         "TEMP_REG_UP",
+        "$s0",
+        "$s1",
+        "$s2",
+        "$s3",
+        "$s4",
+        "$s5",
+        "$s6",
+        "$s7",
+        "GLOBAL_REG_UP",
         "$ra",
         "$sp",
         "NO_REG",
     };
+
+    REG operator++(REG &reg, int n){
+        REG ret = reg;
+        reg = static_cast<REG>(reg+1);
+        return ret;
+    }
+
+    REG operator+(REG reg, int n){
+        return static_cast<REG>((int)reg+n);
+    }
+
+    REG operator+(int n, REG reg){
+        return reg + n;
+    }
+
+    REG operator+(REG reg, unsigned int n){
+        return static_cast<REG>((unsigned int)reg+n);
+    }
+
+    REG operator+(unsigned int n, REG reg){
+        return reg + n;
+    }
 }

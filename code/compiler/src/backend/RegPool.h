@@ -3,6 +3,7 @@
 
 #include "TempRegPool.h"
 #include "ParamRegPool.h"
+#include "GlobalRegPool.h"
 
 class RegPool
 {
@@ -20,6 +21,10 @@ public:
         param_pool.reset();
     }
 
+    void resetGlobalReg(){
+        global_pool.reset();
+    }
+
     bool reserveReg(back::REG reg){
         if(temp_pool.contain(reg))
             return temp_pool.reserveReg(reg);
@@ -29,12 +34,6 @@ public:
 
     void clearTempRegReserve(){
         temp_pool.clearReserve();
-    }
-
-    bool hasTargetMemory(back::REG reg){
-        if(reg == back::v0)
-            return false;
-        return temp_pool.hasTargetMemory(reg);
     }
 
     bool isParamRegFree(int param_index){
@@ -48,6 +47,10 @@ public:
     back::REG registForParamReg(int param_index, const VarEntry *entry=NULL){
         // Note: We allow the entry to be NULL
         return param_pool.regist(param_index, entry);
+    }
+
+    back::REG registForGlobalReg(const VarEntry *entry){
+        return global_pool.regist(entry);
     }
 
     // can only regist for temp reg
@@ -65,17 +68,6 @@ public:
         return temp_pool.unregist(entry);
     }
 
-    back::REG unregist(const VarEntry *entry){
-        auto it = speical_var_reg_pool.find(entry->name);
-        if(it != speical_var_reg_pool.end())
-            throw string("RegPool: cannot unregist speical var: " + entry->name);
-
-        if(param_pool.lookUpReg(entry) != back::NO_REG)
-            throw string("RegPool: cannot unregist a single param reg. Can only reset all param regs.");
-
-        return temp_pool.unregist(entry);
-    }
-
     back::REG lookUpReg(const VarEntry *entry){
         // search special_var_reg_pool
         auto it = speical_var_reg_pool.find(entry->name);
@@ -86,6 +78,11 @@ public:
         
         // search param pool
         res = param_pool.lookUpReg(entry);
+        if(res != back::NO_REG)
+            return res;
+
+        // search global pool
+        res = global_pool.lookUpReg(entry);
         if(res != back::NO_REG)
             return res;
 
@@ -105,6 +102,9 @@ public:
         if(ParamRegPool::contain(reg))
             return param_pool.lookUpEntry(reg);
 
+        if(GlobalRegPool::contain(reg))
+            return global_pool.lookUpEntry(reg);
+
         if(TempRegPool::contain(reg))
             return temp_pool.lookUpEntry(reg);
 
@@ -117,6 +117,9 @@ public:
         auto param_res = param_pool.getAllRegistedVar();
         res.insert(param_res.begin(), param_res.end());
 
+        auto global_res = global_pool.getAllRegistedVar();
+        res.insert(global_res.begin(), global_res.end());
+
         auto temp_res = temp_pool.getAllRegistedVar();
         res.insert(temp_res.begin(), temp_res.end());
         
@@ -127,14 +130,19 @@ public:
         return param_pool.getAllRegistedVar();
     }
 
+    map<back::REG, const VarEntry*> getAllRegistedGlobalReg(){
+        return global_pool.getAllRegistedVar();
+    }
+
     map<back::REG, const VarEntry*> getAllRegistedTempReg(){
         return temp_pool.getAllRegistedVar();
     }
 
 private:
     map<string, back::REG> speical_var_reg_pool;
-    TempRegPool temp_pool;
+    GlobalRegPool global_pool;
     ParamRegPool param_pool;
+    TempRegPool temp_pool;
 };
 
 #endif//REG_POOL_H
