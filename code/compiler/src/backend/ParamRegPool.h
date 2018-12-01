@@ -17,39 +17,38 @@ public:
 
 public:
     ParamRegPool(){
-        for(unsigned int i=0; i<back::PARAM_REG_UP - back::a0; i++)
+        for(unsigned int i=0; i<back::PARAM_REG_UP - back::a0; i++){
+            assigned.push_back(false);
             reg_list.push_back(NULL);
+        }
     }
 
     void reset(){
-        for(unsigned int i=0; i<back::PARAM_REG_UP - back::a0; i++)
+        for(unsigned int i=0; i<back::PARAM_REG_UP - back::a0; i++){
+            assigned[i] = false;
             reg_list[i] = NULL;
+        }
     }
 
-    back::REG regist(const VarEntry *in_entry, const VarEntry **out_entry){
-        // check input
-        if(!in_entry)
-            throw string("TempRegPool: cannot reg a NULL entry on a temp reg.");
+    back::REG regist(int param_index, const VarEntry *in_entry=NULL){
+        // check param_index
+        if(param_index >= back::PARAM_REG_UP - back::a0)
+            throw string("ParamRegPool: trying to regist too many param regs.");
         // check if is param
-        if(!in_entry->is_param)
-            return back::NO_REG;
+        if(in_entry){
+            if(!in_entry->is_param)
+                throw string("ParamRegPool: trying to regist a non-param var for the param reg.");
+        }
+        // check if assigned
+        if(assigned[param_index])
+            throw string("ParamRegPool: trying to regist an assigned param reg.");
 
         back::REG res;
 
-        // check if exists
-        res = lookUpReg(in_entry);
-        if(res != back::NO_REG){
-            return res;
-        }
-
-        // check if param regs are enough for this param's index
-        if(in_entry->param_index >= reg_list.size())
-            return back::NO_REG;
-
         // give the correponding reg
-        res = static_cast<back::REG>(in_entry->param_index + back::a0);
-        *out_entry = getRegEntry(res);
-        setEntryForReg(res, in_entry);
+        res = static_cast<back::REG>(param_index + back::a0);
+        reg_list[res-back::a0] = in_entry;
+        assigned[res-back::a0] = true;
 
         return res;
     }
@@ -58,9 +57,15 @@ public:
         for(unsigned int i=0; i<reg_list.size(); i++){
             if(reg_list[i] == entry){
                 reg_list[i] = NULL;
+                assigned[i] = false;
                 return;
             }
         }
+    }
+
+    void unregist(int param_index){
+        reg_list[param_index] = NULL;
+        assigned[param_index] = false;
     }
 
     back::REG lookUpReg(const VarEntry *entry){
@@ -75,10 +80,21 @@ public:
         return back::NO_REG;
     }
 
+    const VarEntry *lookUpEntry(back::REG reg){
+        return reg_list[reg - back::a0];
+    }
+
+    bool checkIfAssigned(int param_index){
+        // check param_index
+        if(param_index >= back::PARAM_REG_UP - back::a0)
+            throw string("ParamRegPool: trying to regist too many param regs.");
+        return assigned[param_index];
+    }
+
     map<back::REG, const VarEntry*> getAllRegistedVar(){
         map<back::REG, const VarEntry*> res;
         for(unsigned int i=0; i<reg_list.size(); i++){
-            if(reg_list[i] == NULL)
+            if(!assigned[i])
                 continue;
             res[static_cast<back::REG>(i+back::a0)] = reg_list[i];
         }
@@ -86,11 +102,8 @@ public:
     }
 
 private:
+    vector<bool> assigned;
     vector<const VarEntry*> reg_list;
-
-    void setEntryForReg(back::REG reg, const VarEntry *entry){
-        reg_list[reg-back::a0] = entry;
-    }
 
     const VarEntry* getRegEntry(back::REG reg){
         if(!ParamRegPool::contain(reg))

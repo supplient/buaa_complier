@@ -2,6 +2,7 @@
 #define FUNC_BACKEND_H
 
 #include <vector>
+#include <stack>
 
 #include "Command.h"
 #include "FuncTuple.h"
@@ -26,6 +27,7 @@ private:
     // key: local var's full name (NameUtil::genEntryName)
     // value: offset between $sp
     map<string, back::size> lvo_tab;
+    map<back::REG, stack<back::size> > param_stacks;
 
     back::size ra_offset;
     back::size stack_size;
@@ -49,9 +51,6 @@ private:
 
     void saveTempReg(vector<InstCmd*> *inst_cmds);
     void restoreTempReg(vector<InstCmd*> *inst_cmds);
-
-    void saveParamReg(vector<InstCmd*> *inst_cmds);
-    void restoreParamReg(vector<InstCmd*> *inst_cmds);
 
     void transTuple(Tuple *tuple, map<string, string> &str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);

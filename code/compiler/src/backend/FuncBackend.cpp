@@ -70,6 +70,15 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     for(auto pair: lvo_tab){
         mylog::debug << pair.first + ": " + to_string(pair.second);
     }
+
+    // Init param reg alloc, caller should promise for this
+    int param_index = 0;
+    for(VarEntry *entry: param_list){
+        if(param_index >= back::PARAM_REG_UP - back::a0)
+            break;
+        reg_pool.registForParamReg(param_index, entry);
+        param_index++;
+    }
 }
 
 void FuncBackend::writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds){
@@ -192,34 +201,6 @@ void FuncBackend::restoreTempReg(vector<InstCmd*> *inst_cmds){
     map<back::REG, const VarEntry*> reg_entry_map = reg_pool.getAllRegistedTempReg();
     for(auto pair: reg_entry_map){
         loadVar(pair.second, pair.first, inst_cmds);
-    }
-}
-
-void FuncBackend::saveParamReg(vector<InstCmd*> *inst_cmds){
-    throw string("saveParamReg NOT implemented.");
-
-    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
-    for(VarEntry *entry: param_list){
-        back::REG reg = reg_pool.lookUpReg(entry);
-        if(reg == back::NO_REG || !ParamRegPool::contain(reg))
-            continue; // if the param is not in reg or is using a non-param reg, we do not save at this step
-        writeBackVar(entry, reg, inst_cmds);
-    }
-}
-
-void FuncBackend::restoreParamReg(vector<InstCmd*> *inst_cmds){
-    throw string("restoreParamReg NOT implemented.");
-    
-    vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
-
-    int param_reg_num = back::PARAM_REG_UP - back::a0;
-    if(param_reg_num < param_list.size())
-        param_reg_num = param_list.size();
-
-    for(int i=0; i<param_reg_num; i++){
-        back::REG reg = registAndLoadVar(param_list[i], inst_cmds);
-        if(!ParamRegPool::contain(reg))
-            throw string("FuncBackend.restoreParamReg: param [" + param_list[i]->name + "] does not get param reg when restore.");
     }
 }
 

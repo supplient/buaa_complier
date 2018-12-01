@@ -1,3 +1,5 @@
 Each element has a static attribute: headSymbol
 
 TODO: Please exit if grammar/semantics failed (after its whole processing is done)
+
+TODO: For the last switch case, JMP is needless.

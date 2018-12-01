@@ -9,6 +9,12 @@
 class TempRegPool
 {
 public:
+    static bool contain(back::REG reg){
+        if(reg >= back::t0 && reg < back::TEMP_REG_UP)
+            return true;
+        return false;
+    }
+public:
     TempRegPool(){
         // fill reg_list with NULL
         for(unsigned int i=0; i<back::TEMP_REG_UP - back::t0; i++)
@@ -38,12 +44,6 @@ public:
 
     bool hasTargetMemory(back::REG reg){
         return reg_list[reg - back::t0] != NULL;
-    }
-
-    bool contain(back::REG reg){
-        if(reg >= back::t0 && reg < back::TEMP_REG_UP)
-            return true;
-        return false;
     }
 
     back::REG askForTempReg(const VarEntry **out_entry){
@@ -107,6 +107,10 @@ public:
         }
 
         return back::NO_REG;
+    }
+
+    const VarEntry* lookUpEntry(back::REG reg){
+        return reg_list[reg - back::t0];
     }
 
     map<back::REG, const VarEntry*> getAllRegistedVar(){

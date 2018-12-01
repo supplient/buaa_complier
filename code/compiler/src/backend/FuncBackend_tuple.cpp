@@ -11,6 +11,9 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
     using namespace sem;
 
+    int index;
+    int param_number;
+    back::size offset;
     map<back::REG, const VarEntry*> reg_entry_map;
     const VarEntry *var_entry;
     InstCmd::OP inst_op;
@@ -323,67 +326,174 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             break;
 
         case PARAM:
+            if(param_count == 0){
+                // A function call is started
+                // save this function's param regs into memory
+                auto param_list = reg_pool.getAllRegistedParamReg();
+                for(auto pair: param_list){
+                    if(!pair.second)
+                        throw string("PARAM: meet a NULL entry when saving this function's param regs.");
+                    writeBackVar(pair.second, pair.first, inst_cmds);
+                }
+                reg_pool.resetParamReg();
+            }
             // adujst $sp
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, -4)
             );
             // add param count
             param_count++;
-            if(tuple->left->str_value == NameUtil::intString)
-                inst_op = InstCmd::SW;
-            else if(tuple->left->str_value == NameUtil::charString)
-                inst_op = InstCmd::SB;
-            else
-                throw string("Invalid PARAM->left: " + tuple->left->str_value);
-            // push param
-            if(tuple->res->type == Operand::ENTRY){
-                res_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
-                // sw/sb
-                inst_cmds->push_back(
-                    new InstCmd(inst_op, res_reg, back::sp, 0)
-                );
+            // pass params
+            if(tuple->right->int_const < back::PARAM_REG_UP - back::a0){
+                // save param into param regs
+                if(!reg_pool.isParamRegFree(tuple->right->int_const)){
+                    // A nested function call is started
+                    // save all registed param regs into memory
+                    for(auto pair: reg_pool.getAllRegistedParamReg()){
+                        offset = param_stacks[pair.first].top();
+
+                        inst_cmds->push_back(
+                            new InstCmd(InstCmd::SW, pair.first, back::sp, 4*param_count - offset)
+                        );
+                    }
+                    reg_pool.resetParamReg();
+                }
+                // regist for the corresponding param reg
+                res_reg = reg_pool.registForParamReg(tuple->right->int_const);
+                // move value into the reg
+                // TODO type conv
+                if(tuple->res->type == Operand::ENTRY){
+                    left_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
+                    // sw/sb
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::MOVE, res_reg, left_reg, 0)
+                    );
+                }
+                else if(tuple->res->type == Operand::INT_CONST){
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->int_const)
+                    );
+                }
+                else if(tuple->res->type == Operand::CHAR_CONST){
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->char_const)
+                    );
+                }
+                else
+                    throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
+                // push to param's stack
+                param_stacks[res_reg].push(4*param_count);
             }
-            else if(tuple->res->type == Operand::INT_CONST){
-                res_reg = askForTempReg(inst_cmds);
-                // add
-                inst_cmds->push_back(
-                    new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->int_const)
-                );
-                // sw/sb
-                inst_cmds->push_back(
-                    new InstCmd(inst_op, res_reg, back::sp, 0)
-                );
+            else{
+                // push param into stack's memory
+                if(tuple->left->str_value == NameUtil::intString)
+                    inst_op = InstCmd::SW;
+                else if(tuple->left->str_value == NameUtil::charString)
+                    inst_op = InstCmd::SB;
+                else
+                    throw string("Invalid PARAM->left: " + tuple->left->str_value);
+                if(tuple->res->type == Operand::ENTRY){
+                    res_reg = registAndLoadVar(tuple->res->entry, inst_cmds);
+                    // sw/sb
+                    inst_cmds->push_back(
+                        new InstCmd(inst_op, res_reg, back::sp, 0)
+                    );
+                }
+                else if(tuple->res->type == Operand::INT_CONST){
+                    res_reg = askForTempReg(inst_cmds);
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->int_const)
+                    );
+                    // sw/sb
+                    inst_cmds->push_back(
+                        new InstCmd(inst_op, res_reg, back::sp, 0)
+                    );
+                }
+                else if(tuple->res->type == Operand::CHAR_CONST){
+                    res_reg = askForTempReg(inst_cmds);
+                    // add
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->char_const)
+                    );
+                    // sw/sb
+                    inst_cmds->push_back(
+                        new InstCmd(inst_op, res_reg, back::sp, 0)
+                    );
+                }
+                else
+                    throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
             }
-            else if(tuple->res->type == Operand::CHAR_CONST){
-                res_reg = askForTempReg(inst_cmds);
-                // add
-                inst_cmds->push_back(
-                    new InstCmd(InstCmd::ADD, res_reg, back::zero, tuple->res->char_const)
-                );
-                // sw/sb
-                inst_cmds->push_back(
-                    new InstCmd(inst_op, res_reg, back::sp, 0)
-                );
-            }
-            else
-                throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
             break;
 
         case CALL:
+            if(tuple->left->int_const > 0){
+                // if the function has params
+                // check param regs
+                param_number = tuple->left->int_const;
+                if(param_number > back::PARAM_REG_UP - back::a0)
+                    param_number = back::PARAM_REG_UP - back::a0;
+                for(index=0; index<param_number; index++){
+                    if(!reg_pool.isParamRegFree(index))
+                        continue;
+                    // is not assigned, need load from memory into param regs
+                    offset = param_stacks[static_cast<back::REG>(index+back::a0)].top();
+                    inst_cmds->push_back(
+                        new InstCmd(InstCmd::LW, static_cast<back::REG>(index+back::a0), back::sp, 4*param_count - offset)
+                    );
+                }
+                // pop from param stacks
+                for(index=0; index<param_number; index++){
+                    param_stacks[static_cast<back::REG>(index+back::a0)].pop();
+                }
+            }
             // save temp regs that has been registed by a var
             saveTempReg(inst_cmds);
             // jump and link to target function
             inst_cmds->push_back(
                 new InstCmd(InstCmd::JAL, tuple->res->str_value)
             );
-            // recover $sp
-            inst_cmds->push_back(
-                new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*tuple->left->int_const)
-            );
-            // reduce param count
-            param_count -= tuple->left->int_const;
             // restore temp regs
             restoreTempReg(inst_cmds);
+            // recover $sp
+            if(tuple->left->int_const > 0){
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, back::sp, back::sp, 4*tuple->left->int_const)
+                );
+            }
+            // reduce param count
+            param_count -= tuple->left->int_const;
+            // if called function used any register, unregist all param regs
+            if(tuple->left->int_const > 0)
+                reg_pool.resetParamReg();
+            if(param_count == 0){
+                // function call is completed, load back this function's params
+                auto param_list = func_tuple->func_entry->param_list;
+                index = 0;
+                for(VarEntry *entry: param_list){
+                    if(index >= back::PARAM_REG_UP - back::a0)
+                        break;
+                    if(!entry)
+                        throw string("PARAM: meet a NULL entry when loading this function's param regs.");
+                    // check whether has already got a temp reg
+                    left_reg = reg_pool.lookUpReg(entry);
+                    // regist for a param reg
+                    res_reg = reg_pool.registForParamReg(index, entry);
+                    if(left_reg != back::NO_REG){
+                        // has already got a temp reg
+                        inst_cmds->push_back(
+                            new InstCmd(InstCmd::MOVE, res_reg, left_reg)
+                        );
+                        reg_pool.unregistTempReg(entry);
+                    }
+                    else{
+                        loadVar(entry, res_reg, inst_cmds);
+                    }
+                    index++;
+                }
+            }
             break;
 
         case RET:
@@ -465,6 +575,11 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     );
                 }
                 // set $a0
+                if(func_tuple->func_entry->param_list.size() > 0){
+                    // if there is a param, which means $a0 is being used
+                    // save $a0
+                    writeBackVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
+                }
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::LA, back::a0, str_label)
                 );
@@ -476,6 +591,10 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::SYSCALL)
                 );
+                // if there is a param, recover $a0
+                if(func_tuple->func_entry->param_list.size() > 0){
+                    loadVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
+                }
             }
             if(tuple->right){
                 // output expression

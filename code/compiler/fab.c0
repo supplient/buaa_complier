@@ -7,6 +7,8 @@ int fab_func(int j)
         case 2: return(2);
     }
 
+    printf("-");
+
     return(fab_func(j-1) + fab_func(j-2));
 }
 

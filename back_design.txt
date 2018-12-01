@@ -2,6 +2,7 @@ Param Register Logic----
     * Init param_count with 0
     * When meet a PARAM:
         If param_count==0, save this function's params into memory, and unregist them from param_pool.
+        Adjust $sp and Increase param_count.
         If the param index is larger than the param reg's number, just save the param into memory.
         Otherwise, we need consider about param registers.
             if the corresponding param reg is registed, which means there is a nested function call, 
@@ -10,7 +11,6 @@ Param Register Logic----
                     unregist the param reg.
             Then regist for this param register, assign value to this register.
             Push the stack offset onto the corresponding param stack.
-        Increase param_count.
     * When meet a CALL:
         If the param number is X, we check the 0~min(X, param_max_number) param stack.
         For 0~min(X, param_max_number)th param:
@@ -19,12 +19,21 @@ Param Register Logic----
             If the param register is not assigned, which means the param value is in memory,
                 load value from memory into the register.
                 The memory address is informed by param stack's top element.
-        Do call.
+                Pop from the param stack.
+        Save Temp regs
+        JAL
+        Recover $sp and Decrease param_count by param number.
+        Restore temp regs
         For 0~min(X, param_max_number)th param:
             Unregist the param.
-            Pop from the param stack.
-        Decrease param_count by param number.
         If param_count==0, load this function's params from memory, and regist them from param_pool.
+    * When meet a syscall:
+        before using $a0~$a3, 
+            check param's number, if the function has no param, just do nothing.
+            if the function has some params, save used params from reg into memory.
+        after syscall,
+            recover the saved params.
+            load them from memory into regs.
         
 
 Stack----
