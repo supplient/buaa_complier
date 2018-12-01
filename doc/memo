@@ -1,0 +1,9 @@
+Global TODO:
+    Please exit if grammar/semantics failed (after its whole processing is done)
+
+Grammar TODO:
+    Improve error detecting.
+
+Semantics TODO:
+    For the last switch case, JMP is needless.
+    Modify ADD logic, reduce temp var's use.

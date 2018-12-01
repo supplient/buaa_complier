@@ -64,6 +64,8 @@
 		<Unit filename="src/backend/FuncBackend.cpp" />
 		<Unit filename="src/backend/FuncBackend.h" />
 		<Unit filename="src/backend/FuncBackend_tuple.cpp" />
+		<Unit filename="src/backend/GlobalRegPool.h" />
+		<Unit filename="src/backend/ParamRegPool.h" />
 		<Unit filename="src/backend/Reg.cpp" />
 		<Unit filename="src/backend/Reg.h" />
 		<Unit filename="src/backend/RegPool.h" />
