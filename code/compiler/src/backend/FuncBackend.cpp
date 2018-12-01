@@ -4,6 +4,7 @@
 
 #include "symbol.h"
 #include "log.h"
+#include "config.h"
 
 string reserve_fail = "Reserve fail.";
 
@@ -209,6 +210,16 @@ void FuncBackend::trans(map<string, string> &str_tab,
 
     param_count = 0;
     for(Tuple *tuple: func_tuple->tuples){
+        if(MIPS_TUPLE_OUTPUT){
+            inst_cmds->push_back(
+                new CommentCmd("#" + tuple->toString())
+            );
+        }
         transTuple(tuple, str_tab, data_cmds, inst_cmds);
+        if(MIPS_TUPLE_OUTPUT){
+            inst_cmds->push_back(
+                new CommentCmd("")
+            );
+        }
     }
 }

@@ -7,8 +7,7 @@
 
 #include "LexAnalyzer.h"
 #include "log.h"
-
-#define HW false
+#include "config.h"
 
 //2
 #include "Integer.h"

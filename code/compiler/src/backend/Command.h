@@ -173,7 +173,7 @@ public:
         }
         return string();
     }
-    string toString();
+    virtual string toString();
 
     bool has_label;
     string label;
@@ -186,6 +186,18 @@ public:
     back::REG right_reg;
     int right_imme;
     string right_label;
+};
+
+class CommentCmd: public InstCmd
+{
+public:
+    CommentCmd(string comment):comment(comment){}
+
+    virtual string toString(){
+        return comment;
+    }
+
+    string comment;
 };
 
 #endif//COMMAND_H
