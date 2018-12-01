@@ -35,8 +35,6 @@ class IntConstDefine : public ConstDefine
                 exit(-1);
             }
 
-            // TODO dump info tuples
-
             // fill table
             for(unsigned int i=0;i<ident_list.size();i++){
                 if(!tab.insertIntConst(func_name, ident_list[i], integer_list[i]->value)){
@@ -63,8 +61,6 @@ class CharConstDefine : public ConstDefine
                 mylog::error << "const define: ident size != char size.";
                 exit(-1);
             }
-
-            // TODO dump info tuples
 
             // fill table
             for(unsigned int i=0;i<ident_list.size();i++){

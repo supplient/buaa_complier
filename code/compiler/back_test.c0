@@ -1,15 +1,17 @@
-char func(int a){
-    return(a);
-}
-
 void main(){
     char a;
     int b;
 
-    a = 255;
-    b = a;
-    printf(b);
-    b = a + 6;
-    b = func(b);
-    printf("   ", b);
+    while(1){
+        scanf(a);
+
+        switch(a){
+            case 'a': printf("A");
+            case 'b': printf("B");
+            case 'c': printf("C");
+            default: printf("K");
+        }
+
+        printf("------");
+    }
 }

@@ -20,8 +20,6 @@ class VarDefine: public Element
                 exit(-1);
             }
 
-            // TODO dump info tuples
-
             // fill tab
             for(unsigned int i=0;i<ident_list.size();i++){
                 string ident = ident_list[i];

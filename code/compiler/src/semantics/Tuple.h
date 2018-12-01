@@ -36,7 +36,6 @@ namespace sem{
         BEZ,
         BEQ,
         JMP,
-        // TODO
     };
 
     const int MAX_OP_NUM = 100;

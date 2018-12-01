@@ -19,7 +19,6 @@ public:
         INT_CONST,
         CHAR_CONST,
         STRING,
-        // TODO
     };
 
     Operand(NameTableEntry *entry);

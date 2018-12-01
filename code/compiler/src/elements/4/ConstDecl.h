@@ -20,7 +20,7 @@ class ConstDecl : public Element
             Tuples tuples;
 
             for(ConstDefine *const_define: const_define_list){
-                Tuples def_tuples = const_define->dump(tab, func_name); // TODO
+                Tuples def_tuples = const_define->dump(tab, func_name);
                 tuples.insert(tuples.end(), def_tuples.begin(), def_tuples.end());
             }
 
