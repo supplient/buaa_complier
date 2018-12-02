@@ -18,6 +18,7 @@
 					<Add directory="src/grammar" />
 					<Add directory="src/elements" />
 					<Add directory="src/semantics" />
+					<Add directory="src/modify" />
 					<Add directory="src/backend" />
 					<Add directory="log" />
 					<Add directory="src/elements/2" />
@@ -113,6 +114,11 @@
 		<Unit filename="src/lex/LexAnalyzer.cpp" />
 		<Unit filename="src/lex/LexAnalyzer.h" />
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
+		<Unit filename="src/modify/BasicBlock.h" />
+		<Unit filename="src/modify/BasicBlockSplitter.h" />
+		<Unit filename="src/modify/ConstVarRemover.h" />
+		<Unit filename="src/modify/Edge.h" />
+		<Unit filename="src/modify/FuncBlock.h" />
 		<Unit filename="src/semantics/FuncTuple.h" />
 		<Unit filename="src/semantics/NameTable.cpp" />
 		<Unit filename="src/semantics/NameTable.h" />
@@ -128,6 +134,7 @@
 		<Unit filename="test/back_test.cpp" />
 		<Unit filename="test/gra_test.cpp" />
 		<Unit filename="test/lex_test.cpp" />
+		<Unit filename="test/modi_test.cpp" />
 		<Unit filename="test/sem_test.cpp" />
 		<Extensions>
 			<code_completion />
