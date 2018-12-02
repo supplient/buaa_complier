@@ -22,7 +22,7 @@ class MainFunc : public Element
             // create a tuple as the entrance
             Tuple *start_tuple = new Tuple();
             start_tuple->op = sem::FUNC;
-            start_tuple->left = new Operand(sem::MAIN_FUNC_NAME);
+            start_tuple->res = new Operand(sem::MAIN_FUNC_NAME);
             tuples.insert(tuples.begin(), start_tuple); // should be at the head
 
             // fill tab

@@ -312,7 +312,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
 
         case FUNC:
             // func label
-            inst_cmds->push_back(new InstCmd(tuple->left->str_value));
+            inst_cmds->push_back(new InstCmd(tuple->res->str_value));
             // adjust $sp
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, -stack_size)

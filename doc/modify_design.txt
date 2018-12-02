@@ -1,0 +1,33 @@
+Order----(from early to late)
+    ConstVarRemover
+    BasicBlockSplitter
+
+
+BasicBlockSplitter----
+    For each tuple:
+        If tuple is <label tuple> or <func tuple> 
+            if current basic block has not started, add tuple and label to block's labels.
+            otherwise, end current block, start a new basic block, add tuple and label to the new block's labels.
+                And add normal edge between the old block and the new block.
+            if the tuple is <func tuple>, mark the current block(after above processing) as <entrance block>.
+
+        If tuple is <jump tuple>, <branch tuple> or <call tuple>
+            add the tuple to current block.
+            Then end current block, start a new basic block.
+            if the tuple is <branch tuple> or <call tuple>
+                Add normal edge between the old block and the new block.
+
+        If tuple is <return tuple>,
+            add the tuple to current block.
+            Then end current block, start a new block.
+            Mark the old block as <exit block>.
+        
+        For other tuples,
+            add the tuple to current block.
+
+    <label tuple>: LABEL
+    <func tuple>: FUNC
+    <jump tuple>: JMP
+    <branch tuple>: BEQ, BEZ
+    <call tuple>: CALL
+    <return tuple>: RET

@@ -1,0 +1,17 @@
+void main(){
+    char a;
+    int b;
+
+    while(1){
+        scanf(a);
+
+        switch(a){
+            case 'a': printf("A");
+            case 'b': printf("B");
+            case 'c': printf("C");
+            default: printf("K");
+        }
+
+        printf("------");
+    }
+}
