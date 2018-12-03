@@ -3,3 +3,6 @@ Grammar TODO:
 
 Semantics TODO:
     Modify ADD logic, reduce temp var's use.
+
+Backend TODO:
+    Support just input tuple file, then trans to MIPS.
