@@ -63,7 +63,7 @@ void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples,
     );
         // call function
     inst_cmds->push_back(
-        new InstCmd(InstCmd::JAL, sem::MAIN_FUNC_NAME)
+        new InstCmd(InstCmd::JAL, NameUtil::genFuncLabel(sem::MAIN_FUNC_NAME))
     );
     inst_cmds->push_back(
         new InstCmd(InstCmd::NOP)

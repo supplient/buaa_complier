@@ -117,7 +117,7 @@ void FuncBackend::writeBackVar(const VarEntry *entry, back::REG reg, vector<Inst
     if(isGlobalVar(entry)){
         write_cmd->left_reg = back::NO_REG;
         write_cmd->right_type = InstCmd::LABEL_TYPE;
-        write_cmd->right_label = NameUtil::genEntryName(entry);
+        write_cmd->right_label = NameUtil::genGlobalVarLabel(entry->name);
     }
     else{
         write_cmd->left_reg = back::sp;
@@ -144,7 +144,7 @@ void FuncBackend::loadVar(const VarEntry *entry, back::REG reg, vector<InstCmd*>
     if(isGlobalVar(entry)){
         read_cmd->left_reg = back::NO_REG;
         read_cmd->right_type = InstCmd::LABEL_TYPE;
-        read_cmd->right_label = NameUtil::genEntryName(entry);
+        read_cmd->right_label = NameUtil::genGlobalVarLabel(entry->name);
     }
     else{
         read_cmd->left_reg = back::sp;

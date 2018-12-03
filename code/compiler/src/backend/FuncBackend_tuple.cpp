@@ -230,7 +230,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             if(isGlobalVar(var_entry)){
                 // sw/sb
                 inst_cmds->push_back(
-                    new InstCmd(inst_op, right_reg, sel_reg, NameUtil::genEntryName(tuple->res->entry))
+                    new InstCmd(inst_op, right_reg, sel_reg, NameUtil::genGlobalVarLabel(tuple->res->entry->name))
                 );
             }
             else{
@@ -278,13 +278,13 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             }
             else
                 throw string("FuncBackend: Invalid tuple->res's type: " + to_string(tuple->res->type));
-            // save to array
+            // load array
             var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
             inst_op = var_entry->type==sym::INT ? InstCmd::LW : InstCmd::LB;
             if(isGlobalVar(var_entry)){
                 // lw/lb
                 inst_cmds->push_back(
-                    new InstCmd(inst_op, res_reg, sel_reg, NameUtil::genEntryName(tuple->left->entry))
+                    new InstCmd(inst_op, res_reg, sel_reg, NameUtil::genGlobalVarLabel(tuple->left->entry->name))
                 );
             }
             else{
@@ -312,7 +312,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
 
         case FUNC:
             // func label
-            inst_cmds->push_back(new InstCmd(tuple->res->str_value));
+            inst_cmds->push_back(new InstCmd(NameUtil::genFuncLabel(tuple->res->str_value)));
             // adjust $sp
             inst_cmds->push_back(
                 new InstCmd(InstCmd::ADD, back::sp, back::sp, -stack_size)
@@ -466,7 +466,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             saveTempReg(inst_cmds);
             // jump and link to target function
             inst_cmds->push_back(
-                new InstCmd(InstCmd::JAL, tuple->res->str_value)
+                new InstCmd(InstCmd::JAL, NameUtil::genFuncLabel(tuple->res->str_value))
             );
             // restore temp regs
             restoreTempReg(inst_cmds);

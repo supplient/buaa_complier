@@ -11,7 +11,7 @@ class NameUtil
 {
 public:
     static string genFuncLabel(const string &func_name){
-        return "$" + func_name;
+        return "$func_" + func_name;
     }
 
     static string genUniBranchLabel(){
@@ -50,7 +50,7 @@ public:
     }
 
     static string genGlobalVarLabel(string var_name){
-        return var_name;
+        return "$global_" + var_name;
     }
 
     static string intString;

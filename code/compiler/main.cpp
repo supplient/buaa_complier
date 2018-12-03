@@ -20,8 +20,8 @@ int main()
         //graTest("example.c0");
         //semTest("example.c0");
         //backTest("back_test.c0");
-        //backTest("example.c0");
-        modiTest("dag_test.c0");
+        backTest("fab.c0");
+        //modiTest("dag_test.c0");
 
         //graInterface();
 
