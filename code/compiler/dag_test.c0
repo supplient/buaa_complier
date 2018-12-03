@@ -1,0 +1,14 @@
+void main(){
+    int a, b, c;
+
+    a = 2;
+    b = 1;
+    
+    c = a + b;
+    a = a + b;
+    c = a + b;
+
+    printf("a=", a);
+    printf("b=", b);
+    printf("c=", c);
+}
