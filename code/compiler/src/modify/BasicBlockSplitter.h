@@ -4,6 +4,8 @@
 #include "FuncBlock.h"
 #include "FuncTuple.h"
 
+#include <algorithm>
+
 class BasicBlockSplitter
 {
 public:
@@ -74,12 +76,41 @@ public:
         func_block->blocks.pop_back();
 
         // link jmp edges and branch edges
-        // TODO
+        for(BasicBlock *block: func_block->blocks){
+            if(block->tuples.size() < 1)
+                continue;
+            Tuple *last_tuple = block->tuples.back();
+            if(isJumpTuple(last_tuple) || isBranchTuple(last_tuple)){
+                string to_label = last_tuple->res->str_value;
+                BasicBlock *to_block = searchForBlockWithLabel(func_block->blocks, to_label);
+                if(to_block == NULL)
+                    throw string("BasicBlockSplitter: get a NULL when search for block with label [" + to_label + "]");
+
+                Edge::TYPE edge_type;
+                if(isJumpTuple(last_tuple))
+                    edge_type = Edge::JUMP;
+                else// isBranchTuple
+                    edge_type = Edge::BRANCH;
+
+                addEdgeBetween(block, to_block, edge_type);
+            }
+            else
+                continue;
+        }
 
         return func_block;
     }
 
 private:
+    static BasicBlock *searchForBlockWithLabel(const vector<BasicBlock*> &blocks, string label){
+        for(BasicBlock *block: blocks){
+            auto it = find(block->labels.begin(), block->labels.end(), label);
+            if(it != block->labels.end())
+                return block;
+        }
+        return NULL;
+    }
+
     static void addEdgeBetween(BasicBlock *from, BasicBlock *to, Edge::TYPE type){
         Edge *edge = new Edge(from, to, type);
         from->out_edges.push_back(edge);

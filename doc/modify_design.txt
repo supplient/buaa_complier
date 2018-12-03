@@ -29,5 +29,5 @@ BasicBlockSplitter----
     <func tuple>: FUNC
     <jump tuple>: JMP
     <branch tuple>: BEQ, BEZ
-    <call tuple>: CALL
+    <call tuple>: CALL // consider this, whether we need add edge for such tuple
     <return tuple>: RET

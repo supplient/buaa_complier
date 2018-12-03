@@ -21,7 +21,7 @@ int main()
         //semTest("example.c0");
         //backTest("back_test.c0");
         //backTest("example.c0");
-        modiTest("dag_test.c0");
+        modiTest("modi_test.c0");
 
         //graInterface();
 

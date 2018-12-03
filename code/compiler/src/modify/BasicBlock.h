@@ -19,6 +19,12 @@ public:
                 case Edge::NORMAL:
                     s += "N";
                     break;
+                case Edge::JUMP:
+                    s += "J";
+                    break;
+                case Edge::BRANCH:
+                    s += "B";
+                    break;
                 default:
                     throw string("Invaliad Edge's type: " + to_string(edge->type));
             }
@@ -31,6 +37,12 @@ public:
             switch(edge->type){
                 case Edge::NORMAL:
                     s += "N";
+                    break;
+                case Edge::JUMP:
+                    s += "J";
+                    break;
+                case Edge::BRANCH:
+                    s += "B";
                     break;
                 default:
                     throw string("Invaliad Edge's type: " + to_string(edge->type));

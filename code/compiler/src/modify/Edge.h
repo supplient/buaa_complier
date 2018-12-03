@@ -8,6 +8,8 @@ class Edge
 public:
     enum TYPE{
         NORMAL,
+        JUMP,
+        BRANCH,
     };
 
     Edge(BasicBlock *from, BasicBlock *to, TYPE type)
