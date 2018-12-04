@@ -12,14 +12,18 @@
 using namespace std;
 
 void modiTest(string filename){
+    // build input stream
     ifstream file(filename, ios_base::binary);
     if(!file.is_open() || !file){
         cerr << "File " << filename << " open failed." << endl;
         throw "File open failed.";
     }
+
+    // init analyzers
     LexAnalyzer lex(file);
     GrammarAnalyzer gra(lex);
 
+    // grammar analyze
     Program* program = gra.constructProgram();
     if(program == NULL || gra.getErrorCount() > 0){
         cerr << "Grammar analyzer failed." << endl;
@@ -27,6 +31,7 @@ void modiTest(string filename){
     }
     file.close();
 
+    // semantics analyze
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
@@ -35,6 +40,8 @@ void modiTest(string filename){
         exit(-1);
     }
 
+    // Start modify
+    // remove const vars
     ConstVarRemover::work(tab, func_tuples);
 
     mylog::tup << "Start dump name table." << "\n";
@@ -55,14 +62,18 @@ void modiTest(string filename){
 
     cout << "\n";
 
+    // split basic blocks
     vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
+#if DAG_MODIFY
     // DAG modify
     for(FuncBlock *func_block: func_blocks){
         for(BasicBlock *block: func_block->blocks){
             dag::Worker::work(block);
         }
     }
+    // TODO free origin func_tuples after DAG modify
+#endif//DAG_MODIFY
 
     cout << "Start dump basic blocks." << "\n";
     cout << "---------------------------" << "\n";
@@ -71,7 +82,23 @@ void modiTest(string filename){
     }
     cout << "---------------------------" << "\n";
     cout << "Dump done." << "\n";
-/*
+
+    // dump func_tuples from func_blocks after all modify
+    func_tuples.clear();
+    for(FuncBlock *func_block: func_blocks)
+        func_tuples.push_back(func_block->dumpFuncTuple());
+
+    mylog::tup << "\nStart dump tuples after modify." << "\n";
+    mylog::tup << "---------------------------" << "\n";
+    for(FuncTuple* func_tuple : func_tuples){
+        mylog::tup << func_tuple->toString() << "\n";
+    }
+    mylog::tup << "---------------------------" << "\n";
+    mylog::tup << "Dump done." << "\n";
+
+    cout << "\n";
+
+    // MIPS backend
     Backend backend;
     vector<DataCmd*> data_cmds;
     vector<InstCmd*> inst_cmds;
@@ -88,7 +115,7 @@ void modiTest(string filename){
     for(InstCmd *cmd: inst_cmds){
         mylog::ass << cmd->toString() << "\n";
     }
-    */
+    
 
     // Release memory
     delete program;

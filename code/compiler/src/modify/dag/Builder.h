@@ -13,7 +13,6 @@ namespace dag{
             reset();
         }
 
-        // TODO free tuples(outside)
         vector<Node*> work(Tuples tuples){
             // In: should be tuples in a basic block
             //      without head's label tuples
@@ -24,7 +23,6 @@ namespace dag{
             Node *left;
             Node *mid;
             Node *right;
-            Node *special;
 
             VarNode *var_node;
             OpNode *op_node;
@@ -41,11 +39,62 @@ namespace dag{
                         var_tab[tuple->res->entry] = left;
                         break;
 
+                    case sem::NEG:
+                        left = getNodeAndFillTab(tuple->left);
+                        op_node = getOpNodeWithOne(tuple->op, left);
+                        op_node->addVar(tuple->res->entry);
+                        var_tab[tuple->res->entry] = op_node;
+                        break;
+
+                    case sem::RARRAY:
+                    case sem::SUB:
+                    case sem::DIV:
+                    case sem::LESS:
+                    case sem::LESSOREQUAL:
+                    case sem::MORE:
+                    case sem::MOREOREQUAL:
+                        left = getNodeAndFillTab(tuple->left);
+                        right = getNodeAndFillTab(tuple->right);
+                        op_node = getOpNodeWithTwo(tuple->op, left, right, true);
+                        op_node->addVar(tuple->res->entry);
+                        var_tab[tuple->res->entry] = op_node;
+                        break;
+
                     case sem::ADD:
+                    case sem::MUL:
+                    case sem::NOTEQUAL:
+                    case sem::EQUAL:
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, false);
                         op_node->addVar(tuple->res->entry);
+                        var_tab[tuple->res->entry] = op_node;
+                        break;
+
+                    case sem::WARRAY:
+                        left = getNodeAndFillTab(tuple->left);
+                        mid = getNodeAndFillTab(tuple->res);
+                        right = getNodeAndFillTab(tuple->right);
+                        op_node = getOpNodeWithThree_order(tuple->op, left, mid, right);
+                        op_node->addVar(tuple->res->entry);
+                        var_tab[tuple->res->entry] = op_node;
+                        break;
+
+                    case sem::PARAM:
+                        left = getNodeAndFillTab(tuple->left);
+                        mid = getNodeAndFillTab(tuple->res);
+                        right = getNodeAndFillTab(tuple->right);
+                        op_node = new OpNode(stack_node, param_node, tuple->op, left, mid, right);
+                        nodes.push_back(op_node);
+                        stack_node = op_node;
+                        param_node = op_node;
+                        break;
+
+                    case sem::INPUT:
+                        op_node = new OpNode(in_node, tuple->op);
+                        nodes.push_back(op_node);
+                        op_node->addVar(tuple->res->entry);
+                        in_node = op_node;
                         var_tab[tuple->res->entry] = op_node;
                         break;
 
@@ -58,11 +107,11 @@ namespace dag{
                         if(tuple->right){
                             right = getNodeAndFillTab(tuple->right);
                         }
-                        op_node = new OpNode(out_node, sem::OUTPUT, left, right);
+                        op_node = new OpNode(out_node, param_node, sem::OUTPUT, left, right);
                         nodes.push_back(op_node);
                         out_node = op_node;
+                        param_node = op_node;
                         break;
-                    // TODO
 
                     default:
                         throw string("dag::Builder.work: Not Implemented sem::op: " + to_string(tuple->op));
@@ -79,6 +128,7 @@ namespace dag{
         map<char, Node*> char_tab;
         map<string, Node*> str_tab;
 
+        Node* param_node;
         Node* stack_node;
         Node* in_node;
         Node* out_node;
@@ -91,10 +141,30 @@ namespace dag{
             int_tab.clear();
             char_tab.clear();
             str_tab.clear();
+            param_node = new SpecialNode("param");
             stack_node = new SpecialNode("stack");
             in_node = new SpecialNode("in");
             out_node = new SpecialNode("out");
             nodes.clear();
+        }
+
+        OpNode* getOpNodeWithOne(sem::OP op, Node *left){
+            OpNode *res = NULL;
+
+            for(OpNode *node: left->fathers){
+                if(node->op != op)
+                    continue;
+
+                if(node->left != left)
+                    continue;
+
+                return node;
+            }
+
+            res = new OpNode(op, left);
+            nodes.push_back(res);
+
+            return res;
         }
 
         OpNode* getOpNodeWithTwo(sem::OP op, Node *left, Node *right, bool order){
@@ -127,6 +197,27 @@ namespace dag{
             }
 
             res = new OpNode(op, left, right);
+            nodes.push_back(res);
+
+            return res;
+        }
+
+        OpNode* getOpNodeWithThree_order(sem::OP op, Node *left, Node *mid, Node *right){
+            OpNode *res = NULL;
+
+            for(OpNode *node: left->fathers){
+                if(node->op != op)
+                    continue;
+                if(node->left != left
+                    || node->mid != mid
+                    || node->right != right
+                )
+                    continue;
+
+                return node;
+            }
+
+            res = new OpNode(op, left, mid, right);
             nodes.push_back(res);
 
             return res;

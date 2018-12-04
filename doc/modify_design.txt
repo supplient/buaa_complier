@@ -49,7 +49,7 @@ DAG----
             delegate is `res`[means when search `res`, can find this Node]
             left: `left`
 
-        RARRAY, ADD, SUB, MUL, DIV, LESS, LESSOREQUAL, MORE, MOREOREQUAL, NOEQUAL, EQUAL
+        RARRAY, ADD, SUB, MUL, DIV, LESS, LESSOREQUAL, MORE, MOREOREQUAL, NOTEQUAL, EQUAL
             delegate is `res`
             left: `left`
             right: `right`
@@ -61,21 +61,23 @@ DAG----
             right: `right`
 
         PARAM
-            delegate is `STACK`
+            delegate is `STACK` and `PARAM`
             left: `left`
             mid: `res`
             right: `right`
-            special: `STACK`
+            spe_1: `STACK`
+            spe_2: `PARAM`
 
         INPUT
             delegate is `IN` and `res`
-            special: `IN`
+            spe_1: `IN`
 
         OUTPUT
-            delegate is `OUT`
+            delegate is `OUT` and `PARAM`
             left: `left`[optional]
             right: `right`[optional]
-            special: `OUT`
+            spe_1: `OUT`
+            spe_2: `PARAM`
 
         LABEL, FUNC, CALL, RET, BEZ, BEQ, JMP
             should not have

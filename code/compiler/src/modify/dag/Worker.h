@@ -68,8 +68,10 @@ namespace dag{
                         op_candi->mid->removeFather(op_candi);
                     if(op_candi->right)
                         op_candi->right->removeFather(op_candi);
-                    if(op_candi->special)
-                        op_candi->special->removeFather(op_candi);
+                    if(op_candi->spe_1)
+                        op_candi->spe_1->removeFather(op_candi);
+                    if(op_candi->spe_2)
+                        op_candi->spe_2->removeFather(op_candi);
                 }
 
                 // push to node stack

@@ -33,6 +33,15 @@ public:
         return s;
     }
 
+    FuncTuple *dumpFuncTuple(){
+        Tuples tuples;
+        for(BasicBlock *block: blocks){
+            tuples.insert(tuples.end(), block->tuples.begin(), block->tuples.end());
+        }
+        FuncTuple *func_tuple = new FuncTuple(tuples, func_entry);
+        return func_tuple;
+    }
+
     BasicBlock *enter_block;
     vector<BasicBlock*> exit_blocks;
 

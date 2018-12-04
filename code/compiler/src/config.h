@@ -5,4 +5,6 @@
 #define MIPS_TUPLE_OUTPUT true
 #define HW false
 
+#define DAG_MODIFY true
+
 #endif//CONFIG_H
