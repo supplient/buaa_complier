@@ -6,6 +6,7 @@
 #include "log.h"
 #include "ConstVarRemover.h"
 #include "BasicBlockSplitter.h"
+#include "dag/Worker.h"
 #include "Backend.h"
 
 using namespace std;
@@ -55,6 +56,13 @@ void modiTest(string filename){
     cout << "\n";
 
     vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
+
+    // DAG modify
+    for(FuncBlock *func_block: func_blocks){
+        for(BasicBlock *block: func_block->blocks){
+            dag::Worker::work(block);
+        }
+    }
 
     cout << "Start dump basic blocks." << "\n";
     cout << "---------------------------" << "\n";

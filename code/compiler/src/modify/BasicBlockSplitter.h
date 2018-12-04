@@ -28,7 +28,7 @@ public:
         // split and construct basic blocks
         // link normal edge
         for(Tuple *tuple: func_tuple->tuples){
-            if(isLabelTuple(tuple) || isFuncTuple(tuple)){
+            if(BasicBlock::isLabelTuple(tuple) || BasicBlock::isFuncTuple(tuple)){
                 if(!has_started){
                     block->labels.push_back(tuple->res->str_value);
                     block->tuples.push_back(tuple);
@@ -42,23 +42,23 @@ public:
                     addEdgeBetween(block, new_block, Edge::NORMAL);
                     block = new_block;
                 }
-                if(isFuncTuple(tuple))
+                if(BasicBlock::isFuncTuple(tuple))
                     func_block->enter_block = block;
                 continue;
             }
 
             has_started = true;
 
-            if(isJumpTuple(tuple) || isBranchTuple(tuple) || isCallTuple(tuple)){
+            if(BasicBlock::isJumpTuple(tuple) || BasicBlock::isBranchTuple(tuple) || BasicBlock::isCallTuple(tuple)){
                 block->tuples.push_back(tuple);
                 has_started = false;
                 BasicBlock *new_block = new BasicBlock(index++);
                 func_block->blocks.push_back(new_block);
-                if(isBranchTuple(tuple) || isCallTuple(tuple))
+                if(BasicBlock::isBranchTuple(tuple) || BasicBlock::isCallTuple(tuple))
                     addEdgeBetween(block, new_block, Edge::NORMAL);
                 block = new_block;
             }
-            else if(isReturnTuple(tuple)){
+            else if(BasicBlock::isReturnTuple(tuple)){
                 block->tuples.push_back(tuple);
                 has_started = false;
                 BasicBlock *new_block = new BasicBlock(index++);
@@ -80,14 +80,14 @@ public:
             if(block->tuples.size() < 1)
                 continue;
             Tuple *last_tuple = block->tuples.back();
-            if(isJumpTuple(last_tuple) || isBranchTuple(last_tuple)){
+            if(BasicBlock::isJumpTuple(last_tuple) || BasicBlock::isBranchTuple(last_tuple)){
                 string to_label = last_tuple->res->str_value;
                 BasicBlock *to_block = searchForBlockWithLabel(func_block->blocks, to_label);
                 if(to_block == NULL)
                     throw string("BasicBlockSplitter: get a NULL when search for block with label [" + to_label + "]");
 
                 Edge::TYPE edge_type;
-                if(isJumpTuple(last_tuple))
+                if(BasicBlock::isJumpTuple(last_tuple))
                     edge_type = Edge::JUMP;
                 else// isBranchTuple
                     edge_type = Edge::BRANCH;
@@ -115,36 +115,6 @@ private:
         Edge *edge = new Edge(from, to, type);
         from->out_edges.push_back(edge);
         to->in_edges.push_back(edge);
-    }
-
-    static bool isLabelTuple(Tuple *tuple){
-        return tuple->op==sem::LABEL;
-    }
-
-    static bool isFuncTuple(Tuple *tuple){
-        return tuple->op==sem::FUNC;
-    }
-
-    static bool isJumpTuple(Tuple *tuple){
-        return tuple->op==sem::JMP;
-    }
-
-    static bool isBranchTuple(Tuple *tuple){
-        switch(tuple->op){
-            case sem::BEQ:
-            case sem::BEZ:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    static bool isCallTuple(Tuple *tuple){
-        return tuple->op == sem::CALL;
-    }
-
-    static bool isReturnTuple(Tuple *tuple){
-        return tuple->op == sem::RET;
     }
 };
 

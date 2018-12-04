@@ -119,6 +119,9 @@
 		<Unit filename="src/modify/ConstVarRemover.h" />
 		<Unit filename="src/modify/Edge.h" />
 		<Unit filename="src/modify/FuncBlock.h" />
+		<Unit filename="src/modify/dag/Builder.h" />
+		<Unit filename="src/modify/dag/Node.h" />
+		<Unit filename="src/modify/dag/Worker.h" />
 		<Unit filename="src/semantics/FuncTuple.h" />
 		<Unit filename="src/semantics/NameTable.cpp" />
 		<Unit filename="src/semantics/NameTable.h" />

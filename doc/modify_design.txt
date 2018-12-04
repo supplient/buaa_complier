@@ -31,3 +31,51 @@ BasicBlockSplitter----
     <branch tuple>: BEQ, BEZ
     <call tuple>: CALL // consider this, whether we need add edge for such tuple
     <return tuple>: RET
+
+
+
+
+DAG----
+    Builder----
+        ASSIGN
+            search for left's node, if not exist, create a left's node. [this step will be omitted below.]
+            add res to left's Node's vars
+            if exists, do nothing.
+
+        NEG
+            check if there is a left's father with NEG op.
+            If not exist, create OpNode with NEG op, set node.left = left [this step will be omitted below.]
+            Then add res to node's vars
+            delegate is `res`[means when search `res`, can find this Node]
+            left: `left`
+
+        RARRAY, ADD, SUB, MUL, DIV, LESS, LESSOREQUAL, MORE, MOREOREQUAL, NOEQUAL, EQUAL
+            delegate is `res`
+            left: `left`
+            right: `right`
+
+        WARRAY
+            delegate is `res`
+            left: `left`
+            mid: `res`
+            right: `right`
+
+        PARAM
+            delegate is `STACK`
+            left: `left`
+            mid: `res`
+            right: `right`
+            special: `STACK`
+
+        INPUT
+            delegate is `IN` and `res`
+            special: `IN`
+
+        OUTPUT
+            delegate is `OUT`
+            left: `left`[optional]
+            right: `right`[optional]
+            special: `OUT`
+
+        LABEL, FUNC, CALL, RET, BEZ, BEQ, JMP
+            should not have

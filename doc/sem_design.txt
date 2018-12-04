@@ -41,8 +41,8 @@ FUNC
         move stack pointer & save used GPR.
 
 PARAM
-    right: int const. param index.
     left: string. type ident
+    right: int const. param index.
     res: any type. param value to be passed. 
     effect: when next CALL tuple, this value wiil be a passed param.
 

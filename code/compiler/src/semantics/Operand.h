@@ -21,9 +21,9 @@ public:
         STRING,
     };
 
-    Operand(NameTableEntry *entry);
+    Operand(const NameTableEntry *entry);
 
-    Operand(VarEntry *entry): type(ENTRY), entry(entry), int_const(0), char_const(0), str_value("")
+    Operand(const VarEntry *entry): type(ENTRY), entry(entry), int_const(0), char_const(0), str_value("")
     {}
     Operand(int int_value): type(INT_CONST), entry(NULL), int_const(int_value), char_const(0), str_value("")
     {}

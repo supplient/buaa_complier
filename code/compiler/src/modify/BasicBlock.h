@@ -69,6 +69,36 @@ public:
 
     vector<Edge*> in_edges;
     vector<Edge*> out_edges;
+
+    static bool isLabelTuple(Tuple *tuple){
+        return tuple->op==sem::LABEL;
+    }
+
+    static bool isFuncTuple(Tuple *tuple){
+        return tuple->op==sem::FUNC;
+    }
+
+    static bool isJumpTuple(Tuple *tuple){
+        return tuple->op==sem::JMP;
+    }
+
+    static bool isBranchTuple(Tuple *tuple){
+        switch(tuple->op){
+            case sem::BEQ:
+            case sem::BEZ:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    static bool isCallTuple(Tuple *tuple){
+        return tuple->op == sem::CALL;
+    }
+
+    static bool isReturnTuple(Tuple *tuple){
+        return tuple->op == sem::RET;
+    }
 };
 
 #endif//BASIC_BLOCK_H

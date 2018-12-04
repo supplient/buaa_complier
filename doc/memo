@@ -6,3 +6,6 @@ Semantics TODO:
 
 Backend TODO:
     Support just input tuple file, then trans to MIPS.
+    Support 
+        ADD a 2 1
+        which is using two constants as operands.
