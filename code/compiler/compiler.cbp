@@ -13,6 +13,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="../compiler" />
+					<Add directory="log" />
 					<Add directory="src" />
 					<Add directory="src/lex" />
 					<Add directory="src/grammar" />
@@ -20,7 +22,6 @@
 					<Add directory="src/semantics" />
 					<Add directory="src/modify" />
 					<Add directory="src/backend" />
-					<Add directory="log" />
 					<Add directory="src/elements/2" />
 					<Add directory="src/elements/3" />
 					<Add directory="src/elements/4" />
@@ -51,6 +52,7 @@
 			<Add option="-fexceptions" />
 			<Add directory="src/elements" />
 		</Compiler>
+		<Unit filename="config.h" />
 		<Unit filename="interface/gra_interface.cpp" />
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
@@ -61,18 +63,17 @@
 		<Unit filename="src/backend/Backend.h" />
 		<Unit filename="src/backend/Command.cpp" />
 		<Unit filename="src/backend/Command.h" />
-		<Unit filename="src/backend/ConstVarRemover.h" />
 		<Unit filename="src/backend/FuncBackend.cpp" />
 		<Unit filename="src/backend/FuncBackend.h" />
 		<Unit filename="src/backend/FuncBackend_tuple.cpp" />
 		<Unit filename="src/backend/GlobalRegPool.h" />
+		<Unit filename="src/backend/Memory.h" />
 		<Unit filename="src/backend/ParamRegPool.h" />
 		<Unit filename="src/backend/Reg.cpp" />
 		<Unit filename="src/backend/Reg.h" />
 		<Unit filename="src/backend/RegPool.h" />
 		<Unit filename="src/backend/SizeUtil.h" />
 		<Unit filename="src/backend/TempRegPool.h" />
-		<Unit filename="src/config.h" />
 		<Unit filename="src/elements/10/CompoundStatement.h" />
 		<Unit filename="src/elements/10/Statement.cpp" />
 		<Unit filename="src/elements/10/Statement.h" />

@@ -62,41 +62,43 @@ void modiTest(string filename){
 
     cout << "\n";
 
-    // split basic blocks
-    vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
+    if(MODIFY){
+        // split basic blocks
+        vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
-    // DAG modify
-    if(DAG_MODIFY){
-        for(FuncBlock *func_block: func_blocks){
-            for(BasicBlock *block: func_block->blocks){
-                dag::Worker::work(block);
+        // DAG modify
+        if(DAG_MODIFY){
+            for(FuncBlock *func_block: func_blocks){
+                for(BasicBlock *block: func_block->blocks){
+                    dag::Worker::work(block);
+                }
             }
+            // TODO free origin func_tuples after DAG modify
         }
-        // TODO free origin func_tuples after DAG modify
+
+        cout << "Start dump basic blocks." << "\n";
+        cout << "---------------------------" << "\n";
+        for(FuncBlock* func_block : func_blocks){
+            cout << func_block->toString() << "\n";
+        }
+        cout << "---------------------------" << "\n";
+        cout << "Dump done." << "\n";
+
+        // dump func_tuples from func_blocks after all modify
+        func_tuples.clear();
+        for(FuncBlock *func_block: func_blocks)
+            func_tuples.push_back(func_block->dumpFuncTuple());
+
+        mylog::tup << "\nStart dump tuples after modify." << "\n";
+        mylog::tup << "---------------------------" << "\n";
+        for(FuncTuple* func_tuple : func_tuples){
+            mylog::tup << func_tuple->toString() << "\n";
+        }
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << "Dump done." << "\n";
+
+        cout << "\n";
     }
-
-    cout << "Start dump basic blocks." << "\n";
-    cout << "---------------------------" << "\n";
-    for(FuncBlock* func_block : func_blocks){
-        cout << func_block->toString() << "\n";
-    }
-    cout << "---------------------------" << "\n";
-    cout << "Dump done." << "\n";
-
-    // dump func_tuples from func_blocks after all modify
-    func_tuples.clear();
-    for(FuncBlock *func_block: func_blocks)
-        func_tuples.push_back(func_block->dumpFuncTuple());
-
-    mylog::tup << "\nStart dump tuples after modify." << "\n";
-    mylog::tup << "---------------------------" << "\n";
-    for(FuncTuple* func_tuple : func_tuples){
-        mylog::tup << func_tuple->toString() << "\n";
-    }
-    mylog::tup << "---------------------------" << "\n";
-    mylog::tup << "Dump done." << "\n";
-
-    cout << "\n";
 
     // MIPS backend
     Backend backend;

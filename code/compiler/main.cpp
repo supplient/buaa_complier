@@ -14,7 +14,9 @@ void graInterface();
 
 bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
-bool DAG_MODIFY = true;
+
+bool MODIFY = false;
+bool DAG_MODIFY = false & MODIFY;
 
 int main()
 {
@@ -25,7 +27,7 @@ int main()
         //semTest("example.c0");
         //backTest("back_test.c0");
         //backTest("fab.c0");
-        modiTest("param_num_test.c0");
+        modiTest("example.c0");
 
         //graInterface();
 

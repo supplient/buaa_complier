@@ -5,6 +5,8 @@
 
 extern bool FUNC_PREFIX_ENTRY_NAME;
 extern bool MIPS_TUPLE_OUTPUT;
+
+extern bool MODIFY;
 extern bool DAG_MODIFY;
 
 #endif//CONFIG_H
