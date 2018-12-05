@@ -35,6 +35,9 @@ private:
     int param_count = 0;
     int gr_count = 0;
 
+    void writeToTempMem(back::REG reg, vector<InstCmd*> *inst_cmds);
+    void loadFromTempMem(back::REG reg, vector<InstCmd*> *inst_cmds);
+
     void writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds);
     void loadVar(const VarEntry *entry, back::REG res, vector<InstCmd*> *inst_cmds);
 

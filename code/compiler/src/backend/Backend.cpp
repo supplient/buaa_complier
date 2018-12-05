@@ -4,6 +4,7 @@
 #include <string>
 
 #include "NameTable.h"
+#include "Memory.h"
 
 using namespace std;
 
@@ -18,6 +19,12 @@ void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples,
 
     // declare string table
     map<string, string> str_tab;
+
+    // temp memory's space decl DataCmd
+    DataCmd *tmp_cmd = new DataCmd();
+    tmp_cmd->label = NameUtil::genGlobalVarLabel(back::TEMP_MEM_NAME);
+    tmp_cmd->op = DataCmd::WORD;
+    data_cmds->push_back(tmp_cmd);
 
     // global vars' space decl DataCmd
     FuncNameTable *gtab = tab.getFuncNameTable(sem::GLOBAL_FUNC_NAME);

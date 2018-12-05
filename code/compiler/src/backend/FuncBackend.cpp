@@ -5,6 +5,7 @@
 #include "symbol.h"
 #include "log.h"
 #include "config.h"
+#include "Memory.h"
 
 string reserve_fail = "Reserve fail.";
 
@@ -99,6 +100,27 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     for(auto pair: lvo_tab){
         mylog::debug << pair.first + ": " + to_string(pair.second);
     }
+}
+
+void FuncBackend::writeToTempMem(back::REG reg, vector<InstCmd*> *inst_cmds){
+    InstCmd *write_cmd = new InstCmd();
+    write_cmd->op = InstCmd::SW;
+    write_cmd->res_reg = reg;
+    write_cmd->left_reg = back::NO_REG;
+    write_cmd->right_type = InstCmd::LABEL_TYPE;
+    write_cmd->right_label = NameUtil::genGlobalVarLabel(back::TEMP_MEM_NAME);
+    inst_cmds->push_back(write_cmd);
+}
+
+void FuncBackend::loadFromTempMem(back::REG reg, vector<InstCmd*> *inst_cmds){
+    inst_cmds->push_back(
+        new InstCmd(
+            InstCmd::LW,
+            reg,
+            back::NO_REG,
+            NameUtil::genGlobalVarLabel(back::TEMP_MEM_NAME)
+        )
+    );
 }
 
 void FuncBackend::writeBackVar(const VarEntry *entry, back::REG reg, vector<InstCmd*> *inst_cmds){
