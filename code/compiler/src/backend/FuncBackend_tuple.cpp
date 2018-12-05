@@ -597,8 +597,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             inst_cmds->push_back(
                 new InstCmd(InstCmd::SYSCALL)
             );
-            // recover $v0
-            loadFromTempMem(back::v0, inst_cmds);
             // regist res
             res_reg = registVar(tuple->res->entry, inst_cmds);
             // save res
@@ -611,6 +609,8 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     new InstCmd(InstCmd::AND, res_reg, res_reg, 0xff)
                 );
             }
+            // recover $v0
+            loadFromTempMem(back::v0, inst_cmds);
             break;
         // INPUT
 
