@@ -12,6 +12,10 @@ void modiTest(string filename);
 
 void graInterface();
 
+bool FUNC_PREFIX_ENTRY_NAME = false;
+bool MIPS_TUPLE_OUTPUT = true;
+bool DAG_MODIFY = true;
+
 int main()
 {
     try{
