@@ -1,17 +1,13 @@
 void main(){
-    char a;
-    int b;
+    int i, j, k;
 
-    while(1){
-        scanf(a);
+    i = 1;
+    j = 2;
+    k = 3;
 
-        switch(a){
-            case 'a': printf("A");
-            case 'b': printf("B");
-            case 'c': printf("C");
-            default: printf("K");
-        }
+    i = i - 1;
+    j = j - 1;
+    k = k - 1;
 
-        printf("------");
-    }
+    printf(i+j+k);
 }

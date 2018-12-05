@@ -62,16 +62,7 @@ namespace dag{
                 // if is a OpNode with son, remove the node from son's fathers list.
                 OpNode *op_candi = dynamic_cast<OpNode*>(candi);
                 if(op_candi){
-                    if(op_candi->left)
-                        op_candi->left->removeFather(op_candi);
-                    if(op_candi->mid)
-                        op_candi->mid->removeFather(op_candi);
-                    if(op_candi->right)
-                        op_candi->right->removeFather(op_candi);
-                    if(op_candi->spe_1)
-                        op_candi->spe_1->removeFather(op_candi);
-                    if(op_candi->spe_2)
-                        op_candi->spe_2->removeFather(op_candi);
+                    op_candi->removeFromSon();
                 }
 
                 // push to node stack

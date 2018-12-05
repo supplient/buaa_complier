@@ -24,26 +24,28 @@ namespace dag{
             Node *mid;
             Node *right;
 
-            VarNode *var_node;
             OpNode *op_node;
 
+            // Build DGA graph
             for(Tuple *tuple: tuples){
 
                 switch(tuple->op){
                     case sem::ASSIGN:
                         left = getNodeAndFillTab(tuple->left);
-                        var_node = dynamic_cast<VarNode*>(left);
-                        if(!var_node)
-                            throw string("dag::Builder: When processing ASSIGN, its left ord is not mapping a VarNode.");
-                        var_node->addVar(tuple->res->entry);
-                        var_tab[tuple->res->entry] = left;
+                        createAssignNode(left, tuple->res->entry);
                         break;
 
                     case sem::NEG:
                         left = getNodeAndFillTab(tuple->left);
                         op_node = getOpNodeWithOne(tuple->op, left);
-                        op_node->addVar(tuple->res->entry);
-                        var_tab[tuple->res->entry] = op_node;
+                        if(op_node)
+                            createAssignNode(op_node, tuple->res->entry);
+                        else{
+                            op_node = new OpNode(tuple->op, left);
+                            nodes.push_back(op_node);
+                            op_node->setVar(tuple->res->entry);
+                            var_tab[tuple->res->entry] = op_node;
+                        }
                         break;
 
                     case sem::RARRAY:
@@ -56,8 +58,14 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, true);
-                        op_node->addVar(tuple->res->entry);
-                        var_tab[tuple->res->entry] = op_node;
+                        if(op_node)
+                            createAssignNode(op_node, tuple->res->entry);
+                        else{
+                            op_node = new OpNode(tuple->op, left, right);
+                            nodes.push_back(op_node);
+                            op_node->setVar(tuple->res->entry);
+                            var_tab[tuple->res->entry] = op_node;
+                        }
                         break;
 
                     case sem::ADD:
@@ -67,8 +75,14 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, false);
-                        op_node->addVar(tuple->res->entry);
-                        var_tab[tuple->res->entry] = op_node;
+                        if(op_node)
+                            createAssignNode(op_node, tuple->res->entry);
+                        else{
+                            op_node = new OpNode(tuple->op, left, right);
+                            nodes.push_back(op_node);
+                            op_node->setVar(tuple->res->entry);
+                            var_tab[tuple->res->entry] = op_node;
+                        }
                         break;
 
                     case sem::WARRAY:
@@ -76,7 +90,11 @@ namespace dag{
                         mid = getNodeAndFillTab(tuple->res);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithThree_order(tuple->op, left, mid, right);
-                        op_node->addVar(tuple->res->entry);
+                        if(op_node)
+                            throw string("dag::Builder.WARRAY: a op_node is found, while it is impossible to find a calculated node for array.");
+                        op_node = new OpNode(tuple->op, left, mid, right);
+                        nodes.push_back(op_node);
+                        op_node->setVar(tuple->res->entry);
                         var_tab[tuple->res->entry] = op_node;
                         break;
 
@@ -93,7 +111,7 @@ namespace dag{
                     case sem::INPUT:
                         op_node = new OpNode(in_node, tuple->op);
                         nodes.push_back(op_node);
-                        op_node->addVar(tuple->res->entry);
+                        op_node->setVar(tuple->res->entry);
                         in_node = op_node;
                         var_tab[tuple->res->entry] = op_node;
                         break;
@@ -119,7 +137,82 @@ namespace dag{
 
             }
 
+            // remove useless assign node(add res left 0)
+            reverse(nodes.begin(), nodes.end());
+            for(auto pair: var_tab){
+                bool back = false;
+                for(auto it = nodes.begin(); it!=nodes.end(); it++){
+                    if(back){
+                        back = false;
+                        it--;
+                    }
+
+                    Node *node = *it;
+                    if(node == pair.second)
+                        continue;
+                    // is not the final assign
+                    if(node->fathers.size() > 0)
+                        continue;
+                    // has no father
+
+                    OpNode *op_node = dynamic_cast<OpNode*>(node);
+                    if(!op_node)
+                        continue;
+                    // is OpNode
+                    if(op_node->var != pair.first)
+                        continue;
+                    // result is this var
+                    if(op_node->op != sem::ASSIGN)
+                        continue;
+                    // op is assign
+
+                    // is a useless assign node
+                    op_node->removeFromSon();
+                    it = nodes.erase(it);
+                    back = true;
+
+                    if(it == nodes.end())
+                        break;
+                }
+            }
+            reverse(nodes.begin(), nodes.end());
+
+            // Add old_ref
+            for(Node *node: nodes){
+                OpNode *op_node = dynamic_cast<OpNode*>(node);
+                if(!op_node)
+                    continue;
+
+                // check sons,
+                // if son's delegate is a var, which means we are refering its value,
+                // add self into son's ref_set
+                checkAndAddRef(op_node, op_node->left);
+                checkAndAddRef(op_node, op_node->mid);
+                checkAndAddRef(op_node, op_node->right);
+                    // ignore special
+
+                // check self,
+                // if self has any var, which means these vars' value will be updated,
+                // add each var's ref into self's old_ref as sons
+                // and clear the var's ref_set
+                op_node->addOldRef(ref_set_tab[op_node->var]);
+                ref_set_tab[op_node->var].clear();
+            }
+
             return nodes;
+        }
+
+        void checkAndAddRef(OpNode *father, Node *son){
+            if(son){
+                VarNode *var_node = dynamic_cast<VarNode*>(son);
+                if(var_node){
+                    Operand *var = var_node->dumpOperand();
+                    if(var->type == Operand::ENTRY){
+                        ref_set_tab[var->entry].insert(father);
+                    }
+                    delete var;
+                }
+            }
         }
 
     private:
@@ -128,12 +221,14 @@ namespace dag{
         map<char, Node*> char_tab;
         map<string, Node*> str_tab;
 
+        map<const VarEntry*, set<OpNode*> > ref_set_tab;
+
         Node* param_node;
         Node* stack_node;
         Node* in_node;
         Node* out_node;
 
-        vector<Node*> nodes;
+        vector<Node*> nodes; // Note: we must ensure node is inserted into nodes in its creating order to maintain old_ref
 
         void reset(){
             // TODO free memory
@@ -141,16 +236,32 @@ namespace dag{
             int_tab.clear();
             char_tab.clear();
             str_tab.clear();
+
             param_node = new SpecialNode("param");
             stack_node = new SpecialNode("stack");
             in_node = new SpecialNode("in");
             out_node = new SpecialNode("out");
+
             nodes.clear();
         }
 
-        OpNode* getOpNodeWithOne(sem::OP op, Node *left){
-            OpNode *res = NULL;
+        OpNode* createAssignNode(Node *origin_node, const VarEntry *target_var){
+            OpNode *op_node = getOpNodeWithOne(sem::ASSIGN, origin_node);
+            Node *old_node = origin_node;
+            while(op_node){
+                old_node = op_node;
+                op_node = getOpNodeWithOne(sem::ASSIGN, op_node);
+            }
 
+            op_node = new OpNode(sem::ASSIGN, old_node);
+            nodes.push_back(op_node);
+            op_node->setVar(target_var);
+            var_tab[target_var] = op_node;
+
+            return op_node;
+        }
+
+        OpNode* getOpNodeWithOne(sem::OP op, Node *left){
             for(OpNode *node: left->fathers){
                 if(node->op != op)
                     continue;
@@ -161,15 +272,10 @@ namespace dag{
                 return node;
             }
 
-            res = new OpNode(op, left);
-            nodes.push_back(res);
-
-            return res;
+            return NULL;
         }
 
         OpNode* getOpNodeWithTwo(sem::OP op, Node *left, Node *right, bool order){
-            OpNode *res = NULL;
-
             for(OpNode *node: left->fathers){
                 if(node->op != op)
                     continue;
@@ -196,15 +302,10 @@ namespace dag{
                 return node;
             }
 
-            res = new OpNode(op, left, right);
-            nodes.push_back(res);
-
-            return res;
+            return NULL;
         }
 
         OpNode* getOpNodeWithThree_order(sem::OP op, Node *left, Node *mid, Node *right){
-            OpNode *res = NULL;
-
             for(OpNode *node: left->fathers){
                 if(node->op != op)
                     continue;
@@ -217,10 +318,7 @@ namespace dag{
                 return node;
             }
 
-            res = new OpNode(op, left, mid, right);
-            nodes.push_back(res);
-
-            return res;
+            return NULL;
         }
 
         Node* getNodeAndFillTab(Operand *ord){

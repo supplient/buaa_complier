@@ -13,11 +13,16 @@ namespace dag{
     {
     public:
         set<OpNode*> fathers;
+        unsigned int index;
+
+        Node(){
+            static unsigned int node_count = 0;
+            index = node_count++;
+        }
 
         void addFather(OpNode *father){
             fathers.insert(father);
         }
-        // TODO why no father
 
         bool removeFather(OpNode *father){
             auto it = fathers.find(father);
@@ -66,60 +71,28 @@ namespace dag{
     class VarNode: public Node
     {
     public:
-        set<const VarEntry*> vars;
+        const VarEntry* var;
 
         VarNode(){}
 
         VarNode(const VarEntry *var){
-            vars.insert(var);
+            setVar(var);
         }
 
-        void addVar(const VarEntry *var){
+        void setVar(const VarEntry *var){
             if(!var)
-                throw new string("dag::Node.addVar: var is NULL");
-            vars.insert(var);
-        }
-
-        virtual Operand* buildDelegate(){
-            if(vars.size() < 1)
-                throw string("dag::VarNode: vars is empty!");
-            // TODO select a var
-            return new Operand(*(vars.begin()));
+                throw new string("dag::Node.setVar: var is NULL");
+            this->var = var;
         }
 
         virtual Operand* dumpOperand() override{
-            return buildDelegate();
-        }
-
-        virtual Tuples dumpTuple(){
-            Tuples tuples;
-
-            for(const VarEntry *var: vars){
-                Operand *left = buildDelegate();
-                if(left->type == Operand::ENTRY && left->entry == var){
-                    delete left;
-                    continue;
-                }
-
-                if(var->dim > 0)
-                    throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
-                if(left->type == Operand::ENTRY){
-                    if(left->entry->dim > 0)
-                        throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
-                }
-
-                Tuple *tuple = new Tuple();
-                tuple->op = sem::ASSIGN;
-                tuple->res = new Operand(var);
-                tuple->left = left;
-                tuples.push_back(tuple);
-            }
-
-            return tuples;
+            if(!var)
+                throw string("dag::VarNode: var is NULL!");
+            return new Operand(var);
         }
     };
 
-    class ValueNode: public VarNode
+    class ValueNode: public Node
     {
     public:
         sym::SYMBOL type;
@@ -129,7 +102,7 @@ namespace dag{
         ValueNode(int int_value): type(sym::INT), int_value(int_value){}
         ValueNode(char char_value): type(sym::CHAR), char_value(char_value){}
 
-        virtual Operand* buildDelegate() override{
+        virtual Operand* dumpOperand() override{
             switch(type){
                 case sym::INT: return new Operand(int_value);
                 case sym::CHAR: return new Operand(char_value);
@@ -149,27 +122,53 @@ namespace dag{
         Node *spe_1 = NULL;
         Node *spe_2 = NULL;
 
+        set<OpNode*> old_ref_set;
+
         OpNode(){}
         OpNode(sem::OP op, Node *left): op(op), left(left){
-            addFather();
+            addFatherToSon();
         }
         OpNode(sem::OP op, Node *left, Node *right): op(op), left(left), right(right){
-            addFather();
+            addFatherToSon();
         }
         OpNode(sem::OP op, Node *left, Node *mid, Node *right): op(op), left(left), mid(mid), right(right){
-            addFather();
+            addFatherToSon();
         }
 
         OpNode(Node *spe_1, sem::OP op): op(op), spe_1(spe_1){
-            addFather();
+            addFatherToSon();
         }
 
         OpNode(Node *spe_1, Node *spe_2, sem::OP op, Node *left, Node *right): op(op), left(left), right(right), spe_1(spe_1), spe_2(spe_2){
-            addFather();
+            addFatherToSon();
         }
 
         OpNode(Node *spe_1, Node *spe_2, sem::OP op, Node *left, Node *mid, Node *right): op(op), left(left), mid(mid), right(right), spe_1(spe_1), spe_2(spe_2){
-            addFather();
+            addFatherToSon();
+        }
+
+        void addOldRef(set<OpNode*> old_refs){
+            for(OpNode *node: old_refs){
+                if(node && node != this){
+                    old_ref_set.insert(node);
+                    node->addFather(this);
+                }
+            }
+        }
+
+        void removeFromSon(){
+            if(left)
+                left->removeFather(this);
+            if(mid)
+                mid->removeFather(this);
+            if(right)
+                right->removeFather(this);
+            if(spe_1)
+                spe_1->removeFather(this);
+            if(spe_2)
+                spe_2->removeFather(this);
+            for(OpNode *son: old_ref_set)
+                son->removeFather(this);
         }
 
         virtual Tuples dumpTuple(){
@@ -179,22 +178,27 @@ namespace dag{
             tuple->op = op;
             switch(op){
                 case sem::NEG:
-                    tuple->res = buildDelegate();
+                    tuple->res = this->dumpOperand();
+                    tuple->left = left->dumpOperand();
+                    break;
+
+                case sem::ASSIGN:
+                    tuple->res = this->dumpOperand();
                     tuple->left = left->dumpOperand();
                     break;
 
                 case sem::RARRAY:
+                case sem::ADD:
                 case sem::SUB:
                 case sem::DIV:
                 case sem::LESS:
                 case sem::LESSOREQUAL:
                 case sem::MORE:
                 case sem::MOREOREQUAL:
-                case sem::ADD:
                 case sem::MUL:
                 case sem::NOTEQUAL:
                 case sem::EQUAL:
-                    tuple->res = buildDelegate();
+                    tuple->res = this->dumpOperand();
                     tuple->left = left->dumpOperand();
                     tuple->right = right->dumpOperand();
                     break;
@@ -207,7 +211,7 @@ namespace dag{
                     break;
 
                 case sem::INPUT:
-                    tuple->res = buildDelegate();
+                    tuple->res = this->dumpOperand();
                     break;
 
                 case sem::OUTPUT:
@@ -230,7 +234,7 @@ namespace dag{
         }
 
     private:
-        void addFather(){
+        void addFatherToSon(){
             if(left)
                 left->addFather(this);
             if(mid)

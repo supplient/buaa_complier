@@ -81,3 +81,30 @@ DAG----
 
         LABEL, FUNC, CALL, RET, BEZ, BEQ, JMP
             should not have
+
+    Old value bug----
+        For tuples like:
+            b = a + 1
+            a = a + 2
+            c = a + 3
+        The origin DAG algorithm may give a wrong answer.
+
+        Concept:
+            * ref_set
+                each variable maintain one
+            * old_ref
+                a kind of sons
+                each OpNode maintain a list of this
+
+        Algorithm(Based on the origin DGA):
+            After a DGA graph is built, follow the OpNode's creating order, for each OpNode:
+                if left is a VarNode, and its delegate is a var
+                    add self into the var's ref_set.
+                right,mid are also[concern about specials]
+
+                if the OpNode's delegate is a var,
+                    add nodes in the var's ref_set into this node's old_value_chain list.
+                    clear the var's ref_set.
+                    note: not allow self loop
+
+

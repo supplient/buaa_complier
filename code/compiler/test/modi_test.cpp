@@ -65,15 +65,15 @@ void modiTest(string filename){
     // split basic blocks
     vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
-#if DAG_MODIFY
     // DAG modify
-    for(FuncBlock *func_block: func_blocks){
-        for(BasicBlock *block: func_block->blocks){
-            dag::Worker::work(block);
+    if(DAG_MODIFY){
+        for(FuncBlock *func_block: func_blocks){
+            for(BasicBlock *block: func_block->blocks){
+                dag::Worker::work(block);
+            }
         }
+        // TODO free origin func_tuples after DAG modify
     }
-    // TODO free origin func_tuples after DAG modify
-#endif//DAG_MODIFY
 
     cout << "Start dump basic blocks." << "\n";
     cout << "---------------------------" << "\n";
