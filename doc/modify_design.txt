@@ -39,13 +39,14 @@ DAG----
     Builder----
         ASSIGN
             search for left's node, if not exist, create a left's node. [this step will be omitted below.]
-            add res to left's Node's vars
-            if exists, do nothing.
+            search for left's assign node, if exists, continue search the assign node's assign node.
+                if the assign node's var == the var to be assigned, update var_tab and do nothing.
+            If reach the assign list's top, add a new assign node and update var_tab.
 
         NEG
             check if there is a left's father with NEG op.
-            If not exist, create OpNode with NEG op, set node.left = left [this step will be omitted below.]
-            Then add res to node's vars
+            If not exist, create OpNode with NEG op, set node.left = left 
+            If exists, create a ASSIGN node based on the existed NEG node. [this step will be omitted below.]
             delegate is `res`[means when search `res`, can find this Node]
             left: `left`
 
@@ -89,6 +90,7 @@ DAG----
             c = a + 3
         The origin DAG algorithm may give a wrong answer.
 
+        Solution----
         Concept:
             * ref_set
                 each variable maintain one
