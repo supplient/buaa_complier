@@ -54,6 +54,7 @@
 		</Compiler>
 		<Unit filename="config.h" />
 		<Unit filename="interface/gra_interface.cpp" />
+		<Unit filename="interface/modi_interface.cpp" />
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
 		<Unit filename="main.cpp" />
