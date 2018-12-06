@@ -24,11 +24,11 @@ int main()
     try{
         //lexTest("lex_test.txt");
         //graTest("sem_test.c0");
-        //graTest("example.c0");
-        //semTest("example.c0");
+        //graTest("sample/example.c0");
+        //semTest("sample/example.c0");
         //backTest("back_test.c0");
-        //backTest("fab.c0");
-        //modiTest("param_num_test.c0");
+        //backTest("sample/fab.c0");
+        //modiTest("sample/param_num_test.c0");
 
         //graInterface();
         modiInterface();
