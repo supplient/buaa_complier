@@ -110,10 +110,10 @@ namespace dag{
                         break;
 
                     case sem::INPUT:
-                        op_node = new OpNode(in_node, tuple->op);
+                        op_node = new OpNode(stream_node, tuple->op);
                         nodes.push_back(op_node);
                         op_node->setVar(tuple->res->entry);
-                        in_node = op_node;
+                        stream_node = op_node;
                         var_tab[tuple->res->entry] = op_node;
                         break;
 
@@ -126,9 +126,9 @@ namespace dag{
                         if(tuple->right){
                             right = getNodeAndFillTab(tuple->right);
                         }
-                        op_node = new OpNode(out_node, param_node, sem::OUTPUT, left, right);
+                        op_node = new OpNode(stream_node, param_node, sem::OUTPUT, left, right);
                         nodes.push_back(op_node);
-                        out_node = op_node;
+                        stream_node = op_node;
                         param_node = op_node;
                         break;
 
@@ -240,8 +240,7 @@ namespace dag{
 
         Node* param_node;
         Node* stack_node;
-        Node* in_node;
-        Node* out_node;
+        Node* stream_node;
 
         vector<Node*> nodes; // Note: we must ensure node is inserted into nodes in its creating order to maintain old_ref
 
@@ -254,8 +253,7 @@ namespace dag{
 
             param_node = new SpecialNode("param");
             stack_node = new SpecialNode("stack");
-            in_node = new SpecialNode("in");
-            out_node = new SpecialNode("out");
+            stream_node = new SpecialNode("stream");
 
             nodes.clear();
         }
