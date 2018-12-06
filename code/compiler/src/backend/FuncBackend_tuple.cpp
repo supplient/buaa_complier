@@ -714,10 +714,13 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     new InstCmd(InstCmd::ADD, left_reg, back::zero, tuple->left->char_const)
                 );
             }
+            // save all temp regs' value, because we may jump to the above code
+            saveTempReg(inst_cmds);
             // beqz
             inst_cmds->push_back(
                 new InstCmd(InstCmd::BEQZ, left_reg, tuple->res->str_value)
             );
+
             break;
         // BEZ
 
@@ -760,6 +763,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     new InstCmd(InstCmd::ADD, right_reg, back::zero, tuple->right->char_const)
                 );
             }
+            saveTempReg(inst_cmds);
             // beq
             inst_cmds->push_back(
                 new InstCmd(InstCmd::BEQ, left_reg, right_reg, tuple->res->str_value)
@@ -768,6 +772,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
         // BEQ
 
         case JMP:
+            saveTempReg(inst_cmds);
             inst_cmds->push_back(
                 new InstCmd(InstCmd::J, tuple->res->str_value)
             );

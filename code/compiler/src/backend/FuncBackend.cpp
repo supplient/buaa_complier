@@ -246,6 +246,11 @@ void FuncBackend::restoreTempReg(vector<InstCmd*> *inst_cmds){
     }
 }
 
+void FuncBackend::saveAndResetTempReg(vector<InstCmd*> *inst_cmds){
+    saveTempReg(inst_cmds);
+    reg_pool.resetTempReg();
+}
+
 void FuncBackend::trans(map<string, string> &str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
 

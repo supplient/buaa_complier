@@ -29,9 +29,10 @@ int main()
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
         //modiTest("sample/param_num_test.c0");
+        modiTest("sample/loop_test.c0");
 
         //graInterface();
-        modiInterface();
+        //modiInterface();
 
         //cout << "Hello world!" << endl;
     }
