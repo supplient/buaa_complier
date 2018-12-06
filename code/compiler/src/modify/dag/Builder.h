@@ -249,6 +249,10 @@ namespace dag{
             OpNode *op_node = getOpNodeWithOne(sem::ASSIGN, origin_node);
             Node *old_node = origin_node;
             while(op_node){
+                if(op_node->var == target_var){
+                    var_tab[target_var] = op_node;
+                    return NULL;
+                }
                 old_node = op_node;
                 op_node = getOpNodeWithOne(sem::ASSIGN, op_node);
             }
