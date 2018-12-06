@@ -70,14 +70,14 @@ DAG----
             spe_2: `PARAM`
 
         INPUT
-            delegate is `IN` and `res`
-            spe_1: `IN`
+            delegate is `STREAM` and `res`
+            spe_1: `STREAM`
 
         OUTPUT
-            delegate is `OUT` and `PARAM`
+            delegate is `STREAM` and `PARAM`
             left: `left`[optional]
             right: `right`[optional]
-            spe_1: `OUT`
+            spe_1: `STREAM`
             spe_2: `PARAM`
 
         LABEL, FUNC, CALL, RET, BEZ, BEQ, JMP
@@ -108,5 +108,15 @@ DAG----
                     add nodes in the var's ref_set into this node's old_value_chain list.
                     clear the var's ref_set.
                     note: not allow self loop
+
+    Multiple assgin problem----
+        For tuples like:
+            b = a + 1;
+            a = 3;
+            a = 4 + 2;
+            c = a;
+
+        Solution----
+            Remove useless OpNodes.
 
 
