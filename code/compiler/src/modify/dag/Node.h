@@ -3,6 +3,7 @@
 
 #include "Tuple.h"
 #include "symbol.h"
+#include "NameTableEntry.h"
 
 #include <set>
 
@@ -41,6 +42,8 @@ namespace dag{
             Tuples res; // return empty
             return res;
         }
+
+        virtual string toString();
     };
 
     class StringNode: public Node
@@ -54,6 +57,12 @@ namespace dag{
             Operand *res = new Operand(str_value);
             return res;
         }
+
+        virtual string toString(){
+            string s = Node::toString();
+            s += "\tString: " + str_value + "\n";
+            return s;
+        }
     };
 
     class SpecialNode: public Node
@@ -66,12 +75,18 @@ namespace dag{
         virtual Operand* dumpOperand() override{
             throw string("dga::SpecialNode[" + name + "]: trying to dumpOperand, which is not allowed for SpecialNode.");
         }
+
+        virtual string toString(){
+            string s = Node::toString();
+            s += "\t Special name: " + name + "\n";
+            return s;
+        }
     };
 
     class VarNode: public Node
     {
     public:
-        const VarEntry* var;
+        const VarEntry* var = NULL;
 
         VarNode(){}
 
@@ -89,6 +104,13 @@ namespace dag{
             if(!var)
                 throw string("dag::VarNode: var is NULL!");
             return new Operand(var);
+        }
+
+        virtual string toString(){
+            string s = Node::toString();
+            if(var)
+                s += "\tVar: " + NameUtil::genEntryName(var) + "\n";
+            return s;
         }
     };
 
@@ -108,6 +130,15 @@ namespace dag{
                 case sym::CHAR: return new Operand(char_value);
                 default: throw string("dag::ValueNode.buildDelegate: Invalid value type: " + to_string(type));
             }
+        }
+
+        virtual string toString(){
+            string s = Node::toString();
+            if(type == sym::INT)
+                s += "\tInt value: " + to_string(int_value);
+            else
+                s += "\tChar value: " + string(1, char_value);
+            return s + "\n";
         }
     };
 
@@ -231,6 +262,28 @@ namespace dag{
             tuples.insert(tuples.end(), assign_tuples.begin(), assign_tuples.end());
 
             return tuples;
+        }
+
+        virtual string toString(){
+            string s = VarNode::toString();
+            s += "\tOP: " + string(sem::TUPLE_OP_NAME[op]) + "\n";
+            if(left)
+                s += "\tleft: " + to_string(left->index) + "\n";
+            if(mid)
+                s += "\tmid: " + to_string(mid->index) + "\n";
+            if(right)
+                s += "\tright: " + to_string(right->index) + "\n";
+            if(spe_1)
+                s += "\tspe_1: " + to_string(spe_1->index) + "\n";
+            if(spe_2)
+                s += "\tspe_2: " + to_string(spe_2->index) + "\n";
+            if(old_ref_set.size() > 0){
+                s += "\told_ref:";
+                for(OpNode* son: old_ref_set)
+                    s += " " + to_string(son->index);
+                s += "\n";
+            }
+            return s;
         }
 
     private:

@@ -2,6 +2,7 @@
 #define DAG_BUILDER_H
 
 #include "Node.h"
+#include "log.h"
 
 #include <map>
 
@@ -137,7 +138,11 @@ namespace dag{
 
             }
 
-            // remove useless assign node(add res left 0)
+            // DEBUG
+            mylog::debug << "Built DAG graph-----";
+            for(Node *node: nodes)
+                mylog::debug << node->toString();
+
             reverse(nodes.begin(), nodes.end());
             for(auto pair: var_tab){
                 bool back = false;
@@ -177,6 +182,11 @@ namespace dag{
             }
             reverse(nodes.begin(), nodes.end());
 
+            // DEBUG
+            mylog::debug << "DAG graph after remove useless OpNodes-----";
+            for(Node *node: nodes)
+                mylog::debug << node->toString();
+
             // Add old_ref
             for(Node *node: nodes){
                 OpNode *op_node = dynamic_cast<OpNode*>(node);
@@ -198,6 +208,11 @@ namespace dag{
                 op_node->addOldRef(ref_set_tab[op_node->var]);
                 ref_set_tab[op_node->var].clear();
             }
+
+            // DEBUG
+            mylog::debug << "DAG graph after add old_ref-----";
+            for(Node *node: nodes)
+                mylog::debug << node->toString();
 
             return nodes;
         }
