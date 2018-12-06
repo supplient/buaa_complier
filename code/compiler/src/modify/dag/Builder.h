@@ -143,7 +143,11 @@ namespace dag{
             for(Node *node: nodes)
                 mylog::debug << node->toString();
 
+            // remove useless OpNode(Assigned while never used)
             reverse(nodes.begin(), nodes.end());
+            bool no_change;
+            do{
+                no_change = true;
             for(auto pair: var_tab){
                 bool back = false;
                 for(auto it = nodes.begin(); it!=nodes.end(); it++){
@@ -167,11 +171,9 @@ namespace dag{
                     if(op_node->var != pair.first)
                         continue;
                     // result is this var
-                    if(op_node->op != sem::ASSIGN)
-                        continue;
-                    // op is assign
 
-                    // is a useless assign node
+                        // is a useless OpNode
+                        no_change = false;
                     op_node->removeFromSon();
                     it = nodes.erase(it);
                     back = true;
@@ -180,6 +182,7 @@ namespace dag{
                         break;
                 }
             }
+            }while(!no_change);
             reverse(nodes.begin(), nodes.end());
 
             // DEBUG
