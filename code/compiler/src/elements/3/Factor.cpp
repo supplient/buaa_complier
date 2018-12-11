@@ -29,7 +29,7 @@ Tuples VarFactor::dump(NameTable &tab, const string &func_name, TempVarPool &tvp
 
         // ask for a temp var to save read result
         // & fill ret_ord
-        VarEntry *tv_entry = tvp.getNewIntTempVar();
+        VarEntry *tv_entry = tvp.getNewTempVar(entry->type);
         *ret_ord = new Operand(tv_entry);
 
         // construct load tuple
