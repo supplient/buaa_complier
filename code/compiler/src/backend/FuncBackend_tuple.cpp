@@ -616,6 +616,13 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
         // INPUT
 
         case OUTPUT:
+            if(func_tuple->func_entry->param_list.size() > 0){
+                // if there is a param, which means $a0 is being used
+                // save $a0
+                writeBackVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
+            }
+            // save $v0
+            writeToTempMem(back::v0, inst_cmds);
             if(tuple->left){
                 // output string
                 // search/create string label
@@ -629,16 +636,10 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                     );
                 }
                 // set $a0
-                if(func_tuple->func_entry->param_list.size() > 0){
-                    // if there is a param, which means $a0 is being used
-                    // save $a0
-                    writeBackVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
-                }
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::LA, back::a0, str_label)
                 );
-                // save & set $v0
-                writeToTempMem(back::v0, inst_cmds);
+                // set $v0
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, back::v0, back::zero, 4)
                 );
@@ -646,12 +647,6 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::SYSCALL)
                 );
-                // recover $v0
-                loadFromTempMem(back::v0, inst_cmds);
-                // if there is a param, recover $a0
-                if(func_tuple->func_entry->param_list.size() > 0){
-                    loadVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
-                }
             }
             if(tuple->right){
                 // output expression
@@ -680,8 +675,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                         new InstCmd(InstCmd::ADD, back::a0, back::zero, tuple->right->char_const)
                     );
                 }
-                // save & set $v0
-                writeToTempMem(back::v0, inst_cmds);
+                // set $v0
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::ADD, back::v0, back::zero, sys_num)
                 );
@@ -689,8 +683,25 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
                 inst_cmds->push_back(
                     new InstCmd(InstCmd::SYSCALL)
                 );
-                // recover $v0
-                loadFromTempMem(back::v0, inst_cmds);
+            }
+            // output line change
+                // set $a0
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, back::a0, back::zero, 10)
+                );
+                // set $v0
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::ADD, back::v0, back::zero, 11)
+                );
+                // syscall
+                inst_cmds->push_back(
+                    new InstCmd(InstCmd::SYSCALL)
+                );
+            // recover $v0
+            loadFromTempMem(back::v0, inst_cmds);
+            // if there is a param, recover $a0
+            if(func_tuple->func_entry->param_list.size() > 0){
+                loadVar(reg_pool.lookUpEntry(back::a0), back::a0, inst_cmds);
             }
             break;
         // OUTPUT
