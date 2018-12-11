@@ -1,0 +1,10 @@
+void main(){
+    switch(1){
+        case 1:
+            printf("1");
+        case 1:
+            printf("2");
+        case 2:
+            printf("3");
+    }
+}

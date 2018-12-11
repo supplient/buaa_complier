@@ -381,8 +381,23 @@ SwitchCaseList* GrammarAnalyzer::constructSwitchCaseList(const SymSet &delimiter
 
     while(*lex == sym::CASE){
         SwitchCase *switch_case = constructSwitchCase(delimiter);
-        if(switch_case != NULL)
+        if(switch_case != NULL){
+            // check multiple const error
+            for(SwitchCase *exist_case: case_list->case_list){
+                if(*switch_case == *exist_case){
+                    string const_str;
+                    if(switch_case->is_int_const)
+                        const_str = to_string(switch_case->int_value->value);
+                    else
+                        const_str = string(1, switch_case->char_value);
+                    errorRepo("SwitchCaseList: existed constant for switch case: " + const_str);
+                    delete case_list;
+                    return NULL;
+                }
+            }
+
             case_list->case_list.push_back(switch_case);
+        }
     }
 
     if(case_list->case_list.size() < 1){

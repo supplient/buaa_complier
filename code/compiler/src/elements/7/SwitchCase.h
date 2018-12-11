@@ -15,6 +15,8 @@ public:
     Statement *state;
 
     virtual Tuples dump(NameTable &tab, const string &func_name, TempVarPool &tvp, Operand **ret_ord);
+
+    bool operator==(const SwitchCase &b);
 };
 
 #endif// SWITCH_CASE_H

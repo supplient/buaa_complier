@@ -23,3 +23,14 @@ Tuples SwitchCase::dump(NameTable &tab, const string &func_name, TempVarPool &tv
 
     return state->dump(tab, func_name);
 }
+
+bool SwitchCase::operator==(const SwitchCase &b){
+    // Note: Only check whether case constant equals
+    if(is_int_const != b.is_int_const)
+        return false;
+
+    if(is_int_const)
+        return int_value->value == b.int_value->value;
+    else
+        return char_value == b.char_value;
+}

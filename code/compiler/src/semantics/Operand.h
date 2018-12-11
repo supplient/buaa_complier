@@ -34,6 +34,23 @@ public:
 
     string toString();
 
+    bool equal(Operand *b){
+        // Note: This function is never tested.
+        if(this->type != b->type)
+            return false;
+        
+        if(type == ENTRY)
+            return entry == b->entry;
+        else if(type == INT_CONST)
+            return int_const == b->int_const;
+        else if(type == CHAR_CONST)
+            return char_const == b->char_const;
+        else if(type == STRING)
+            return str_value == b->str_value;
+        else
+            throw string("Operand.equal: Invalid type " + to_string(type));
+    }
+
     const TYPE type;
 
     const VarEntry *entry;
