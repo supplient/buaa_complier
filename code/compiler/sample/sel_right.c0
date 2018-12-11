@@ -1,0 +1,22 @@
+int i;
+
+int func(){
+    i = 2;
+
+    return(i);
+}
+
+void main()
+{
+    int a[3];
+    a[0] = 0;
+    a[1] = 0;
+    a[2] = 0;
+
+    i = 1;
+    a[func()] = i+3;
+
+    printf(a[0]);
+    printf(a[1]);
+    printf(a[2]);
+}

@@ -254,11 +254,8 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
         exit(-1);
     }
 
-    // evaluate right value
-    Operand *right_ord = NULL;
-    Tuples sub_tuples = exp->dump(tab, func_name, tvp, &right_ord);
-    tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
-
+    // if is array, evaluate selector
+    Operand *sel_ord = NULL;
     if(is_array){
         // check dim
         if(left_var->dim == 0){
@@ -267,10 +264,16 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
         }
 
         // evaluate selector
-        Operand *sel_ord = NULL;
         Tuples sel_tuples = select->dump(tab, func_name, tvp, &sel_ord);
         tuples.insert(tuples.end(), sel_tuples.begin(), sel_tuples.end());
+    }
 
+    // evaluate right value
+    Operand *right_ord = NULL;
+    Tuples sub_tuples = exp->dump(tab, func_name, tvp, &right_ord);
+    tuples.insert(tuples.end(), sub_tuples.begin(), sub_tuples.end());
+
+    if(is_array){
         // assign
         Tuple *assign_tuple = new Tuple();
         assign_tuple->op = sem::WARRAY;
@@ -280,7 +283,6 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
         tuples.push_back(assign_tuple);
     }
     else{
-
         // check whether is an array name
         if(left_var->dim != 0){
             errorRepo("Cannot assign to an array!");
