@@ -263,9 +263,22 @@ Tuples AssignStatement::dump_int(NameTable &tab, const string &func_name, TempVa
             return tuples;
         }
 
+        // ask for a temp var to save selector
+        VarEntry *tv_sel_entry = tvp.getNewIntTempVar();
+        sel_ord = new Operand(tv_sel_entry);
+
         // evaluate selector
-        Tuples sel_tuples = select->dump(tab, func_name, tvp, &sel_ord);
+        Operand *temp_sel_ord = NULL;
+        Tuples sel_tuples = select->dump(tab, func_name, tvp, &temp_sel_ord);
         tuples.insert(tuples.end(), sel_tuples.begin(), sel_tuples.end());
+
+        // assign sel to the temp var to avoid being overrided when calculating right_value
+        // e.g. a[fb()] = fa();
+        Tuple *assign_tuple = new Tuple();
+        assign_tuple->op = sem::ASSIGN;
+        assign_tuple->res = new Operand(tv_sel_entry);
+        assign_tuple->left = temp_sel_ord;
+        tuples.push_back(assign_tuple);
     }
 
     // evaluate right value

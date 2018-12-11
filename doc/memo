@@ -1,12 +1,12 @@
 Grammar TODO:
-    Improve error detecting.
+    * Improve error detecting.
 
 Semantics TODO:
-    Modify ADD logic, reduce temp var's use.
+    * Modify ADD logic, reduce temp var's use.
 
 Backend TODO:
-    Support just input tuple file, then trans to MIPS.
-    Support 
+    * Support just input tuple file, then trans to MIPS.
+    * Support 
         ADD a 2 1
         which is using two constants as operands.
-    Concern about $v0's use
+    * Concern about $v0's use
