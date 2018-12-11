@@ -1,13 +1,83 @@
+const int const_1=1,const_2=2;
+int judge;
+
+void test_if()
+{
+    int a,flag;
+    char c;
+    a = 0;
+    flag=0;
+    judge = judge + 1;
+    if(const_1==1){
+
+    }
+
+    if(const_1==1)
+        ;
+
+    if (const_1==1){
+        ;
+    }
+
+    a=0;
+    while(a<=1){
+        if(const_1==1){
+            if(a==0){
+                judge = judge + 1;
+                flag=1;
+            }
+            if(flag==0){
+                judge = judge + 1;
+            }
+        }
+        flag=0;
+        a=a+1;
+    }
+
+    a=0;
+    if (const_1==1){
+        while(a<2){
+            judge = judge + 1;
+            a = a + 1;
+        }
+
+    }
+
+    a=0;
+    while(a<=1){
+        if(const_1==1){
+            switch(a){
+                 case 0:{
+                     judge = judge + 1;
+                 }
+                 default:
+                     judge = judge + 1;
+            }
+        }
+        a = a + 1;
+    }
+
+
+    flag=0;
+    c='a';
+    if(c=='a'){
+            judge = judge + 1;
+    }
+
+    if(c=='b'){
+            judge = judge + 1;
+        flag=1;
+    }
+    if(flag==0){
+        judge = judge + 1;
+    }
+
+
+    return ;
+}
+
 void main(){
-    int i, j, k;
-
-    i = 1;
-    j = 2;
-    k = 3;
-
-    i = i - 1;
-    j = j - 1;
-    k = k - 1;
-
-    printf(i+j+k);
+    judge = 100;
+    test_if();
+    printf(judge);
 }
