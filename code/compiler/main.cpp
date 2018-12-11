@@ -17,7 +17,7 @@ bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
 
 bool MODIFY = false;
-bool DAG_MODIFY = false & MODIFY;
+bool DAG_MODIFY = true & MODIFY;
 
 int main()
 {
@@ -29,10 +29,10 @@ int main()
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
         //modiTest("sample/param_num_test.c0");
-        modiTest("sample/loop_test.c0");
+        //modiTest("sample/param_num_test.c0");
 
         //graInterface();
-        //modiInterface();
+        modiInterface();
 
         //cout << "Hello world!" << endl;
     }

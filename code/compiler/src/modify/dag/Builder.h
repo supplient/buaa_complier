@@ -148,40 +148,40 @@ namespace dag{
             bool no_change;
             do{
                 no_change = true;
-            for(auto pair: var_tab){
-                bool back = false;
-                for(auto it = nodes.begin(); it!=nodes.end(); it++){
-                    if(back){
-                        back = false;
-                        it--;
-                    }
+                for(auto pair: var_tab){
+                    bool back = false;
+                    for(auto it = nodes.begin(); it!=nodes.end(); it++){
+                        if(back){
+                            back = false;
+                            it--;
+                        }
 
-                    Node *node = *it;
-                    if(node == pair.second)
-                        continue;
-                    // is not the final assign
-                    if(node->fathers.size() > 0)
-                        continue;
-                    // has no father
+                        Node *node = *it;
+                        if(node == pair.second)
+                            continue;
+                        // is not the final assign
+                        if(node->fathers.size() > 0)
+                            continue;
+                        // has no father
 
-                    OpNode *op_node = dynamic_cast<OpNode*>(node);
-                    if(!op_node)
-                        continue;
-                    // is OpNode
-                    if(op_node->var != pair.first)
-                        continue;
-                    // result is this var
+                        OpNode *op_node = dynamic_cast<OpNode*>(node);
+                        if(!op_node)
+                            continue;
+                        // is OpNode
+                        if(op_node->var != pair.first)
+                            continue;
+                        // result is this var
 
                         // is a useless OpNode
                         no_change = false;
-                    op_node->removeFromSon();
-                    it = nodes.erase(it);
-                    back = true;
+                        op_node->removeFromSon();
+                        it = nodes.erase(it);
+                        back = true;
 
-                    if(it == nodes.end())
-                        break;
+                        if(it == nodes.end())
+                            break;
+                    }
                 }
-            }
             }while(!no_change);
             reverse(nodes.begin(), nodes.end());
 

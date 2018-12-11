@@ -122,6 +122,7 @@
 		<Unit filename="src/modify/Edge.h" />
 		<Unit filename="src/modify/FuncBlock.h" />
 		<Unit filename="src/modify/dag/Builder.h" />
+		<Unit filename="src/modify/dag/Node.cpp" />
 		<Unit filename="src/modify/dag/Node.h" />
 		<Unit filename="src/modify/dag/Worker.h" />
 		<Unit filename="src/semantics/FuncTuple.h" />

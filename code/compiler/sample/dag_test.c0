@@ -4,11 +4,9 @@ void main(){
     a = 2;
     b = 1;
     
-    c = a + b;
-    a = a + b;
-    c = a + b;
-
-    printf("a=", a);
-    printf("b=", b);
-    printf("c=", c);
+    c = a;
+    a = b + 3;
+    a = 10;
+    c = a;
+    
 }
