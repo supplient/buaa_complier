@@ -10,7 +10,7 @@ namespace dag{
 
     class Worker{
     public:
-        static void work(BasicBlock *block){
+        static void work(NameTable &tab, BasicBlock *block){
             Tuples head_tuples;
             Tuples mid_tuples;
             Tuple *end_tuple;
@@ -42,7 +42,20 @@ namespace dag{
 
             // build DAG graph
             Builder builder;
-            vector<Node*> nodes = builder.work(mid_tuples);
+            vector<Node*> nodes = builder.work(tab, mid_tuples);
+
+            // clear out-of-date tuples
+            mid_tuples.clear();
+
+            // dump init tuples
+            for(Node *node: nodes){
+                VarNode *var_node = dynamic_cast<VarNode*>(node);
+                if(!var_node)
+                    continue;
+                Tuple *tuple = var_node->dumpInitTuple();
+                if(tuple)
+                    mid_tuples.push_back(tuple);
+            }
 
             // build DAG node stack
             stack<Node*> node_stack;
@@ -70,7 +83,6 @@ namespace dag{
             }
 
             // dump DAGed mid_tuples
-            mid_tuples.clear();
             while(node_stack.size() > 0){
                 Node *node = node_stack.top();
                 node_stack.pop();

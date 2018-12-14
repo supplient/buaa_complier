@@ -2,10 +2,13 @@
 #define NAME_UTIL_H
 
 #include <string>
+#include <map>
+#include <algorithm>
 
 using namespace std;
 
 class NameTableEntry;
+class VarEntry;
 
 class NameUtil
 {
@@ -28,18 +31,46 @@ public:
         return res;
     }
 
+    static string genGlobalVarLabel(string var_name){
+        return "$global_" + var_name;
+    }
+
     static string genEntryName(const NameTableEntry *entry);
 
+    static string genEntryName(const VarEntry *entry);
+
+    static string genUniqueDAGVarName(const VarEntry *entry){
+        static map<const VarEntry*, int> cnt_tab;
+        // TODO maybe this index can be reset
+
+        int index = 0;
+        auto it = cnt_tab.find(entry);
+        if(it == cnt_tab.end())
+            cnt_tab[entry] = 1;
+        else{
+            index = it->second;
+            it->second = it->second + 1;
+        }
+
+        return "$$" + to_string(index) + "_" + genEntryName(entry);
+    }
+
+    static bool isDAGVarName(string name){
+        if(name.size() < 2)
+            return false;
+        return name[0] == '$' && name[1] == '$';
+    }
+
     static string genTempVarName(int index){
-        return "#" + to_string(index);
+        return "$" + to_string(index);
     }
 
     static string getIntReturnVarName(){
-        return "#RV#INT";
+        return "$RV$INT";
     }
 
     static string getCharReturnVarName(){
-        return "#RV#CHAR";
+        return "$RV$CHAR";
     }
 
     static bool isSpecialVarName(string var_name){
@@ -47,10 +78,6 @@ public:
             throw string("NameUtil: empty string should never be a var's name.");
         return var_name == getIntReturnVarName()
             || var_name == getCharReturnVarName();
-    }
-
-    static string genGlobalVarLabel(string var_name){
-        return "$global_" + var_name;
     }
 
     static string intString;

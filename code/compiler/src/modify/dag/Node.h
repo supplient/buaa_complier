@@ -86,35 +86,114 @@ namespace dag{
     class VarNode: public Node
     {
     public:
-        const VarEntry* var = NULL;
+        // Var providing init value
+        const VarEntry *main_var = NULL; // If main_var==None, means this node does need init value
+        // Var sharing the value
+        vector<const VarEntry*> sub_vars;
+        // Var for init tuple
+        const VarEntry *origin_var = NULL;
 
         VarNode(){}
 
         VarNode(const VarEntry *var){
-            setVar(var);
+            main_var = var;
         }
 
-        void setVar(const VarEntry *var){
+        void replaceMainAndSetOrigin(const VarEntry *var){
             if(!var)
-                throw new string("dag::Node.setVar: var is NULL");
-            this->var = var;
+                throw string("dag::Node.replaceMainAndSetOrigin: var is NULL");
+            if(!main_var)
+                throw string("dag::Node.replaceMainAndSetOrigin: main_var is NULL");
+            if(origin_var)
+                throw string("dag::Node.replaceMainAndSetOrigin: a new main_var is given, while both main_var and origin var are not NULL.");
+
+            origin_var = main_var;
+            main_var = var;
+        }
+
+        void addSubVar(const VarEntry *var){
+            if(!var)
+                throw string("dag::Node.addSubVar: var is NULL");
+            auto it = find(sub_vars.begin(), sub_vars.end(), var);
+            if(it == sub_vars.end())
+                sub_vars.push_back(var);
+        }
+
+        void removeSubVar(const VarEntry *var){
+            if(!var)
+                throw string("dag::Node.removeSubVar: var is NULL");
+            auto it = find(sub_vars.begin(), sub_vars.end(), var);
+            if(it == sub_vars.end())
+                throw string("dag::Node.removeSubVar: cannot find var [" + NameUtil::genEntryName(var) + "] in this node's sub_vars--\n" + toString());
+            sub_vars.erase(it);
+        }
+
+        Tuple* dumpInitTuple(){
+            if(!main_var)
+                return NULL;
+
+            if(!NameUtil::isDAGVarName(main_var->name))
+                return NULL;
+
+            Tuple *tuple = new Tuple();
+            tuple->op = sem::ASSIGN;
+            tuple->res = new Operand(main_var);
+            tuple->left = new Operand(origin_var);
+            return tuple;
+        }
+
+        virtual Operand* buildDelegate(){
+            if(main_var)
+                return new Operand(main_var);
+
+            if(sub_vars.size() < 1)
+                throw string("dag::VarNode: sub_vars is empty when main_var is NULL.");
+            // TODO select a var
+            return new Operand(*(sub_vars.begin()));
         }
 
         virtual Operand* dumpOperand() override{
-            if(!var)
-                throw string("dag::VarNode: var is NULL!");
-            return new Operand(var);
+            return buildDelegate();
         }
 
         virtual string toString(){
             string s = Node::toString();
-            if(var)
-                s += "\tVar: " + NameUtil::genEntryName(var) + "\n";
+            if(main_var)
+                s += "\tmain_var: " + NameUtil::genEntryName(main_var) + "\n";
+            if(sub_vars.size() > 0){
+                s += "\tsub_vars:";
+                for(auto var: sub_vars)
+                    s += " " + NameUtil::genEntryName(var);
+                s += "\n";
+            }
             return s;
+        }
+
+        virtual Tuples dumpTuple(){
+            Tuples tuples;
+             for(const VarEntry *var: sub_vars){
+                Operand *left = buildDelegate();
+                if(left->type == Operand::ENTRY && left->entry == var){
+                    delete left;
+                    continue;
+                }
+                 if(var->dim > 0)
+                    throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
+                if(left->type == Operand::ENTRY){
+                    if(left->entry->dim > 0)
+                        throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
+                }
+                Tuple *tuple = new Tuple();
+                tuple->op = sem::ASSIGN;
+                tuple->res = new Operand(var);
+                tuple->left = left;
+                tuples.push_back(tuple);
+            }
+             return tuples;
         }
     };
 
-    class ValueNode: public Node
+    class ValueNode: public VarNode
     {
     public:
         sym::SYMBOL type;
@@ -124,7 +203,7 @@ namespace dag{
         ValueNode(int int_value): type(sym::INT), int_value(int_value){}
         ValueNode(char char_value): type(sym::CHAR), char_value(char_value){}
 
-        virtual Operand* dumpOperand() override{
+        virtual Operand* buildDelegate() override{
             switch(type){
                 case sym::INT: return new Operand(int_value);
                 case sym::CHAR: return new Operand(char_value);
@@ -133,7 +212,7 @@ namespace dag{
         }
 
         virtual string toString(){
-            string s = Node::toString();
+            string s = VarNode::toString();
             if(type == sym::INT)
                 s += "\tInt value: " + to_string(int_value);
             else
@@ -152,8 +231,6 @@ namespace dag{
         Node *right = NULL;
         Node *spe_1 = NULL;
         Node *spe_2 = NULL;
-
-        set<OpNode*> old_ref_set;
 
         OpNode(){}
         OpNode(sem::OP op, Node *left): op(op), left(left){
@@ -178,15 +255,6 @@ namespace dag{
             addFatherToSon();
         }
 
-        void addOldRef(set<OpNode*> old_refs){
-            for(OpNode *node: old_refs){
-                if(node && node != this){
-                    old_ref_set.insert(node);
-                    node->addFather(this);
-                }
-            }
-        }
-
         void removeFromSon(){
             if(left)
                 left->removeFather(this);
@@ -198,8 +266,6 @@ namespace dag{
                 spe_1->removeFather(this);
             if(spe_2)
                 spe_2->removeFather(this);
-            for(OpNode *son: old_ref_set)
-                son->removeFather(this);
         }
 
         virtual Tuples dumpTuple(){
@@ -209,11 +275,6 @@ namespace dag{
             tuple->op = op;
             switch(op){
                 case sem::NEG:
-                    tuple->res = this->dumpOperand();
-                    tuple->left = left->dumpOperand();
-                    break;
-
-                case sem::ASSIGN:
                     tuple->res = this->dumpOperand();
                     tuple->left = left->dumpOperand();
                     break;
@@ -277,12 +338,6 @@ namespace dag{
                 s += "\tspe_1: " + to_string(spe_1->index) + "\n";
             if(spe_2)
                 s += "\tspe_2: " + to_string(spe_2->index) + "\n";
-            if(old_ref_set.size() > 0){
-                s += "\told_ref:";
-                for(OpNode* son: old_ref_set)
-                    s += " " + to_string(son->index);
-                s += "\n";
-            }
             return s;
         }
 

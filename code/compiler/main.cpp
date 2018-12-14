@@ -16,7 +16,7 @@ void modiInterface();
 bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
 
-bool MODIFY = false;
+bool MODIFY = true;
 bool DAG_MODIFY = true & MODIFY;
 
 int main()
@@ -29,7 +29,7 @@ int main()
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
         //modiTest("modi_test.c0");
-        modiTest("sample/switch_multi_const/c0");
+        modiTest("sample/dag_test/c0");
 
         //graInterface();
         //modiInterface();

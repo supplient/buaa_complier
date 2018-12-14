@@ -60,7 +60,7 @@ void modiTest(string filename){
     mylog::tup << "---------------------------" << "\n";
     mylog::tup << "Dump done." << "\n";
 
-    cout << "\n";
+    mylog::tup << "\n";
 
     if(MODIFY){
         // split basic blocks
@@ -70,7 +70,7 @@ void modiTest(string filename){
         if(DAG_MODIFY){
             for(FuncBlock *func_block: func_blocks){
                 for(BasicBlock *block: func_block->blocks){
-                    dag::Worker::work(block);
+                    dag::Worker::work(tab, block);
                 }
             }
             // TODO free origin func_tuples after DAG modify
@@ -88,6 +88,14 @@ void modiTest(string filename){
         func_tuples.clear();
         for(FuncBlock *func_block: func_blocks)
             func_tuples.push_back(func_block->dumpFuncTuple());
+
+        mylog::tup << "Start dump name table after modify." << "\n";
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << tab.toString();
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << "Dump done." << "\n";
+
+        mylog::tup << "\n";
 
         mylog::tup << "\nStart dump tuples after modify." << "\n";
         mylog::tup << "---------------------------" << "\n";

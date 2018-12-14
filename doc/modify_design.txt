@@ -36,7 +36,7 @@ BasicBlockSplitter----
 
 
 DAG----
-    Builder----
+    Builder---- [desprecated]
         ASSIGN
             search for left's node, if not exist, create a left's node. [this step will be omitted below.]
             search for left's assign node, if exists, continue search the assign node's assign node.
@@ -91,23 +91,8 @@ DAG----
         The origin DAG algorithm may give a wrong answer.
 
         Solution----
-        Concept:
-            * ref_set
-                each variable maintain one
-            * old_ref
-                a kind of sons
-                each OpNode maintain a list of this
-
-        Algorithm(Based on the origin DGA):
-            After a DGA graph is built, follow the OpNode's creating order, for each OpNode:
-                if left is a VarNode, and its delegate is a var
-                    add self into the var's ref_set.
-                right,mid are also[concern about specials]
-
-                if the OpNode's delegate is a var,
-                    add nodes in the var's ref_set into this node's old_value_chain list.
-                    clear the var's ref_set.
-                    note: not allow self loop
+            Create a variable called like #I_0_a for a's mapping node, if a will be mapped to another node in DAG.
+            #I_<index>_<var_name>
 
     Multiple assgin problem----
         For tuples like:
@@ -117,7 +102,7 @@ DAG----
             c = a;
 
         Solution----
-            Remove useless OpNodes.
+            # TODO
 
 
 Data Flow Anlyzer----
