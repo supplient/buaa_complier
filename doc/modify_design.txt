@@ -94,5 +94,16 @@ DAG----
             Create a variable called like #I_0_a for a's mapping node, if a will be mapped to another node in DAG.
             #I_<index>_<var_name>
 
+    Multiple assgin problem----
+        For tuples like:
+            b = a + 1;
+            a = 3;
+            a = 4 + 2;
+            c = a;
+
+        Solution----
+            # TODO
+
+
 Data Flow Anlyzer----
     

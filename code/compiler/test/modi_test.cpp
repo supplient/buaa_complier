@@ -70,7 +70,7 @@ void modiTest(string filename){
         if(DAG_MODIFY){
             for(FuncBlock *func_block: func_blocks){
                 for(BasicBlock *block: func_block->blocks){
-                    dag::Worker::work(block);
+                    dag::Worker::work(tab, block);
                 }
             }
             // TODO free origin func_tuples after DAG modify
