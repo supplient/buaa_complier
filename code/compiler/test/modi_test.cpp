@@ -89,6 +89,14 @@ void modiTest(string filename){
         for(FuncBlock *func_block: func_blocks)
             func_tuples.push_back(func_block->dumpFuncTuple());
 
+        mylog::tup << "Start dump name table after modify." << "\n";
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << tab.toString();
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << "Dump done." << "\n";
+
+        mylog::tup << "\n";
+
         mylog::tup << "\nStart dump tuples after modify." << "\n";
         mylog::tup << "---------------------------" << "\n";
         for(FuncTuple* func_tuple : func_tuples){

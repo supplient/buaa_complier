@@ -37,6 +37,7 @@ public:
 
     static string genUniqueDAGVarName(const VarEntry *entry){
         static map<const VarEntry*, int> cnt_tab;
+        // TODO maybe this index can be reset
 
         int index = 0;
         auto it = cnt_tab.find(entry);
@@ -48,6 +49,12 @@ public:
         }
 
         return "@" + to_string(index) + "_" + genEntryName(entry);
+    }
+
+    static bool isDAGVarName(string name){
+        if(name.size() < 1)
+            return false;
+        return name[0] == '@';
     }
 
     static string genTempVarName(int index){

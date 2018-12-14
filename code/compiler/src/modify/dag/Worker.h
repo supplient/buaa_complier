@@ -44,6 +44,19 @@ namespace dag{
             Builder builder;
             vector<Node*> nodes = builder.work(tab, mid_tuples);
 
+            // clear out-of-date tuples
+            mid_tuples.clear();
+
+            // dump init tuples
+            for(Node *node: nodes){
+                VarNode *var_node = dynamic_cast<VarNode*>(node);
+                if(!var_node)
+                    continue;
+                Tuple *tuple = var_node->dumpInitTuple();
+                if(tuple)
+                    mid_tuples.push_back(tuple);
+            }
+
             // build DAG node stack
             stack<Node*> node_stack;
             while(nodes.size() > 0){
@@ -70,7 +83,6 @@ namespace dag{
             }
 
             // dump DAGed mid_tuples
-            mid_tuples.clear();
             while(node_stack.size() > 0){
                 Node *node = node_stack.top();
                 node_stack.pop();

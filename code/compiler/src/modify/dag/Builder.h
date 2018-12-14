@@ -126,7 +126,7 @@ namespace dag{
         }
 
     private:
-        map<const VarEntry*, Node*> var_tab;
+        map<const VarEntry*, VarNode*> var_tab;
         map<int, Node*> int_tab;
         map<char, Node*> char_tab;
         map<string, Node*> str_tab;
@@ -151,13 +151,47 @@ namespace dag{
             nodes.clear();
         }
 
-        void assignVarToNode(NameTable &tab, Node *node, const VarEntry *target_var){
+        void assignVarToNode(NameTable &tab, Node *node, const VarEntry *var){
             // TODO
             VarNode *var_node = dynamic_cast<VarNode*>(node);
             if(!var_node)
-                throw string("dag::Builder.assignVarToNode:tab,  the node cannot be converted to VarNode.");
-            var_node->addSubVar(target_var);
-            var_tab[target_var] = var_node;
+                throw string("dag::Builder.assignVarToNode: the node cannot be converted to VarNode.");
+
+            auto it = var_tab.find(var);
+            if(it == var_tab.end()){
+                // if not used before, just fill var_tab & addSubVar
+                var_node->addSubVar(var);
+                var_tab[var] = var_node;
+                return;
+            }
+
+            // if is used before, we need to use a new var to save old value
+            VarNode *old_node = var_tab[var];
+
+            // check dim, because array is not assignable
+            if(var->dim > 0)
+                throw string("dag::Builder.assignVarToNode: trying to assign an array to a node.");
+
+            // create a new var
+            VarEntry *new_var = tab.insertVar(
+                var->getOwnerName(),
+                NameUtil::genUniqueDAGVarName(var),
+                var->type,
+                var->dim
+            );
+
+            // replace old node's main_var or sub_var
+            if(old_node->main_var == var){
+                old_node->replaceMainAndSetOrigin(new_var);
+            }
+            else{
+                old_node->removeSubVar(var);
+                old_node->addSubVar(new_var);
+            }
+
+            // finally fill var_tab & addSubVar
+            var_node->addSubVar(var);
+            var_tab[var] = var_node;
         }
 
         OpNode* getOpNodeWithOne(sem::OP op, Node *left){
@@ -245,8 +279,8 @@ namespace dag{
                 case Operand::ENTRY:
                     var_it = var_tab.find(ord->entry);
                     if(var_it == var_tab.end()){
-                        res = new VarNode(ord->entry);
-                        var_tab[ord->entry] = res;
+                        var_tab[ord->entry] = new VarNode(ord->entry);
+                        res = var_tab[ord->entry];
                         nodes.push_back(res);
                     }
                     else

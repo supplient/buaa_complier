@@ -90,6 +90,8 @@ namespace dag{
         const VarEntry *main_var = NULL; // If main_var==None, means this node does need init value
         // Var sharing the value
         vector<const VarEntry*> sub_vars;
+        // Var for init tuple
+        const VarEntry *origin_var = NULL;
 
         VarNode(){}
 
@@ -97,10 +99,47 @@ namespace dag{
             main_var = var;
         }
 
+        void replaceMainAndSetOrigin(const VarEntry *var){
+            if(!var)
+                throw string("dag::Node.replaceMainAndSetOrigin: var is NULL");
+            if(!main_var)
+                throw string("dag::Node.replaceMainAndSetOrigin: main_var is NULL");
+            if(origin_var)
+                throw string("dag::Node.replaceMainAndSetOrigin: a new main_var is given, while both main_var and origin var are not NULL.");
+
+            origin_var = main_var;
+            main_var = var;
+        }
+
         void addSubVar(const VarEntry *var){
             if(!var)
-                throw new string("dag::Node.addSubVar: var is NULL");
-            this->sub_vars.push_back(var);
+                throw string("dag::Node.addSubVar: var is NULL");
+            auto it = find(sub_vars.begin(), sub_vars.end(), var);
+            if(it == sub_vars.end())
+                sub_vars.push_back(var);
+        }
+
+        void removeSubVar(const VarEntry *var){
+            if(!var)
+                throw string("dag::Node.removeSubVar: var is NULL");
+            auto it = find(sub_vars.begin(), sub_vars.end(), var);
+            if(it == sub_vars.end())
+                throw string("dag::Node.removeSubVar: cannot find var [" + NameUtil::genEntryName(var) + "] in this node's sub_vars--\n" + toString());
+            sub_vars.erase(it);
+        }
+
+        Tuple* dumpInitTuple(){
+            if(!main_var)
+                return NULL;
+
+            if(!NameUtil::isDAGVarName(main_var->name))
+                return NULL;
+
+            Tuple *tuple = new Tuple();
+            tuple->op = sem::ASSIGN;
+            tuple->res = new Operand(main_var);
+            tuple->left = new Operand(origin_var);
+            return tuple;
         }
 
         virtual Operand* buildDelegate(){

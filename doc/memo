@@ -4,5 +4,16 @@ Grammar TODO:
 Semantics TODO:
     * Modify ADD logic, reduce temp var's use.
 
+DAG TODO:
+    * sub_var may contain @2_x and @3_x at the same time. It may be better if they are merged.
+    * for tree like 
+        `
+        a = 1
+        a = a + 1
+        c = a
+        `
+        there is no need to create @0_a, since a's old value is only used by itself's updating.
+    * maybe there is no need to assign final_value to DAGVar
+
 Backend TODO:
     * Support just input tuple file, then trans to MIPS.
