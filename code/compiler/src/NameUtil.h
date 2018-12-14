@@ -2,10 +2,13 @@
 #define NAME_UTIL_H
 
 #include <string>
+#include <map>
+#include <algorithm>
 
 using namespace std;
 
 class NameTableEntry;
+class VarEntry;
 
 class NameUtil
 {
@@ -30,11 +33,13 @@ public:
 
     static string genEntryName(const NameTableEntry *entry);
 
+    static string genEntryName(const VarEntry *entry);
+
     static string genUniqueDAGVarName(const VarEntry *entry){
         static map<const VarEntry*, int> cnt_tab;
 
         int index = 0;
-        auto it = find(cnt_tab.begin(), cnt_tab.end(), entry);
+        auto it = cnt_tab.find(entry);
         if(it == cnt_tab.end())
             cnt_tab[entry] = 1;
         else{

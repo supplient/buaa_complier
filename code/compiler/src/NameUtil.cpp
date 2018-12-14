@@ -11,3 +11,7 @@ string NameUtil::genEntryName(const NameTableEntry *entry){
     else
         return entry->name;
 }
+
+string NameUtil::genEntryName(const VarEntry *entry){
+    return genEntryName(static_cast<const NameTableEntry*>(entry));
+}

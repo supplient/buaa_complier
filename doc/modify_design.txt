@@ -36,7 +36,7 @@ BasicBlockSplitter----
 
 
 DAG----
-    Builder----
+    Builder---- [desprecated]
         ASSIGN
             search for left's node, if not exist, create a left's node. [this step will be omitted below.]
             search for left's assign node, if exists, continue search the assign node's assign node.

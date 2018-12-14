@@ -34,13 +34,13 @@ namespace dag{
                 switch(tuple->op){
                     case sem::ASSIGN:
                         left = getNodeAndFillTab(tuple->left);
-                        assignVarToNode(left, tuple->res->entry);
+                        assignVarToNode(tab, left, tuple->res->entry);
                         break;
 
                     case sem::NEG:
                         left = getNodeAndFillTab(tuple->left);
                         op_node = getOpNodeWithOne(tuple->op, left);
-                        assignVarToNode(op_node, tuple->res->entry);
+                        assignVarToNode(tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::RARRAY:
@@ -53,7 +53,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, true);
-                        assignVarToNode(op_node, tuple->res->entry);
+                        assignVarToNode(tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::ADD:
@@ -63,7 +63,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, false);
-                        assignVarToNode(op_node, tuple->res->entry);
+                        assignVarToNode(tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::WARRAY:
@@ -75,7 +75,7 @@ namespace dag{
                             throw string("dag::Builder.WARRAY: a op_node is found, while it is impossible to find a calculated node for array.");
                         op_node = new OpNode(tuple->op, left, mid, right);
                         nodes.push_back(op_node);
-                        op_node->addVar(tuple->res->entry);
+                        op_node->addSubVar(tuple->res->entry);
                         var_tab[tuple->res->entry] = op_node;
                         break;
 
@@ -92,7 +92,7 @@ namespace dag{
                     case sem::INPUT:
                         op_node = new OpNode(stream_node, tuple->op);
                         nodes.push_back(op_node);
-                        assignVarToNode(op_node, tuple->res->entry);
+                        assignVarToNode(tab, op_node, tuple->res->entry);
                         stream_node = op_node;
                         break;
 
@@ -151,12 +151,12 @@ namespace dag{
             nodes.clear();
         }
 
-        void assignVarToNode(Node *node, const VarEntry *target_var){
+        void assignVarToNode(NameTable &tab, Node *node, const VarEntry *target_var){
             // TODO
             VarNode *var_node = dynamic_cast<VarNode*>(node);
             if(!var_node)
-                throw string("dag::Builder.assignVarToNode: the node cannot be converted to VarNode.");
-            var_node->addVar(target_var);
+                throw string("dag::Builder.assignVarToNode:tab,  the node cannot be converted to VarNode.");
+            var_node->addSubVar(target_var);
             var_tab[target_var] = var_node;
         }
 

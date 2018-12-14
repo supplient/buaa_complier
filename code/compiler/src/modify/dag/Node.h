@@ -86,25 +86,31 @@ namespace dag{
     class VarNode: public Node
     {
     public:
-        vector<const VarEntry*> vars;
+        // Var providing init value
+        const VarEntry *main_var = NULL; // If main_var==None, means this node does need init value
+        // Var sharing the value
+        vector<const VarEntry*> sub_vars;
 
         VarNode(){}
 
         VarNode(const VarEntry *var){
-            addVar(var);
+            main_var = var;
         }
 
-        void addVar(const VarEntry *var){
+        void addSubVar(const VarEntry *var){
             if(!var)
-                throw new string("dag::Node.addVar: var is NULL");
-            this->vars.push_back(var);
+                throw new string("dag::Node.addSubVar: var is NULL");
+            this->sub_vars.push_back(var);
         }
 
         virtual Operand* buildDelegate(){
-            if(vars.size() < 1)
-                throw string("dag::VarNode: vars is empty");
+            if(main_var)
+                return new Operand(main_var);
+
+            if(sub_vars.size() < 1)
+                throw string("dag::VarNode: sub_vars is empty when main_var is NULL.");
             // TODO select a var
-            return new Operand(*(vars.begin()));
+            return new Operand(*(sub_vars.begin()));
         }
 
         virtual Operand* dumpOperand() override{
@@ -113,16 +119,20 @@ namespace dag{
 
         virtual string toString(){
             string s = Node::toString();
-            s += "\tVars:";
-            for(auto var: vars)
-                s += " " + NameUtil::genEntryName(var);
-            s += "\n";
+            if(main_var)
+                s += "\tmain_var: " + NameUtil::genEntryName(main_var) + "\n";
+            if(sub_vars.size() > 0){
+                s += "\tsub_vars:";
+                for(auto var: sub_vars)
+                    s += " " + NameUtil::genEntryName(var);
+                s += "\n";
+            }
             return s;
         }
 
         virtual Tuples dumpTuple(){
             Tuples tuples;
-             for(const VarEntry *var: vars){
+             for(const VarEntry *var: sub_vars){
                 Operand *left = buildDelegate();
                 if(left->type == Operand::ENTRY && left->entry == var){
                     delete left;
@@ -134,7 +144,7 @@ namespace dag{
                     if(left->entry->dim > 0)
                         throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
                 }
-                 Tuple *tuple = new Tuple();
+                Tuple *tuple = new Tuple();
                 tuple->op = sem::ASSIGN;
                 tuple->res = new Operand(var);
                 tuple->left = left;
@@ -163,7 +173,7 @@ namespace dag{
         }
 
         virtual string toString(){
-            string s = Node::toString();
+            string s = VarNode::toString();
             if(type == sym::INT)
                 s += "\tInt value: " + to_string(int_value);
             else
@@ -226,11 +236,6 @@ namespace dag{
             tuple->op = op;
             switch(op){
                 case sem::NEG:
-                    tuple->res = this->dumpOperand();
-                    tuple->left = left->dumpOperand();
-                    break;
-
-                case sem::ASSIGN:
                     tuple->res = this->dumpOperand();
                     tuple->left = left->dumpOperand();
                     break;
