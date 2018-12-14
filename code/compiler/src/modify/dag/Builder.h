@@ -190,47 +190,7 @@ namespace dag{
             for(Node *node: nodes)
                 mylog::debug << node->toString();
 
-            // Add old_ref
-            for(Node *node: nodes){
-                OpNode *op_node = dynamic_cast<OpNode*>(node);
-                if(!op_node)
-                    continue;
-
-                // check sons,
-                // if son's delegate is a var, which means we are refering its value,
-                // add self into son's ref_set
-                checkAndAddRef(op_node, op_node->left);
-                checkAndAddRef(op_node, op_node->mid);
-                checkAndAddRef(op_node, op_node->right);
-                    // ignore special
-
-                // check self,
-                // if self has any var, which means these vars' value will be updated,
-                // add each var's ref into self's old_ref as sons
-                // and clear the var's ref_set
-                op_node->addOldRef(ref_set_tab[op_node->var]);
-                ref_set_tab[op_node->var].clear();
-            }
-
-            // DEBUG
-            mylog::debug << "DAG graph after add old_ref-----";
-            for(Node *node: nodes)
-                mylog::debug << node->toString();
-
             return nodes;
-        }
-
-        void checkAndAddRef(OpNode *father, Node *son){
-            if(son){
-                VarNode *var_node = dynamic_cast<VarNode*>(son);
-                if(var_node){
-                    Operand *var = var_node->dumpOperand();
-                    if(var->type == Operand::ENTRY){
-                        ref_set_tab[var->entry].insert(father);
-                    }
-                    delete var;
-                }
-            }
         }
 
     private:
@@ -238,8 +198,6 @@ namespace dag{
         map<int, Node*> int_tab;
         map<char, Node*> char_tab;
         map<string, Node*> str_tab;
-
-        map<const VarEntry*, set<OpNode*> > ref_set_tab;
 
         Node* param_node;
         Node* stack_node;

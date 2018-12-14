@@ -521,7 +521,23 @@ void test_printf(){
     printf(x);
 
     x=5;
-    printf(-(num[x]+num[x+const_1]+3)*count_to_10()/const_3+'a'+const_a-3*3/4);
+    printf(
+        -(
+            num[x]
+            +
+            num[
+                x + const_1
+            ]
+            + 3
+        )
+        * count_to_10()
+        / const_3
+        + 'a'
+        + const_a
+        - 3
+        * 3
+        / 4
+    );
 
 
     return ;
