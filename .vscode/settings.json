@@ -4,7 +4,6 @@
         "xstring": "cpp"
     },
     "files.exclude": {
-        "**/*.cbp": true,
         "**/*.depend": true,
         "**/*.exe": true,
         "**/*.layout": true,
