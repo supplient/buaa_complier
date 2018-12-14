@@ -30,6 +30,21 @@ public:
 
     static string genEntryName(const NameTableEntry *entry);
 
+    static string genUniqueDAGVarName(const VarEntry *entry){
+        static map<const VarEntry*, int> cnt_tab;
+
+        int index = 0;
+        auto it = find(cnt_tab.begin(), cnt_tab.end(), entry);
+        if(it == cnt_tab.end())
+            cnt_tab[entry] = 1;
+        else{
+            index = it->second;
+            it->second = it->second + 1;
+        }
+
+        return "@" + to_string(index) + "_" + genEntryName(entry);
+    }
+
     static string genTempVarName(int index){
         return "#" + to_string(index);
     }
