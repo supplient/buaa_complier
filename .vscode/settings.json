@@ -5,8 +5,8 @@
     },
     "files.exclude": {
         "**/*.depend": true,
-        "**/*.exe": true,
         "**/*.layout": true,
         "**/obj": true
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceRoot}/code/compiler"
 }
