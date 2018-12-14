@@ -70,9 +70,6 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         mid = getNodeAndFillTab(tuple->res);
                         right = getNodeAndFillTab(tuple->right);
-                        op_node = getOpNodeWithThree_order(tuple->op, left, mid, right);
-                        if(op_node)
-                            throw string("dag::Builder.WARRAY: a op_node is found, while it is impossible to find a calculated node for array.");
                         op_node = new OpNode(tuple->op, left, mid, right);
                         nodes.push_back(op_node);
                         op_node->addSubVar(tuple->res->entry);

@@ -60,7 +60,7 @@ void modiTest(string filename){
     mylog::tup << "---------------------------" << "\n";
     mylog::tup << "Dump done." << "\n";
 
-    cout << "\n";
+    mylog::tup << "\n";
 
     if(MODIFY){
         // split basic blocks
