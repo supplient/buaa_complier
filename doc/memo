@@ -14,6 +14,7 @@ DAG TODO:
         `
         there is no need to create @0_a, since a's old value is only used by itself's updating.
     * maybe there is no need to assign final_value to DAGVar
+    * concern about reducing "ASSIGN" 's number.
 
 Backend TODO:
     * Support just input tuple file, then trans to MIPS.

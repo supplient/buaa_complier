@@ -50,7 +50,7 @@ void modiTest(string filename){
     mylog::tup << "---------------------------" << "\n";
     mylog::tup << "Dump done." << "\n";
 
-    mylog::tup << "\n";
+    mylog::tup << "\n"; 
 
     mylog::tup << "Start dump tuples." << "\n";
     mylog::tup << "---------------------------" << "\n";
