@@ -86,35 +86,65 @@ namespace dag{
     class VarNode: public Node
     {
     public:
-        const VarEntry* var = NULL;
+        vector<const VarEntry*> vars;
 
         VarNode(){}
 
         VarNode(const VarEntry *var){
-            setVar(var);
+            addVar(var);
         }
 
-        void setVar(const VarEntry *var){
+        void addVar(const VarEntry *var){
             if(!var)
-                throw new string("dag::Node.setVar: var is NULL");
-            this->var = var;
+                throw new string("dag::Node.addVar: var is NULL");
+            this->vars.push_back(var);
+        }
+
+        virtual Operand* buildDelegate(){
+            if(vars.size() < 1)
+                throw string("dag::VarNode: vars is empty");
+            // TODO select a var
+            return new Operand(*(vars.begin()));
         }
 
         virtual Operand* dumpOperand() override{
-            if(!var)
-                throw string("dag::VarNode: var is NULL!");
-            return new Operand(var);
+            return buildDelegate();
         }
 
         virtual string toString(){
             string s = Node::toString();
-            if(var)
-                s += "\tVar: " + NameUtil::genEntryName(var) + "\n";
+            s += "\tVars:";
+            for(auto var: vars)
+                s += " " + NameUtil::genEntryName(var);
+            s += "\n";
             return s;
+        }
+
+        virtual Tuples dumpTuple(){
+            Tuples tuples;
+             for(const VarEntry *var: vars){
+                Operand *left = buildDelegate();
+                if(left->type == Operand::ENTRY && left->entry == var){
+                    delete left;
+                    continue;
+                }
+                 if(var->dim > 0)
+                    throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
+                if(left->type == Operand::ENTRY){
+                    if(left->entry->dim > 0)
+                        throw string("dag::VarNode.dumpTuple: trying to assign arrays.");
+                }
+                 Tuple *tuple = new Tuple();
+                tuple->op = sem::ASSIGN;
+                tuple->res = new Operand(var);
+                tuple->left = left;
+                tuples.push_back(tuple);
+            }
+             return tuples;
         }
     };
 
-    class ValueNode: public Node
+    class ValueNode: public VarNode
     {
     public:
         sym::SYMBOL type;
@@ -124,7 +154,7 @@ namespace dag{
         ValueNode(int int_value): type(sym::INT), int_value(int_value){}
         ValueNode(char char_value): type(sym::CHAR), char_value(char_value){}
 
-        virtual Operand* dumpOperand() override{
+        virtual Operand* buildDelegate() override{
             switch(type){
                 case sym::INT: return new Operand(int_value);
                 case sym::CHAR: return new Operand(char_value);
