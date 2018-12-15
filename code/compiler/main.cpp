@@ -18,6 +18,7 @@ bool MIPS_TUPLE_OUTPUT = true;
 
 bool MODIFY = true;
 bool DAG_MODIFY = true & MODIFY;
+bool FLOW_ANALYZE = true & MODIFY;
 
 int main()
 {
@@ -28,8 +29,8 @@ int main()
         //semTest("sample/example.c0");
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
-        //modiTest("modi_test.c0");
-        modiTest("sample/complex/c0");
+        modiTest("modi_test.c0");
+        //modiTest("sample/complex/c0");
 
         //graInterface();
         //modiInterface();

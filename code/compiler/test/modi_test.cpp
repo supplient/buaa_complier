@@ -7,6 +7,7 @@
 #include "ConstVarRemover.h"
 #include "BasicBlockSplitter.h"
 #include "dag/Worker.h"
+#include "FlowFuncBlock.h"
 #include "Backend.h"
 
 using namespace std;
@@ -88,6 +89,20 @@ void modiTest(string filename){
                 }
             }
             // TODO free origin func_tuples after DAG modify
+        }
+
+        // Data Flow analyzing
+        if(FLOW_ANALYZE){
+            mylog::info << "Data Flow analyzing is on."
+                        << "Its subject modifying will be done too.";
+            vector<FlowFuncBlock*> flow_func_blocks;
+            for(FuncBlock *func_block: func_blocks)
+                flow_func_blocks.push_back(new FlowFuncBlock(func_block));
+
+            mylog::debug << "Start dump data flow analyzing's result.";
+            for(FlowFuncBlock *flow_func_block: flow_func_blocks)
+                mylog::debug << flow_func_block->toString();
+            mylog::debug << "Dump done.";
         }
 
         // dump func_tuples from func_blocks after all modify
