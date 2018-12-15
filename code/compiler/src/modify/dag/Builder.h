@@ -15,7 +15,7 @@ namespace dag{
             reset();
         }
 
-        vector<Node*> work(NameTable & tab, Tuples tuples){
+        vector<Node*> work(FuncNameTable *func_tab, Tuples tuples){
             // In: should be tuples in a basic block
             //      without head's label tuples
             //      and tail's jump tuples
@@ -34,13 +34,13 @@ namespace dag{
                 switch(tuple->op){
                     case sem::ASSIGN:
                         left = getNodeAndFillTab(tuple->left);
-                        assignVarToNode(tab, left, tuple->res->entry);
+                        assignVarToNode(func_tab, left, tuple->res->entry);
                         break;
 
                     case sem::NEG:
                         left = getNodeAndFillTab(tuple->left);
                         op_node = getOpNodeWithOne(tuple->op, left);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::RARRAY:
@@ -53,7 +53,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, true);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::ADD:
@@ -63,7 +63,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, false);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::WARRAY:
@@ -89,7 +89,7 @@ namespace dag{
                     case sem::INPUT:
                         op_node = new OpNode(stream_node, tuple->op);
                         nodes.push_back(op_node);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         stream_node = op_node;
                         break;
 
@@ -148,7 +148,7 @@ namespace dag{
             nodes.clear();
         }
 
-        void assignVarToNode(NameTable &tab, Node *node, const VarEntry *var){
+        void assignVarToNode(FuncNameTable *func_tab, Node *node, const VarEntry *var){
             // TODO
             VarNode *var_node = dynamic_cast<VarNode*>(node);
             if(!var_node)
@@ -170,8 +170,7 @@ namespace dag{
                 throw string("dag::Builder.assignVarToNode: trying to assign an array to a node.");
 
             // create a new var
-            VarEntry *new_var = tab.insertVar(
-                var->getOwnerName(),
+            VarEntry *new_var = func_tab->insertVar(
                 NameUtil::genUniqueDAGVarName(var),
                 var->type,
                 var->dim

@@ -39,5 +39,8 @@ int main()
     catch(string s){
         mylog::fatal << s;
     }
+
+    char stop;
+    cin >> stop;
     return 0;
 }

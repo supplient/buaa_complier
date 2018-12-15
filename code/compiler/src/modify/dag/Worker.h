@@ -10,7 +10,7 @@ namespace dag{
 
     class Worker{
     public:
-        static void work(NameTable &tab, BasicBlock *block){
+        static void work(FuncNameTable *func_tab, BasicBlock *block){
             Tuples head_tuples;
             Tuples mid_tuples;
             Tuple *end_tuple;
@@ -42,7 +42,7 @@ namespace dag{
 
             // build DAG graph
             Builder builder;
-            vector<Node*> nodes = builder.work(tab, mid_tuples);
+            vector<Node*> nodes = builder.work(func_tab, mid_tuples);
 
             // clear out-of-date tuples
             mid_tuples.clear();
