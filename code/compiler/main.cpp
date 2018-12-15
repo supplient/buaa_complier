@@ -29,7 +29,7 @@ int main()
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
         //modiTest("modi_test.c0");
-        modiTest("sample/dag_test/c0");
+        modiTest("sample/complex/c0");
 
         //graInterface();
         //modiInterface();

@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "log.h"
 #include "NameTable.h"
+#include "VarPool.h"
 
 #include <map>
 
@@ -21,6 +22,7 @@ namespace dag{
             //      and tail's jump tuples
             // Out: is the DAG tree's all nodes
             reset();
+            dag_var_pool = new VarPool(func_tab);
 
             Node *left;
             Node *mid;
@@ -134,6 +136,8 @@ namespace dag{
 
         vector<Node*> nodes; // Note: we must ensure node is inserted into nodes in its creating order to maintain old_ref
 
+        VarPool *dag_var_pool = NULL;
+
         void reset(){
             // TODO free memory
             var_tab.clear();
@@ -146,10 +150,13 @@ namespace dag{
             stream_node = new SpecialNode("stream");
 
             nodes.clear();
+
+            if(dag_var_pool)
+                delete dag_var_pool;
+            dag_var_pool = NULL;
         }
 
         void assignVarToNode(FuncNameTable *func_tab, Node *node, const VarEntry *var){
-            // TODO
             VarNode *var_node = dynamic_cast<VarNode*>(node);
             if(!var_node)
                 throw string("dag::Builder.assignVarToNode: the node cannot be converted to VarNode.");
@@ -170,11 +177,7 @@ namespace dag{
                 throw string("dag::Builder.assignVarToNode: trying to assign an array to a node.");
 
             // create a new var
-            VarEntry *new_var = func_tab->insertVar(
-                NameUtil::genUniqueDAGVarName(var),
-                var->type,
-                var->dim
-            );
+            VarEntry *new_var = dag_var_pool->getNewTempVar(var->type);
 
             // replace old node's main_var or sub_var
             if(old_node->main_var == var){
