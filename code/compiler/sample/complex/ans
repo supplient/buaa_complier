@@ -1,0 +1,38 @@
+1.
+[O] 2
+[O] a
+[O] 120
+[O]  !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~
+[O] 1
+[O] -4318
+[I] 12
+[I] a
+[I] x
+[I] 123
+[O] all test:2668
+
+2.
+[O] 2
+[O] a
+[O] 120
+[O]  !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~
+[O] 1
+[O] -4318
+[I] 0
+[I] p
+[I] q
+[I] -1
+[O] all test:2540
+
+2.
+[O] 2
+[O] a
+[O] 120
+[O]  !#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~
+[O] 1
+[O] -4318
+[I] -100
+[I] _
+[I] +
+[I] 3
+[O] all test:2357
