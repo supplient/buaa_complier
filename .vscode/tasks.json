@@ -1,0 +1,22 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "mars",
+            "type": "shell",
+            "command": "java Mars ${workspaceFolder}\\asm\\test.asm",
+            "options": {"cwd": "D:/code_concerned/hardware/Mars4_5/"},
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher":[]
+        }
+    ]
+}
