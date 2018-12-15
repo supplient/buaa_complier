@@ -8,5 +8,6 @@
         "**/*.layout": true,
         "**/obj": true
     },
-    "cmake.sourceDirectory": "${workspaceRoot}/code/compiler"
+    "cmake.sourceDirectory": "${workspaceRoot}/code/compiler",
+    "cmake.useCMakeServer": false
 }
