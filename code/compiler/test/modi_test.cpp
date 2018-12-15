@@ -24,14 +24,17 @@ void modiTest(string filename){
     GrammarAnalyzer gra(lex);
 
     // grammar analyze
+    mylog::info << "Doing grammar analyzing...";
     Program* program = gra.constructProgram();
     if(program == NULL || gra.getErrorCount() > 0){
         cerr << "Grammar analyzer failed." << endl;
         exit(-1);
     }
     file.close();
+    mylog::info << "Grammar analyzing Done.";
 
     // semantics analyze
+    mylog::info << "Doing semantics analyzing...";
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
@@ -39,6 +42,7 @@ void modiTest(string filename){
         cerr << "Semantics analyzer failed." << endl;
         exit(-1);
     }
+    mylog::info << "Semantics analyzing Done.";
 
     // Start modify
     // remove const vars
@@ -63,11 +67,21 @@ void modiTest(string filename){
     mylog::tup << "\n";
 
     if(MODIFY){
+        mylog::info << "Modify is on.";
         // split basic blocks
         vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
+        mylog::debug << "Start dump basic blocks." << "\n";
+        mylog::debug << "---------------------------" << "\n";
+        for(FuncBlock* func_block : func_blocks){
+            mylog::debug << func_block->toString() << "\n";
+        }
+        mylog::debug << "---------------------------" << "\n";
+        mylog::debug << "Dump done." << "\n";
+
         // DAG modify
         if(DAG_MODIFY){
+            mylog::info << "DAG Modify is on.";
             for(FuncBlock *func_block: func_blocks){
                 for(BasicBlock *block: func_block->blocks){
                     dag::Worker::work(tab.getFuncNameTable(func_block->func_entry->name), block);
@@ -76,15 +90,8 @@ void modiTest(string filename){
             // TODO free origin func_tuples after DAG modify
         }
 
-        cout << "Start dump basic blocks." << "\n";
-        cout << "---------------------------" << "\n";
-        for(FuncBlock* func_block : func_blocks){
-            cout << func_block->toString() << "\n";
-        }
-        cout << "---------------------------" << "\n";
-        cout << "Dump done." << "\n";
-
         // dump func_tuples from func_blocks after all modify
+        mylog::info << "Modify is finished.";
         func_tuples.clear();
         for(FuncBlock *func_block: func_blocks)
             func_tuples.push_back(func_block->dumpFuncTuple());
@@ -104,11 +111,10 @@ void modiTest(string filename){
         }
         mylog::tup << "---------------------------" << "\n";
         mylog::tup << "Dump done." << "\n";
-
-        cout << "\n";
     }
 
     // MIPS backend
+    mylog::info << "Doing MIPS backend transforming...";
     Backend backend;
     vector<DataCmd*> data_cmds;
     vector<InstCmd*> inst_cmds;
@@ -125,10 +131,12 @@ void modiTest(string filename){
     for(InstCmd *cmd: inst_cmds){
         mylog::ass << cmd->toString() << "\n";
     }
+    mylog::info << "MIPS backend transforming done.";
     
 
     // Release memory
     delete program;
     for(auto func_tuple: func_tuples)
         delete func_tuple;
+    mylog::info << "All work finished.";
 }
