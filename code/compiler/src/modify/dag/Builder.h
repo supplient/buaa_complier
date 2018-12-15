@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "log.h"
 #include "NameTable.h"
+#include "VarPool.h"
 
 #include <map>
 
@@ -15,12 +16,13 @@ namespace dag{
             reset();
         }
 
-        vector<Node*> work(NameTable & tab, Tuples tuples){
+        vector<Node*> work(FuncNameTable *func_tab, Tuples tuples){
             // In: should be tuples in a basic block
             //      without head's label tuples
             //      and tail's jump tuples
             // Out: is the DAG tree's all nodes
             reset();
+            dag_var_pool = new VarPool(func_tab);
 
             Node *left;
             Node *mid;
@@ -34,13 +36,13 @@ namespace dag{
                 switch(tuple->op){
                     case sem::ASSIGN:
                         left = getNodeAndFillTab(tuple->left);
-                        assignVarToNode(tab, left, tuple->res->entry);
+                        assignVarToNode(func_tab, left, tuple->res->entry);
                         break;
 
                     case sem::NEG:
                         left = getNodeAndFillTab(tuple->left);
                         op_node = getOpNodeWithOne(tuple->op, left);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::RARRAY:
@@ -53,7 +55,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, true);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::ADD:
@@ -63,7 +65,7 @@ namespace dag{
                         left = getNodeAndFillTab(tuple->left);
                         right = getNodeAndFillTab(tuple->right);
                         op_node = getOpNodeWithTwo(tuple->op, left, right, false);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         break;
 
                     case sem::WARRAY:
@@ -89,7 +91,7 @@ namespace dag{
                     case sem::INPUT:
                         op_node = new OpNode(stream_node, tuple->op);
                         nodes.push_back(op_node);
-                        assignVarToNode(tab, op_node, tuple->res->entry);
+                        assignVarToNode(func_tab, op_node, tuple->res->entry);
                         stream_node = op_node;
                         break;
 
@@ -134,6 +136,8 @@ namespace dag{
 
         vector<Node*> nodes; // Note: we must ensure node is inserted into nodes in its creating order to maintain old_ref
 
+        VarPool *dag_var_pool = NULL;
+
         void reset(){
             // TODO free memory
             var_tab.clear();
@@ -146,10 +150,13 @@ namespace dag{
             stream_node = new SpecialNode("stream");
 
             nodes.clear();
+
+            if(dag_var_pool)
+                delete dag_var_pool;
+            dag_var_pool = NULL;
         }
 
-        void assignVarToNode(NameTable &tab, Node *node, const VarEntry *var){
-            // TODO
+        void assignVarToNode(FuncNameTable *func_tab, Node *node, const VarEntry *var){
             VarNode *var_node = dynamic_cast<VarNode*>(node);
             if(!var_node)
                 throw string("dag::Builder.assignVarToNode: the node cannot be converted to VarNode.");
@@ -170,12 +177,7 @@ namespace dag{
                 throw string("dag::Builder.assignVarToNode: trying to assign an array to a node.");
 
             // create a new var
-            VarEntry *new_var = tab.insertVar(
-                var->getOwnerName(),
-                NameUtil::genUniqueDAGVarName(var),
-                var->type,
-                var->dim
-            );
+            VarEntry *new_var = dag_var_pool->getNewTempVar(var->type);
 
             // replace old node's main_var or sub_var
             if(old_node->main_var == var){

@@ -39,20 +39,8 @@ public:
 
     static string genEntryName(const VarEntry *entry);
 
-    static string genUniqueDAGVarName(const VarEntry *entry){
-        static map<const VarEntry*, int> cnt_tab;
-        // TODO maybe this index can be reset
-
-        int index = 0;
-        auto it = cnt_tab.find(entry);
-        if(it == cnt_tab.end())
-            cnt_tab[entry] = 1;
-        else{
-            index = it->second;
-            it->second = it->second + 1;
-        }
-
-        return "$$" + to_string(index) + "_" + genEntryName(entry);
+    static string genDAGVarName(int index){
+        return "$$" + to_string(index);
     }
 
     static bool isDAGVarName(string name){
@@ -61,7 +49,7 @@ public:
         return name[0] == '$' && name[1] == '$';
     }
 
-    static string genTempVarName(int index){
+    static string genTempVarName(unsigned int index){
         return "$" + to_string(index);
     }
 

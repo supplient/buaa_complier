@@ -29,7 +29,7 @@ int main()
         //backTest("back_test.c0");
         //backTest("sample/fab.c0");
         //modiTest("modi_test.c0");
-        modiTest("sample/dag_test/c0");
+        modiTest("sample/complex/c0");
 
         //graInterface();
         //modiInterface();
@@ -39,5 +39,8 @@ int main()
     catch(string s){
         mylog::fatal << s;
     }
+
+    char stop;
+    cin >> stop;
     return 0;
 }
