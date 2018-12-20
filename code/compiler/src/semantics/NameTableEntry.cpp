@@ -16,6 +16,10 @@ string NameTableEntry::getOwnerName()const{
         return "";
 }
 
+bool VarEntry::isGlobalVar(const VarEntry *entry){
+    return entry->getOwnerName() == sem::GLOBAL_FUNC_NAME;
+}
+
 string VarEntry::toString(){
     string s = NameTableEntry::toString();
     s += " ";

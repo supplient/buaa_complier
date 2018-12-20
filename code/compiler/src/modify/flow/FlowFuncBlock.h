@@ -10,6 +10,13 @@
 
 // TODO release analyzed FuncBlock and BasicBlock
 
+void mergeVarMap(VarMap &res, const VarMap &from){
+    for(auto pair: from){
+        vector<FlowTuple*> &res_vec = res[pair.first];
+        res_vec.insert(res_vec.end(), pair.second.begin(), pair.second.end());
+    }
+}
+
 class FlowFuncBlock{
 public:
     static FlowFuncBlock* fromFuncBlock(FuncBlock *func_block){
@@ -58,6 +65,8 @@ public:
             }
         }
 
+        // call analyze
+        analyze();
     }
 
     FuncBlock* toFuncBlock(){
@@ -123,6 +132,87 @@ public:
         }
 
         return s;
+    }
+
+    void reset(){
+        for(auto block: blocks)
+            block->reset();
+    }
+
+    void analyze(){
+        // TODO check size and remove empty blocks
+        reset();
+        liveAnalyze();
+        activeAnalyze();
+    }
+
+    void liveAnalyze(){
+        bool has_change = false;
+        do{
+            has_change = false;
+
+            for(FlowBasicBlock *block: blocks){
+                vector<FlowBasicBlock*> front_blocks;
+                vector<FlowBasicBlock*> back_blocks;
+                for(FlowEdge *edge: block->in_edges)
+                    front_blocks.push_back(edge->from);
+                for(FlowEdge *edge: block->out_edges)
+                    back_blocks.push_back(edge->to);
+
+                // cal the block's in
+                VarMap cur_flow;
+                for(auto front_block: front_blocks)
+                    mergeVarMap(cur_flow, front_block->live_map);
+
+                // anlayze tuple by tuple
+                for(auto tuple: block->tuples){
+                    // assign flow
+                    tuple->live_map = cur_flow;
+
+                    // update flow
+                    for(const VarEntry *var: tuple->def()){
+                        cur_flow[var].clear();
+                        cur_flow[var].push_back(tuple);
+                    }
+                }
+
+                // detect change
+                if(!has_change){
+                    if(block->live_map.size() != cur_flow.size())
+                        has_change = true;
+                    else{
+                        for(auto pair: cur_flow){
+                            if(block->live_map.find(pair.first) == block->live_map.end()){
+                                has_change = true;
+                                break;
+                            }
+
+                            auto block_vec = block->live_map[pair.first];
+                            auto flow_vec = pair.second;
+                            if(block_vec.size() != flow_vec.size()){
+                                has_change = true;
+                                break;
+                            }
+
+                            for(auto var: flow_vec){
+                                auto it = find(block_vec.begin(), block_vec.end(), var);
+                                if(it == block_vec.end()){
+                                    has_change = true;
+                                    break;
+                                }
+                            }
+                        } // for(auto pair: cur_flow){
+                    } // else{
+                } // if(!has_change){
+
+                // assign the block's out
+                block->live_map = cur_flow;
+            } // for(FlowBasicBlock *block: blocks){
+        }while(has_change);
+    }
+
+    void activeAnalyze(){
+        // TODO
     }
 
     FlowBasicBlock *enter_block;

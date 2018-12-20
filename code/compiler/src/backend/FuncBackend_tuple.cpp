@@ -5,8 +5,6 @@
 #include "symbol.h"
 #include "log.h"
 
-bool isGlobalVar(const VarEntry *entry);
-
 void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
     vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
     using namespace sem;
@@ -257,7 +255,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             // save to array
             var_entry = dynamic_cast<const VarEntry*>(tuple->res->entry);
             inst_op = var_entry->type==sym::INT ? InstCmd::SW : InstCmd::SB;
-            if(isGlobalVar(var_entry)){
+            if(VarEntry::isGlobalVar(var_entry)){
                 // sw/sb
                 inst_cmds->push_back(
                     new InstCmd(inst_op, right_reg, sel_reg, NameUtil::genGlobalVarLabel(tuple->res->entry->name))
@@ -311,7 +309,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             // load array
             var_entry = dynamic_cast<const VarEntry*>(tuple->left->entry);
             inst_op = var_entry->type==sym::INT ? InstCmd::LW : InstCmd::LB;
-            if(isGlobalVar(var_entry)){
+            if(VarEntry::isGlobalVar(var_entry)){
                 // lw/lb
                 inst_cmds->push_back(
                     new InstCmd(inst_op, res_reg, sel_reg, NameUtil::genGlobalVarLabel(tuple->left->entry->name))
@@ -545,7 +543,7 @@ void FuncBackend::transTuple(Tuple *tuple, map<string, string> &str_tab,
             for(auto pair: reg_entry_map){
                 back::REG reg = pair.first;
                 const VarEntry *entry = pair.second;
-                if(!isGlobalVar(entry))
+                if(!VarEntry::isGlobalVar(entry))
                     continue;
 
                 writeBackVar(entry, reg, inst_cmds);

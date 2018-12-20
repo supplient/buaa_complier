@@ -84,12 +84,23 @@ public:
         return s;
     }
 
+    void reset(){
+        live_map.clear();
+        active_map.clear();
+        for(auto tuple: tuples)
+            tuple->reset();
+    }
+
     const unsigned int index;
     vector<FlowTuple*> tuples;
     vector<string> labels;
 
     vector<FlowEdge*> in_edges;
     vector<FlowEdge*> out_edges;
+
+    // TODO fill these maps
+    VarMap live_map; // The alive vars(with its def tuple) at the end of the block
+    VarMap active_map; // The active vars(with its use tuple) at the head of the block
 };
 
 #endif//FLOW_BASIC_BLOCK

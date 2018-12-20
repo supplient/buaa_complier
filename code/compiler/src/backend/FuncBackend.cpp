@@ -9,10 +9,6 @@
 
 string reserve_fail = "Reserve fail.";
 
-bool isGlobalVar(const VarEntry *entry){
-    return entry->getOwnerName() == sem::GLOBAL_FUNC_NAME;
-}
-
 FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
     :func_tuple(func_tuple)
 {
@@ -136,7 +132,7 @@ void FuncBackend::writeBackVar(const VarEntry *entry, back::REG reg, vector<Inst
             throw string("FuncBackend.writeBackVar: invalid entry's type: " + to_string(entry->type));
     }
     write_cmd->res_reg = reg;
-    if(isGlobalVar(entry)){
+    if(VarEntry::isGlobalVar(entry)){
         write_cmd->left_reg = back::NO_REG;
         write_cmd->right_type = InstCmd::LABEL_TYPE;
         write_cmd->right_label = NameUtil::genGlobalVarLabel(entry->name);
@@ -163,7 +159,7 @@ void FuncBackend::loadVar(const VarEntry *entry, back::REG reg, vector<InstCmd*>
             throw string("FuncBackend.registAndLoadVar: invalid entry's type: " + to_string(entry->type));
     }
     read_cmd->res_reg = reg;
-    if(isGlobalVar(entry)){
+    if(VarEntry::isGlobalVar(entry)){
         read_cmd->left_reg = back::NO_REG;
         read_cmd->right_type = InstCmd::LABEL_TYPE;
         read_cmd->right_label = NameUtil::genGlobalVarLabel(entry->name);

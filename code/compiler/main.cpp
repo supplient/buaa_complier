@@ -17,7 +17,7 @@ bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
 
 bool MODIFY = true;
-bool DAG_MODIFY = true & MODIFY;
+bool DAG_MODIFY = false & MODIFY;
 bool FLOW_ANALYZE = true & MODIFY;
 
 int main()

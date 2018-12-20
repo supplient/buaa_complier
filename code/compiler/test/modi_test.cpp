@@ -28,7 +28,7 @@ void modiTest(string filename){
     mylog::info << "Doing grammar analyzing...";
     Program* program = gra.constructProgram();
     if(program == NULL || gra.getErrorCount() > 0){
-        cerr << "Grammar analyzer failed." << endl;
+        mylog::error << "Grammar analyzer failed.";
         exit(-1);
     }
     file.close();
@@ -40,7 +40,7 @@ void modiTest(string filename){
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
     if(Element::error_count > 0){
-        cerr << "Semantics analyzer failed." << endl;
+        mylog::error << "Semantics analyzer failed.";
         exit(-1);
     }
     mylog::info << "Semantics analyzing Done.";
