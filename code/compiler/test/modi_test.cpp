@@ -103,6 +103,12 @@ void modiTest(string filename){
             for(FlowFuncBlock *flow_func_block: flow_func_blocks)
                 mylog::debug << flow_func_block->toString();
             mylog::debug << "Dump done.";
+
+            // dump FlowFuncBlock to FuncBlock
+            mylog::info << "Data Flow's subject modifies are all done.";
+            func_blocks.clear();
+            for(FlowFuncBlock *flow_func_block: flow_func_blocks)
+                func_blocks.push_back(flow_func_block->toFuncBlock());
         }
 
         // dump func_tuples from func_blocks after all modify
