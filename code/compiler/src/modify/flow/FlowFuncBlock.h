@@ -13,7 +13,12 @@
 void mergeVarMap(VarMap &res, const VarMap &from){
     for(auto pair: from){
         vector<FlowTuple*> &res_vec = res[pair.first];
-        res_vec.insert(res_vec.end(), pair.second.begin(), pair.second.end());
+        for(auto tuple: pair.second){
+            auto it = find(res_vec.begin(), res_vec.end(), tuple);
+            if(it != res_vec.end())
+                continue; // exist
+            res_vec.push_back(tuple);
+        }
     }
 }
 
@@ -147,7 +152,9 @@ public:
     }
 
     void liveAnalyze(){
-        bool has_change = false;
+        mylog::debug << "Start " + func_entry->name + " 's live analyzing...";
+
+        bool has_change;
         do{
             has_change = false;
 
@@ -187,8 +194,8 @@ public:
                                 break;
                             }
 
-                            auto block_vec = block->live_map[pair.first];
-                            auto flow_vec = pair.second;
+                            vector<FlowTuple*> &block_vec = block->live_map[pair.first];
+                            vector<FlowTuple*> &flow_vec = pair.second;
                             if(block_vec.size() != flow_vec.size()){
                                 has_change = true;
                                 break;

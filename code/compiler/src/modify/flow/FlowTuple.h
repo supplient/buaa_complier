@@ -58,13 +58,28 @@ public:
 
         switch(tuple->op){
             case sem::ASSIGN:
+            case sem::NEG:
             case sem::BEZ:
                 ords.push_back(tuple->left);
                 break;
-            case sem::LESS:
             case sem::ADD:
+            case sem::SUB:
+            case sem::MUL:
+            case sem::DIV:
+            case sem::WARRAY:
+            case sem::RARRAY:
+            case sem::LESS:
+            case sem::LESSOREQUAL:
+            case sem::MORE:
+            case sem::MOREOREQUAL:
+            case sem::NOTEQUAL:
+            case sem::EQUAL:
+            case sem::BEQ:
                 ords.push_back(tuple->left);
                 ords.push_back(tuple->right);
+                break;
+            case sem::PARAM:
+                ords.push_back(tuple->res);
                 break;
             case sem::OUTPUT:
                 if(tuple->left)
@@ -72,14 +87,14 @@ public:
                 if(tuple->right)
                     ords.push_back(tuple->right);
                 break;
-            case sem::FUNC:
             case sem::LABEL:
-            case sem::JMP:
-            case sem::RET:
+            case sem::FUNC:
             case sem::CALL:
+            case sem::RET:
+            case sem::INPUT:
+            case sem::JMP:
                 ;// Do Nothing.
                 break;
-            // TODO
             default:
                 throw string("FlowTuple.use: Not implemented " + to_string(tuple->op));
         }
@@ -99,22 +114,34 @@ public:
     vector<const VarEntry*> def(){
         vector<const VarEntry*> res;
         Operand *ord;
-        // FUNC, ASSIGN, LABEL, LESS, BEZ, ADD, JMP, RET, CALL, OUTPUT
 
         switch(tuple->op){
             case sem::ASSIGN:
-            case sem::LESS:
+            case sem::NEG:
             case sem::ADD:
+            case sem::SUB:
+            case sem::MUL:
+            case sem::DIV:
+            case sem::WARRAY:
+            case sem::RARRAY:
+            case sem::INPUT:
+            case sem::LESS:
+            case sem::LESSOREQUAL:
+            case sem::MORE:
+            case sem::MOREOREQUAL:
+            case sem::NOTEQUAL:
+            case sem::EQUAL:
                 ord = tuple->res;
                 break;
-            // TODO
+            case sem::LABEL:
+            case sem::FUNC:
+            case sem::PARAM:
+            case sem::CALL:
+            case sem::RET:
             case sem::OUTPUT:
             case sem::BEZ:
-            case sem::FUNC:
-            case sem::LABEL:
+            case sem::BEQ:
             case sem::JMP:
-            case sem::RET:
-            case sem::CALL:
                 ;// Do nothing.
                 break;
             default:
