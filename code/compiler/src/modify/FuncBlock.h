@@ -2,6 +2,7 @@
 #define FUNC_BLOCK_H
 
 #include "BasicBlock.h"
+#include "FuncTuple.h"
 
 class FuncBlock
 {
