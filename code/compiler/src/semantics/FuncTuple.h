@@ -4,6 +4,8 @@
 #include "Tuple.h"
 #include "NameTableEntry.h"
 
+class NameTable;
+
 class FuncTuple
 {
 public:
@@ -12,6 +14,15 @@ public:
     {
         if(!func_entry)
             throw string("FuncTuple: func_entry is NULL.");
+    }
+
+    string toString(NameTable &tab){
+        string s = "";
+        for(Tuple *tuple: tuples){
+            s += tuple->toString(tab);
+            s += "\n";
+        }
+        return s;
     }
 
     string toString(){

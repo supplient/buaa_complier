@@ -3,6 +3,8 @@
 
 #define HW false
 
+extern bool STO;
+
 extern bool FUNC_PREFIX_ENTRY_NAME;
 extern bool MIPS_TUPLE_OUTPUT;
 

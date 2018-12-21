@@ -44,6 +44,8 @@ namespace sem{
     extern char TUPLE_OP_NAME[MAX_OP_NUM][MAX_OP_LEN];
 }
 
+class NameTable;
+
 class Tuple
 {
 public:
@@ -54,22 +56,13 @@ public:
         res = NULL;
     }
 
+    string toString(NameTable &tab)const;
+    string toString()const;
+
     sem::OP op;
     Operand *left;
     Operand *right;
     Operand *res;
-
-    string toString()const{
-        string s = sem::TUPLE_OP_NAME[op];
-        s += " ";
-        if(res)
-            s += res->toString() + " ";
-        if(left)
-            s += left->toString() + " ";
-        if(right)
-            s += right->toString() + " ";
-        return s;
-    }
 };
 
 typedef vector<Tuple*> Tuples;

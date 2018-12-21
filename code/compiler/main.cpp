@@ -13,6 +13,8 @@ void modiTest(string filename);
 void graInterface();
 void modiInterface();
 
+bool STO = false;// standard tuple output
+
 bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
 
