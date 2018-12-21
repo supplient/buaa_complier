@@ -12,6 +12,47 @@
 
 using namespace std;
 
+void outputTuples(NameTable &tab, vector<FuncTuple*> func_tuples){
+    if(!STO){
+        mylog::tup << "Start dump name table." << "\n";
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << tab.toString();
+        mylog::tup << "---------------------------" << "\n";
+        mylog::tup << "Dump done." << "\n";
+
+        mylog::tup << "\n"; 
+    }
+
+    mylog::tup << "Start dump tuples." << "\n";
+    mylog::tup << "---------------------------" << "\n";
+    if(STO){
+        // If STO, we need to output global vars' info by hand.
+        FuncNameTable *func_tab = tab.getFuncNameTable(sem::GLOBAL_FUNC_NAME);
+        for(const VarEntry *var: func_tab->getUnconstVars()){
+            if(var->is_param)
+                continue;
+            string s = "";
+            s += "var ";
+            switch(var->type){
+                case sym::INT: s += "int"; break;
+                case sym::CHAR: s += "char"; break;
+                case sym::VOID: s += "void"; break;
+                default: throw string("invalid var type: " + to_string(var->type));
+            }
+            s += " " + var->name + "\n";
+            mylog::tup << s;
+        }
+    }
+    for(FuncTuple* func_tuple : func_tuples){
+        if(STO)
+            mylog::tup << func_tuple->toString(tab) << "\n";
+        else
+            mylog::tup << func_tuple->toString() << "\n";
+    }
+    mylog::tup << "---------------------------" << "\n";
+    mylog::tup << "Dump done." << "\n";
+}
+
 void modiTest(string filename){
     // build input stream
     ifstream file(filename, ios_base::binary);
@@ -49,22 +90,7 @@ void modiTest(string filename){
     // remove const vars
     ConstVarRemover::work(tab, func_tuples);
 
-    mylog::tup << "Start dump name table." << "\n";
-    mylog::tup << "---------------------------" << "\n";
-    mylog::tup << tab.toString();
-    mylog::tup << "---------------------------" << "\n";
-    mylog::tup << "Dump done." << "\n";
-
-    mylog::tup << "\n"; 
-
-    mylog::tup << "Start dump tuples." << "\n";
-    mylog::tup << "---------------------------" << "\n";
-    for(FuncTuple* func_tuple : func_tuples){
-        mylog::tup << func_tuple->toString() << "\n";
-    }
-    mylog::tup << "---------------------------" << "\n";
-    mylog::tup << "Dump done." << "\n";
-
+    outputTuples(tab, func_tuples);
     mylog::tup << "\n";
 
     if(MODIFY){
@@ -117,21 +143,8 @@ void modiTest(string filename){
         for(FuncBlock *func_block: func_blocks)
             func_tuples.push_back(func_block->dumpFuncTuple());
 
-        mylog::tup << "Start dump name table after modify." << "\n";
-        mylog::tup << "---------------------------" << "\n";
-        mylog::tup << tab.toString();
-        mylog::tup << "---------------------------" << "\n";
-        mylog::tup << "Dump done." << "\n";
-
-        mylog::tup << "\n";
-
-        mylog::tup << "\nStart dump tuples after modify." << "\n";
-        mylog::tup << "---------------------------" << "\n";
-        for(FuncTuple* func_tuple : func_tuples){
-            mylog::tup << func_tuple->toString() << "\n";
-        }
-        mylog::tup << "---------------------------" << "\n";
-        mylog::tup << "Dump done." << "\n";
+        mylog::tup << "After modify---" << "\n";
+        outputTuples(tab, func_tuples);
     }
 
     // MIPS backend
