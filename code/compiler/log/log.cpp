@@ -6,7 +6,7 @@ using namespace std;
 
 namespace mylog{
     Debug debug("log/debug.log");
-    Debug info("log/info.log", &debug);
+    Info info("log/info.log", &debug);
     Debug warning("log/warning.log", &info);
     Error error("log/error.log", &warning);
     Fatal fatal("log/fatal.log", &error);

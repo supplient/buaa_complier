@@ -1,20 +1,14 @@
-int fa(){
-    return(2);
-}
-
-int fb(){
-    return(1);
+int b;
+void func(){
+    int a;
+    a = 3;
+    b = 6;
+    while(a < 30)
+        a = a + 1;
+    printf(a);
+    printf(b);
 }
 
 void main(){
-    int a[3];
-    a[0] = 0;
-    a[1] = 0;
-    a[2] = 0;
-
-    a[fb()] = fa();
-
-    printf(a[0]);
-    printf(a[1]);
-    printf(a[2]);
+    func();
 }

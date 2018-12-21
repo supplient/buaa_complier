@@ -51,6 +51,19 @@ namespace mylog{
             }
     };
 
+    class Info:public Log{
+        public:
+            Info(const string &filename, Log *lower=NULL):Log(filename, lower){}
+            virtual ~Info(){}
+
+            template<class T>
+            Info& operator<<(const T &s){
+                file << "[Info]" << s << endl;
+                clog << "[Info]" << s << endl;
+                return dynamic_cast<Info&>(Log::operator<<(s));
+            }
+    };
+
     class Debug:public Log{
         public:
             Debug(const string &filename, Log *lower=NULL):Log(filename, lower){}
@@ -83,7 +96,7 @@ namespace mylog{
 
             template<class T>
             FileNormal& operator<<(const T &s){
-                cout << s;
+                //cout << s;
                 file << s;
                 return dynamic_cast<FileNormal&>(Log::operator<<(s));
             }
@@ -92,7 +105,7 @@ namespace mylog{
     extern Fatal fatal;
     extern Error error;
     extern Debug warning;
-    extern Debug info;
+    extern Info info;
     extern Debug debug;
 
     extern Homework hw;

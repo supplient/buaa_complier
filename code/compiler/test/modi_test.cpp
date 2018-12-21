@@ -7,6 +7,7 @@
 #include "ConstVarRemover.h"
 #include "BasicBlockSplitter.h"
 #include "dag/Worker.h"
+#include "FlowFuncBlock.h"
 #include "Backend.h"
 
 using namespace std;
@@ -24,21 +25,25 @@ void modiTest(string filename){
     GrammarAnalyzer gra(lex);
 
     // grammar analyze
+    mylog::info << "Doing grammar analyzing...";
     Program* program = gra.constructProgram();
     if(program == NULL || gra.getErrorCount() > 0){
-        cerr << "Grammar analyzer failed." << endl;
+        mylog::error << "Grammar analyzer failed.";
         exit(-1);
     }
     file.close();
+    mylog::info << "Grammar analyzing Done.";
 
     // semantics analyze
+    mylog::info << "Doing semantics analyzing...";
     NameTable tab;
     vector<FuncTuple*> func_tuples = program->dumpFunc(tab);
 
     if(Element::error_count > 0){
-        cerr << "Semantics analyzer failed." << endl;
+        mylog::error << "Semantics analyzer failed.";
         exit(-1);
     }
+    mylog::info << "Semantics analyzing Done.";
 
     // Start modify
     // remove const vars
@@ -63,11 +68,21 @@ void modiTest(string filename){
     mylog::tup << "\n";
 
     if(MODIFY){
+        mylog::info << "Modify is on.";
         // split basic blocks
         vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
+        mylog::debug << "Start dump basic blocks." << "\n";
+        mylog::debug << "---------------------------" << "\n";
+        for(FuncBlock* func_block : func_blocks){
+            mylog::debug << func_block->toString() << "\n";
+        }
+        mylog::debug << "---------------------------" << "\n";
+        mylog::debug << "Dump done." << "\n";
+
         // DAG modify
         if(DAG_MODIFY){
+            mylog::info << "DAG Modify is on.";
             for(FuncBlock *func_block: func_blocks){
                 for(BasicBlock *block: func_block->blocks){
                     dag::Worker::work(tab.getFuncNameTable(func_block->func_entry->name), block);
@@ -76,15 +91,28 @@ void modiTest(string filename){
             // TODO free origin func_tuples after DAG modify
         }
 
-        cout << "Start dump basic blocks." << "\n";
-        cout << "---------------------------" << "\n";
-        for(FuncBlock* func_block : func_blocks){
-            cout << func_block->toString() << "\n";
+        // Data Flow analyzing
+        if(FLOW_ANALYZE){
+            mylog::info << "Data Flow analyzing is on."
+                        << "Its subject modifying will be done too.";
+            vector<FlowFuncBlock*> flow_func_blocks;
+            for(FuncBlock *func_block: func_blocks)
+                flow_func_blocks.push_back(new FlowFuncBlock(func_block));
+
+            mylog::debug << "Start dump data flow analyzing's result.";
+            for(FlowFuncBlock *flow_func_block: flow_func_blocks)
+                mylog::debug << flow_func_block->toString();
+            mylog::debug << "Dump done.";
+
+            // dump FlowFuncBlock to FuncBlock
+            mylog::info << "Data Flow's subject modifies are all done.";
+            func_blocks.clear();
+            for(FlowFuncBlock *flow_func_block: flow_func_blocks)
+                func_blocks.push_back(flow_func_block->toFuncBlock());
         }
-        cout << "---------------------------" << "\n";
-        cout << "Dump done." << "\n";
 
         // dump func_tuples from func_blocks after all modify
+        mylog::info << "Modify is finished.";
         func_tuples.clear();
         for(FuncBlock *func_block: func_blocks)
             func_tuples.push_back(func_block->dumpFuncTuple());
@@ -104,11 +132,10 @@ void modiTest(string filename){
         }
         mylog::tup << "---------------------------" << "\n";
         mylog::tup << "Dump done." << "\n";
-
-        cout << "\n";
     }
 
     // MIPS backend
+    mylog::info << "Doing MIPS backend transforming...";
     Backend backend;
     vector<DataCmd*> data_cmds;
     vector<InstCmd*> inst_cmds;
@@ -125,10 +152,12 @@ void modiTest(string filename){
     for(InstCmd *cmd: inst_cmds){
         mylog::ass << cmd->toString() << "\n";
     }
+    mylog::info << "MIPS backend transforming done.";
     
 
     // Release memory
     delete program;
     for(auto func_tuple: func_tuples)
         delete func_tuple;
+    mylog::info << "All work finished.";
 }

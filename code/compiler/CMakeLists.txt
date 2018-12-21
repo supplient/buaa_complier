@@ -23,6 +23,7 @@ include_directories(
     "src/lex"
     "src/modify"
     "src/modify/dag"
+    "src/modify/flow"
     "src/semantics"
     "test"
     )

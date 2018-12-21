@@ -50,6 +50,8 @@ private:
 class VarEntry: public NameTableEntry
 {
 public:
+    static bool isGlobalVar(const VarEntry *entry);
+
     VarEntry(const string &name, FuncNameTable *owner, sym::SYMBOL type, int dim, bool is_param=false, int param_index = 0, bool is_const=false)
         :NameTableEntry(name, sem::VAR_ENTRY, owner), is_param(is_param), param_index(param_index), type(type), dim(dim), is_const(is_const), int_value(0), char_value(0){
     }
