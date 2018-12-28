@@ -14,18 +14,45 @@ public:
             for(auto tuple: block->tuples){
 
                 vector<const VarEntry*> actives = extractVarMapKeys(tuple->active_map);
+
+                // remove param
+                for(auto it=actives.begin(); it!=actives.end(); ){
+                    if((*it)->is_param){
+                        actives.erase(it);
+                        if(it == actives.end())
+                            break;
+                    }
+                    else
+                        it++;
+                }
+
+                // add conflict edge
                 for(int i=0; i<actives.size(); i++)
                     for(int j=i+1; j<actives.size(); j++)
                         addEdge(actives[i], actives[j]);
+                
+                // check no conflict var, add single node for them
                 if(actives.size() == 1)
                     addVar(actives[0]);
 
             }//for(auto tuple: block->tuples){
 
             vector<const VarEntry*> actives = extractVarMapKeys(block->active_map);
+            // remove param
+            for(auto it=actives.begin(); it!=actives.end(); ){
+                if((*it)->is_param){
+                    actives.erase(it);
+                    if(it == actives.end())
+                        break;
+                }
+                else
+                    it++;
+            }
+            // add conflict edge
             for(int i=0; i<actives.size(); i++)
                 for(int j=i+1; j<actives.size(); j++)
                     addEdge(actives[i], actives[j]);
+            // check no conflict var, add single node for them
             if(actives.size() == 1)// for no conflict vars
                 addVar(actives[0]);
 
