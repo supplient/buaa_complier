@@ -49,8 +49,8 @@ public:
         return param_pool.regist(param_index, entry);
     }
 
-    back::REG registForGlobalReg(const VarEntry *entry){
-        return global_pool.regist(entry);
+    back::REG registForGlobalReg(const VarEntry *entry, back::REG reg){
+        return global_pool.regist(entry, reg);
     }
 
     // can only regist for temp reg
@@ -83,8 +83,10 @@ public:
 
         // search global pool
         res = global_pool.lookUpReg(entry);
-        if(res != back::NO_REG)
+        if(res != back::NO_REG){
+            global_pool.updateUsing(entry, res);
             return res;
+        }
 
         // search temp pool
         res = temp_pool.lookUpReg(entry);

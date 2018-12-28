@@ -5,6 +5,7 @@
 #include "Reg.h"
 
 #include <map>
+#include <set>
 
 class GlobalRegPool
 {
@@ -17,62 +18,58 @@ public:
 
 public:
     GlobalRegPool(){
-        for(unsigned int i=0; i<back::GLOBAL_REG_UP - back::s0; i++){
-            reg_list.push_back(NULL);
-        }
-        ng = back::s0;
     }
 
     void reset(){
-        for(unsigned int i=0; i<back::GLOBAL_REG_UP - back::s0; i++){
-            reg_list[i] = NULL;
-        }
-        ng = back::s0;
+        reg_map.clear();
+        using_reg_map.clear();
     }
 
-    back::REG regist(const VarEntry *in_entry){
-        if(ng == back::GLOBAL_REG_UP)
-            return back::NO_REG;
-
+    back::REG regist(const VarEntry *in_entry, back::REG reg){
         back::REG res;
 
-        // give the correponding reg
-        res = ng;
-        ng = ng + 1;
-        reg_list[res-back::s0] = in_entry;
+        if(!GlobalRegPool::contain(reg))
+            return back::NO_REG;
 
-        return res;
+        reg_map[reg].insert(in_entry);
+        return reg;
+    }
+
+    void updateUsing(const VarEntry *entry, back::REG reg){
+        if(!GlobalRegPool::contain(reg))
+            throw string("GlobalRegPool: trying to update using_reg_map with reg " + to_string(reg) + " which is not a global reg.");
+        using_reg_map[reg] = entry;
     }
 
     back::REG lookUpReg(const VarEntry *entry){
         if(!entry)
             return back::NO_REG;
 
-        for(unsigned int i=0; i<reg_list.size();i++){
-            if(reg_list[i] == entry)
-                return back::s0 + i;
+        for(auto pair: reg_map){
+            if(pair.second.find(entry) != pair.second.end())
+                return pair.first;
         }
 
         return back::NO_REG;
     }
 
-    const VarEntry *lookUpEntry(back::REG reg){
-        return reg_list[reg - back::s0];
+    const VarEntry* lookUpEntry(back::REG reg){
+        if(!GlobalRegPool::contain(reg))
+            throw string("GlobalRegPool: trying to look up entry with reg " + to_string(reg) + " which is not a global reg.");
+        if(using_reg_map.find(reg) != using_reg_map.end())
+            return using_reg_map[reg];
+        else
+            return NULL;
     }
 
     map<back::REG, const VarEntry*> getAllRegistedVar(){
-        map<back::REG, const VarEntry*> res;
-        for(unsigned int i=0; i<reg_list.size(); i++){
-            if(!reg_list[i])
-                continue;
-            res[back::s0 + i] = reg_list[i];
-        }
-        return res;
+        return using_reg_map;
     }
 
 private:
     vector<const VarEntry*> reg_list;
-    back::REG ng;
+    map<back::REG, set<const VarEntry*> > reg_map;
+    map<back::REG, const VarEntry*> using_reg_map; // TODO maintain this
 
     const VarEntry* getRegEntry(back::REG reg){
         if(!GlobalRegPool::contain(reg))

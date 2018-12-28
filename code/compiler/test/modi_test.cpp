@@ -156,6 +156,7 @@ void modiTest(string filename){
     // check global_reg_allocator, if still NULL, build linear one.
     if(!global_reg_allocator)
         global_reg_allocator = new LinearGlobalRegAllocator(tab);
+    mylog::info << "Using " + global_reg_allocator->name();
 
     // MIPS backend
     mylog::info << "Doing MIPS backend transforming...";

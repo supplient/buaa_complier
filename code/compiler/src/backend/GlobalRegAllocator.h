@@ -7,15 +7,18 @@
 
 class GlobalRegAllocator{
 public:
-    virtual vector<const VarEntry*> alloc(const FuncEntry* func_entry)=0;
+    virtual map<back::REG, vector<const VarEntry*> > alloc(const FuncEntry* func_entry)=0;
+
+    virtual string name()=0;
 };
+
 
 class LinearGlobalRegAllocator:public GlobalRegAllocator{
 public:
     LinearGlobalRegAllocator(NameTable &tab):tab(tab){}
 
-    vector<const VarEntry*> alloc(const FuncEntry* func_entry){
-        vector<const VarEntry*> res;
+    map<back::REG, vector<const VarEntry*> > alloc(const FuncEntry* func_entry){
+        map<back::REG, vector<const VarEntry*> > res;
 
         FuncNameTable *func_tab = tab.getFuncNameTable(func_entry->name);
         vector<VarEntry*> lv_list = func_tab->getUnconstVars();
@@ -29,11 +32,15 @@ public:
             if(lv->is_param)
                 continue;// param cannot be allocated for global regs
             
-            res.push_back(lv);
+            res[gr_count + back::s0].push_back(lv);
             gr_count++;
         }
 
         return res;
+    }
+
+    string name(){
+        return "Linear Global Reg Allocator";
     }
 
 private:
