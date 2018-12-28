@@ -5,6 +5,7 @@
 #include "GrammarAnalyzer.h"
 #include "log.h"
 #include "ConstVarRemover.h"
+#include "GlobalRegAllocator.h"
 #include "BasicBlockSplitter.h"
 #include "dag/Worker.h"
 #include "FlowFuncBlock.h"
@@ -86,6 +87,9 @@ void modiTest(string filename){
     }
     mylog::info << "Semantics analyzing Done.";
 
+    // claim global reg allocator
+    GlobalRegAllocator *global_reg_allocator = NULL;
+
     // Start modify
     // remove const vars
     ConstVarRemover::work(tab, func_tuples);
@@ -135,6 +139,8 @@ void modiTest(string filename){
             func_blocks.clear();
             for(FlowFuncBlock *flow_func_block: flow_func_blocks)
                 func_blocks.push_back(flow_func_block->toFuncBlock());
+
+            // TODO build graph-global_reg_allocator
         }
 
         // dump func_tuples from func_blocks after all modify
@@ -147,12 +153,16 @@ void modiTest(string filename){
         outputTuples(tab, func_tuples);
     }
 
+    // check global_reg_allocator, if still NULL, build linear one.
+    if(!global_reg_allocator)
+        global_reg_allocator = new LinearGlobalRegAllocator(tab);
+
     // MIPS backend
     mylog::info << "Doing MIPS backend transforming...";
     Backend backend;
     vector<DataCmd*> data_cmds;
     vector<InstCmd*> inst_cmds;
-    backend.trans(tab, func_tuples, &data_cmds, &inst_cmds);
+    backend.trans(tab, global_reg_allocator, func_tuples, &data_cmds, &inst_cmds);
 
     mylog::ass << ".data" << "\n";
     for(DataCmd *cmd: data_cmds){
