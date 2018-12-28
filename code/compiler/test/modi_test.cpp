@@ -140,7 +140,10 @@ void modiTest(string filename){
             for(FlowFuncBlock *flow_func_block: flow_func_blocks)
                 func_blocks.push_back(flow_func_block->toFuncBlock());
 
-            // TODO build graph-global_reg_allocator
+            // build graph-global_reg_allocator
+            if(global_reg_allocator)
+                delete global_reg_allocator;
+            global_reg_allocator = new GraphGlobalRegAllocator(flow_func_blocks);
         }
 
         // dump func_tuples from func_blocks after all modify

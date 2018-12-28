@@ -4,6 +4,7 @@
 #include "NameTable.h"
 #include "NameTableEntry.h"
 #include "Reg.h"
+#include "ConflictGraph.h"
 
 class GlobalRegAllocator{
 public:
@@ -45,6 +46,65 @@ public:
 
 private:
     NameTable &tab;
+};
+
+
+class GraphGlobalRegAllocator:public GlobalRegAllocator{
+public:
+    GraphGlobalRegAllocator(vector<FlowFuncBlock*> func_blocks){
+        mylog::debug << "Start building conlict graphs...";
+        for(FlowFuncBlock *func_block: func_blocks){
+            string name = func_block->func_entry->name;
+            if(conflict_graphs.count(name) != 0)
+                throw string("GraphGlobalRegAllocator: Func <" + name + "> 's conflict graph has been built.");
+
+            conflict_graphs[name] = new ConflictGraph(func_block);
+
+            mylog::debug << "Func <" + name + ">--";
+            mylog::debug << conflict_graphs[name]->toString() + "\n";
+        }
+    }
+
+    // Warning!!! 
+    //      For each func_entry, this function can only be called once, because conflict graph will be broken after one call.
+    map<back::REG, vector<const VarEntry*> > alloc(const FuncEntry *func_entry){
+        map<back::REG, vector<const VarEntry*> > res;
+
+        ConflictGraph *graph = conflict_graphs[func_entry->name];
+        unsigned int reg_num = back::GLOBAL_REG_UP - back::s0;
+        back::REG reg = back::s0;
+
+        while(graph->varNum()){
+            // try to find a var conflict with less than reg_num
+            const VarEntry *candi = graph->searchVarConflictLess(reg_num);
+
+            if(candi){
+                // found, alloc reg for it
+                res[reg].push_back(candi);
+                reg++;
+                if(reg == back::GLOBAL_REG_UP)
+                    reg = back::s0;
+            }
+            else{
+                // not found, choose a var to give up
+                candi = graph->giveVarToGiveUp();
+                if(!candi)
+                    throw string("GraphGlobalRegAllocator: cannot find a var to give up.");
+            }
+
+            // remove the selected var
+            graph->removeVar(candi);
+        }
+
+        return res;
+    }
+
+    string name(){
+        return "Graph Global Reg Allocator";
+    }
+
+private:
+    map<string, ConflictGraph*> conflict_graphs;
 };
 
 #endif//GLOBAL_REG_ALLOCATOR_H
