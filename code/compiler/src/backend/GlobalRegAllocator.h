@@ -65,14 +65,14 @@ public:
         }
     }
 
-    // Warning!!! 
-    //      For each func_entry, this function can only be called once, because conflict graph will be broken after one call.
     map<back::REG, vector<const VarEntry*> > alloc(const FuncEntry *func_entry){
         map<back::REG, vector<const VarEntry*> > res;
 
-        ConflictGraph *graph = conflict_graphs[func_entry->name];
+        // search for no conflict vars
+        const ConflictGraph *origin_graph = conflict_graphs[func_entry->name];
+        ConflictGraph *graph = new ConflictGraph(*origin_graph);
+        map<const VarEntry*, back::REG> alloced_map;
         unsigned int reg_num = back::GLOBAL_REG_UP - back::s0;
-        back::REG reg = back::s0;
 
         while(graph->varNum()){
             // try to find a var conflict with less than reg_num
@@ -80,10 +80,28 @@ public:
 
             if(candi){
                 // found, alloc reg for it
+
+                // avoid the regs chosen by the neighbors
+                set<const VarEntry*> conflicted_vars = origin_graph->conflictWith(candi);
+                set<back::REG> conflicted_regs;
+                for(const VarEntry *var: conflicted_vars){
+                    auto it = alloced_map.find(var);
+                    if(it == alloced_map.end())
+                        continue; // not alloced
+                    conflicted_regs.insert(it->second);
+                }
+
+                // search for an unalloced reg
+                back::REG reg = back::s0;
+                while(conflicted_regs.find(reg) != conflicted_regs.end()){
+                    reg++;
+                    if(reg == back::GLOBAL_REG_UP)
+                        throw string("GraphGlobalRegAllocator: No valid global reg rest.");
+                }
+
+                // alloc & memo it
                 res[reg].push_back(candi);
-                reg++;
-                if(reg == back::GLOBAL_REG_UP)
-                    reg = back::s0;
+                alloced_map[candi] = reg;
             }
             else{
                 // not found, choose a var to give up
@@ -95,6 +113,7 @@ public:
             // remove the selected var
             graph->removeVar(candi);
         }
+        delete graph;
 
         return res;
     }
