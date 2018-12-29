@@ -12,52 +12,39 @@ public:
 
         for(auto block: func_block->blocks){
             for(auto tuple: block->tuples){
-
                 vector<const VarEntry*> actives = extractVarMapKeys(tuple->active_map);
-
-                // remove param
-                for(auto it=actives.begin(); it!=actives.end(); ){
-                    if((*it)->is_param){
-                        actives.erase(it);
-                        if(it == actives.end())
-                            break;
-                    }
-                    else
-                        it++;
-                }
-
-                // add conflict edge
-                for(int i=0; i<actives.size(); i++)
-                    for(int j=i+1; j<actives.size(); j++)
-                        addEdge(actives[i], actives[j]);
-                
-                // check no conflict var, add single node for them
-                if(actives.size() == 1)
-                    addVar(actives[0]);
-
+                // We also do not allow def and use share one global reg.
+                vector<const VarEntry*> defs = tuple->def();
+                actives.insert(actives.end(), defs.begin(), defs.end());
+                checkOnePoint(actives);
             }//for(auto tuple: block->tuples){
 
             vector<const VarEntry*> actives = extractVarMapKeys(block->active_map);
-            // remove param
-            for(auto it=actives.begin(); it!=actives.end(); ){
-                if((*it)->is_param){
-                    actives.erase(it);
-                    if(it == actives.end())
-                        break;
-                }
-                else
-                    it++;
-            }
-            // add conflict edge
-            for(int i=0; i<actives.size(); i++)
-                for(int j=i+1; j<actives.size(); j++)
-                    addEdge(actives[i], actives[j]);
-            // check no conflict var, add single node for them
-            if(actives.size() == 1)// for no conflict vars
-                addVar(actives[0]);
-
+            checkOnePoint(actives);
         }//for(auto block: func_block->blocks){
 
+    }
+
+    void checkOnePoint(vector<const VarEntry*> vars){
+        // remove param
+        for(auto it=vars.begin(); it!=vars.end(); ){
+            if((*it)->is_param){
+                vars.erase(it);
+                if(it == vars.end())
+                    break;
+            }
+            else
+                it++;
+        }
+
+        // add conflict edge
+        for(int i=0; i<vars.size(); i++)
+            for(int j=i+1; j<vars.size(); j++)
+                addEdge(vars[i], vars[j]);
+                
+        // check no conflict var, add single node for them
+        if(vars.size() == 1)
+            addVar(vars[0]);
     }
 
     bool addVar(const VarEntry *var){
@@ -106,6 +93,13 @@ public:
         }
 
         return res;
+    }
+
+    set<const VarEntry*> conflictWith(const VarEntry *var) const{
+        auto it = mat.find(var);
+        if(it == mat.end())
+            throw string("ConflictGraph: Invalid var in the graph: " + var->name);
+        return it->second;
     }
 
     string toString(){
