@@ -9,11 +9,12 @@
 #include "NameTable.h"
 #include "RegPool.h"
 #include "SizeUtil.h"
+#include "GlobalRegAllocator.h"
 
 class FuncBackend
 {
 public:
-    FuncBackend(NameTable &tab, const FuncTuple *func_tuple);
+    FuncBackend(NameTable &tab, GlobalRegAllocator *global_reg_allocator, const FuncTuple *func_tuple);
 
     void trans(map<string, string> &str_tab,
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds);

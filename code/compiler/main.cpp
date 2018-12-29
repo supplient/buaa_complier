@@ -4,13 +4,8 @@
 
 using namespace std;
 
-void lexTest(string filename);
-void graTest(string filename);
-void semTest(string filename);
-void backTest(string filename);
 void modiTest(string filename);
 
-void graInterface();
 void modiInterface();
 
 bool STO = false;// standard tuple output
@@ -25,19 +20,10 @@ bool FLOW_ANALYZE = true & MODIFY;
 int main()
 {
     try{
-        //lexTest("lex_test.txt");
-        //graTest("sem_test.c0");
-        //graTest("sample/example.c0");
-        //semTest("sample/example.c0");
-        //backTest("back_test.c0");
-        //backTest("sample/fab.c0");
         //modiTest("modi_test.c0");
-        modiTest("sample/example/c0");
+        modiTest("sample/complex/c0");
 
-        //graInterface();
         //modiInterface();
-
-        //cout << "Hello world!" << endl;
     }
     catch(string s){
         mylog::fatal << s;

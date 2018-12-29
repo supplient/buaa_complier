@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples, 
+void Backend::trans(NameTable &tab, GlobalRegAllocator *global_reg_allocator, const vector<FuncTuple*> &func_tuples, 
         vector<DataCmd*> *data_cmds, vector<InstCmd*> *inst_cmds){
         
     // check input
@@ -53,7 +53,7 @@ void Backend::trans(NameTable &tab, const vector<FuncTuple*> &func_tuples,
     // build func backends
     vector<FuncBackend*> func_backends;
     for(FuncTuple *func_tuple: func_tuples)
-        func_backends.push_back(new FuncBackend(tab, func_tuple));
+        func_backends.push_back(new FuncBackend(tab, global_reg_allocator, func_tuple));
 
     // trans each function
     for(FuncBackend *func_backend: func_backends)

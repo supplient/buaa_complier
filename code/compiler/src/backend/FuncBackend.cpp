@@ -9,7 +9,7 @@
 
 string reserve_fail = "Reserve fail.";
 
-FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
+FuncBackend::FuncBackend(NameTable &tab, GlobalRegAllocator *global_reg_allocator, const FuncTuple *func_tuple)
     :func_tuple(func_tuple)
 {
     vector<VarEntry*> param_list = func_tuple->func_entry->param_list;
@@ -28,18 +28,11 @@ FuncBackend::FuncBackend(NameTable &tab, const FuncTuple *func_tuple)
 
     // Init global reg alloc
     gr_count = 0;
-    for(VarEntry *lv: lv_list){
-        if(gr_count >= back::GLOBAL_REG_UP - back::s0)
-            break;
-
-        if(!lv)
-            throw string("FuncBackend: NULL local variable!");
-
-        if(lv->is_param)
-            continue; // param is not processed here.
-
-        reg_pool.registForGlobalReg(lv);
+    map<back::REG, vector<const VarEntry*> > global_alloc_res = global_reg_allocator->alloc(func_tuple->func_entry);
+    for(auto pair: global_alloc_res){
         gr_count++;
+        for(const VarEntry *entry: pair.second)
+            reg_pool.registForGlobalReg(entry, pair.first);
     }
 
 
