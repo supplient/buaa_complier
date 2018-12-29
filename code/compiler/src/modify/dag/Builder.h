@@ -212,6 +212,9 @@ namespace dag{
         }
 
         OpNode* getOpNodeWithTwo(sem::OP op, Node *left, Node *right, bool order){
+            if(DAG_ALWAYS_ORDER)
+                order = true;
+
             for(OpNode *node: left->fathers){
                 if(node->op != op)
                     continue;

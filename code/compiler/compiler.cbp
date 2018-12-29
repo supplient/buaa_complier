@@ -12,8 +12,10 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add directory="../compiler" />
+					<Add directory="test" />
 					<Add directory="log" />
 					<Add directory="src" />
 					<Add directory="src/lex" />
@@ -21,6 +23,8 @@
 					<Add directory="src/elements" />
 					<Add directory="src/semantics" />
 					<Add directory="src/modify" />
+					<Add directory="src/modify/dag" />
+					<Add directory="src/modify/flow" />
 					<Add directory="src/backend" />
 					<Add directory="src/elements/2" />
 					<Add directory="src/elements/3" />
@@ -48,6 +52,8 @@
 					<Add directory="src/elements" />
 					<Add directory="src/semantics" />
 					<Add directory="src/modify" />
+					<Add directory="src/modify/dag" />
+					<Add directory="src/modify/flow" />
 					<Add directory="src/backend" />
 					<Add directory="src/elements/2" />
 					<Add directory="src/elements/3" />
@@ -66,7 +72,6 @@
 			<Add directory="src/elements" />
 		</Compiler>
 		<Unit filename="config.h" />
-		<Unit filename="interface/gra_interface.cpp" />
 		<Unit filename="interface/modi_interface.cpp" />
 		<Unit filename="log/log.cpp" />
 		<Unit filename="log/log.h" />
@@ -80,6 +85,7 @@
 		<Unit filename="src/backend/FuncBackend.cpp" />
 		<Unit filename="src/backend/FuncBackend.h" />
 		<Unit filename="src/backend/FuncBackend_tuple.cpp" />
+		<Unit filename="src/backend/GlobalRegAllocator.h" />
 		<Unit filename="src/backend/GlobalRegPool.h" />
 		<Unit filename="src/backend/Memory.h" />
 		<Unit filename="src/backend/ParamRegPool.h" />
@@ -131,13 +137,22 @@
 		<Unit filename="src/lex/LexAnalyzer_static.cpp" />
 		<Unit filename="src/modify/BasicBlock.h" />
 		<Unit filename="src/modify/BasicBlockSplitter.h" />
+		<Unit filename="src/modify/ConflictGraph.cpp" />
+		<Unit filename="src/modify/ConflictGraph.h" />
 		<Unit filename="src/modify/ConstVarRemover.h" />
 		<Unit filename="src/modify/Edge.h" />
 		<Unit filename="src/modify/FuncBlock.h" />
 		<Unit filename="src/modify/dag/Builder.h" />
 		<Unit filename="src/modify/dag/Node.cpp" />
 		<Unit filename="src/modify/dag/Node.h" />
+		<Unit filename="src/modify/dag/VarPool.h" />
 		<Unit filename="src/modify/dag/Worker.h" />
+		<Unit filename="src/modify/flow/FlowBasicBlock.h" />
+		<Unit filename="src/modify/flow/FlowEdge.h" />
+		<Unit filename="src/modify/flow/FlowFuncBlock.cpp" />
+		<Unit filename="src/modify/flow/FlowFuncBlock.h" />
+		<Unit filename="src/modify/flow/FlowTuple.cpp" />
+		<Unit filename="src/modify/flow/FlowTuple.h" />
 		<Unit filename="src/semantics/FuncTuple.h" />
 		<Unit filename="src/semantics/NameTable.cpp" />
 		<Unit filename="src/semantics/NameTable.h" />
@@ -150,11 +165,7 @@
 		<Unit filename="src/semantics/Tuple.h" />
 		<Unit filename="src/symbol.cpp" />
 		<Unit filename="src/symbol.h" />
-		<Unit filename="test/back_test.cpp" />
-		<Unit filename="test/gra_test.cpp" />
-		<Unit filename="test/lex_test.cpp" />
 		<Unit filename="test/modi_test.cpp" />
-		<Unit filename="test/sem_test.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

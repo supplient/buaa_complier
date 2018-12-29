@@ -17,5 +17,7 @@ namespace mylog{
 
     Log::Log(const string &filename, Log *lower)
         :file(filename), lower(lower){
+        if(file.bad())
+            cerr << "Open " << filename << " failed." << endl;
     }
 }

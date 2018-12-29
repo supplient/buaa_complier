@@ -4,6 +4,7 @@
 #define HW false
 
 extern bool STO;
+extern bool DAG_ALWAYS_ORDER;
 
 extern bool FUNC_PREFIX_ENTRY_NAME;
 extern bool MIPS_TUPLE_OUTPUT;

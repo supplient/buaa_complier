@@ -8,22 +8,23 @@ void modiTest(string filename);
 
 void modiInterface();
 
-bool STO = false;// standard tuple output
+bool STO = true;// standard tuple output
+bool DAG_ALWAYS_ORDER = true;
 
 bool FUNC_PREFIX_ENTRY_NAME = false;
 bool MIPS_TUPLE_OUTPUT = true;
 
 bool MODIFY = true;
-bool DAG_MODIFY = false & MODIFY;
+bool DAG_MODIFY = true & MODIFY;
 bool FLOW_ANALYZE = true & MODIFY;
 
 int main()
 {
     try{
         //modiTest("modi_test.c0");
-        modiTest("sample/complex/c0");
+        //modiTest("sample/complex/c0");
 
-        //modiInterface();
+        modiInterface();
     }
     catch(string s){
         mylog::fatal << s;

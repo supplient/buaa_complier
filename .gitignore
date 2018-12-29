@@ -50,3 +50,6 @@ build
 
 # Tuple file
 tuple/*
+
+# Output file
+output/*

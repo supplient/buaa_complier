@@ -13,19 +13,19 @@
 
 using namespace std;
 
-void outputTuples(NameTable &tab, vector<FuncTuple*> func_tuples){
+void outputTuples(mylog::FileNormal &out, NameTable &tab, vector<FuncTuple*> func_tuples){
     if(!STO){
-        mylog::tup << "Start dump name table." << "\n";
-        mylog::tup << "---------------------------" << "\n";
-        mylog::tup << tab.toString();
-        mylog::tup << "---------------------------" << "\n";
-        mylog::tup << "Dump done." << "\n";
+        out << "Start dump name table." << "\n";
+        out << "---------------------------" << "\n";
+        out << tab.toString();
+        out << "---------------------------" << "\n";
+        out << "Dump done." << "\n";
 
-        mylog::tup << "\n"; 
+        out << "\n"; 
     }
 
-    mylog::tup << "Start dump tuples." << "\n";
-    mylog::tup << "---------------------------" << "\n";
+    out << "Start dump tuples." << "\n";
+    out << "---------------------------" << "\n";
     if(STO){
         // If STO, we need to output global vars' info by hand.
         FuncNameTable *func_tab = tab.getFuncNameTable(sem::GLOBAL_FUNC_NAME);
@@ -41,20 +41,46 @@ void outputTuples(NameTable &tab, vector<FuncTuple*> func_tuples){
                 default: throw string("invalid var type: " + to_string(var->type));
             }
             s += " " + var->name + "\n";
-            mylog::tup << s;
+            out << s;
         }
     }
     for(FuncTuple* func_tuple : func_tuples){
         if(STO)
-            mylog::tup << func_tuple->toString(tab) << "\n";
+            out << func_tuple->toString(tab) << "\n";
         else
-            mylog::tup << func_tuple->toString() << "\n";
+            out << func_tuple->toString() << "\n";
     }
-    mylog::tup << "---------------------------" << "\n";
-    mylog::tup << "Dump done." << "\n";
+    out << "---------------------------" << "\n";
+    out << "Dump done." << "\n";
 }
 
+
+void outputMIPS(mylog::FileNormal &out, NameTable &tab, GlobalRegAllocator *global_reg_allocator, vector<FuncTuple*> func_tuples){
+    Backend backend;
+    vector<DataCmd*> data_cmds;
+    vector<InstCmd*> inst_cmds;
+    backend.trans(tab, global_reg_allocator, func_tuples, &data_cmds, &inst_cmds);
+
+    out << ".data" << "\n";
+    for(DataCmd *cmd: data_cmds){
+        out << cmd->toString() << "\n";
+    }
+
+    out << "\n";
+
+    out << ".text" << "\n";
+    for(InstCmd *cmd: inst_cmds){
+        out << cmd->toString() << "\n";
+    }
+}
+
+
 void modiTest(string filename){
+    mylog::FileNormal mid_prev("../../output/16061103_zzy_mid_prev.TXT");
+    mylog::FileNormal mid_after("../../output/16061103_zzy_mid_after.TXT");
+    mylog::FileNormal mips_prev("../../output/16061103_zzy_mips_prev.TXT");
+    mylog::FileNormal mips_after("../../output/16061103_zzy_mips_after.TXT");
+
     // build input stream
     ifstream file(filename, ios_base::binary);
     if(!file.is_open() || !file){
@@ -90,15 +116,26 @@ void modiTest(string filename){
     // claim global reg allocator
     GlobalRegAllocator *global_reg_allocator = NULL;
 
-    // Start modify
     // remove const vars
     ConstVarRemover::work(tab, func_tuples);
 
-    outputTuples(tab, func_tuples);
+    outputTuples(mylog::tup, tab, func_tuples);
+    outputTuples(mid_prev, tab, func_tuples);
     mylog::tup << "\n";
 
+    // Start modify
     if(MODIFY){
+        // MIPS Backend before modify
+        global_reg_allocator = new LinearGlobalRegAllocator(tab);
+        mylog::info << "Using " + global_reg_allocator->name();
+        mylog::info << "Doing MIPS backend transforming before modify...";
+        outputMIPS(mips_prev, tab, global_reg_allocator, func_tuples);
+        mylog::info << "MIPS backend transforming done.";
+        delete global_reg_allocator;
+        global_reg_allocator = NULL;
+
         mylog::info << "Modify is on.";
+
         // split basic blocks
         vector<FuncBlock*> func_blocks = BasicBlockSplitter::work(func_tuples);
 
@@ -153,7 +190,8 @@ void modiTest(string filename){
             func_tuples.push_back(func_block->dumpFuncTuple());
 
         mylog::tup << "After modify---" << "\n";
-        outputTuples(tab, func_tuples);
+        outputTuples(mylog::tup, tab, func_tuples);
+        outputTuples(mid_after, tab, func_tuples);
     }
 
     // check global_reg_allocator, if still NULL, build linear one.
@@ -163,24 +201,10 @@ void modiTest(string filename){
 
     // MIPS backend
     mylog::info << "Doing MIPS backend transforming...";
-    Backend backend;
-    vector<DataCmd*> data_cmds;
-    vector<InstCmd*> inst_cmds;
-    backend.trans(tab, global_reg_allocator, func_tuples, &data_cmds, &inst_cmds);
-
-    mylog::ass << ".data" << "\n";
-    for(DataCmd *cmd: data_cmds){
-        mylog::ass << cmd->toString() << "\n";
-    }
-
-    mylog::ass << "\n";
-
-    mylog::ass << ".text" << "\n";
-    for(InstCmd *cmd: inst_cmds){
-        mylog::ass << cmd->toString() << "\n";
-    }
+    outputMIPS(mylog::ass, tab, global_reg_allocator, func_tuples);
+    outputMIPS(mips_after, tab, global_reg_allocator, func_tuples);
     mylog::info << "MIPS backend transforming done.";
-    
+
 
     // Release memory
     delete program;
