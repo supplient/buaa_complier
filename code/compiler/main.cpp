@@ -22,9 +22,9 @@ int main()
 {
     try{
         //modiTest("modi_test.c0");
-        //modiTest("sample/complex/c0");
+        modiTest("sample/complex/c0");
 
-        modiInterface();
+        //modiInterface();
     }
     catch(string s){
         mylog::fatal << s;

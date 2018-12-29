@@ -27,12 +27,15 @@ FuncBackend::FuncBackend(NameTable &tab, GlobalRegAllocator *global_reg_allocato
 
 
     // Init global reg alloc
+    mylog::debug << "Start alloc global regs for func <" + func_tuple->func_entry->name + ">...";
     gr_count = 0;
     map<back::REG, vector<const VarEntry*> > global_alloc_res = global_reg_allocator->alloc(func_tuple->func_entry);
     for(auto pair: global_alloc_res){
         gr_count++;
-        for(const VarEntry *entry: pair.second)
+        for(const VarEntry *entry: pair.second){
+            mylog::debug << "\tAlloc s" + to_string(pair.first-back::s0) + " for " + entry->name;
             reg_pool.registForGlobalReg(entry, pair.first);
+        }
     }
 
 
